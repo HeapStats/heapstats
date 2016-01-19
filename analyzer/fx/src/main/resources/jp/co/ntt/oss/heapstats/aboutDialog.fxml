@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (C) 2014-2015 Yasumasa Suenaga
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="615.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.AboutDialogController">
+    <children>
+        <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@/jp/co/ntt/oss/heapstats/heapstats-logo.png" />
+            </image>
+        </ImageView>
+        <Label layoutX="200.0" layoutY="14.0" text="HeapStats Analyzer">
+            <font>
+                <Font size="36.0" />
+            </font>
+        </Label>
+        <Label layoutX="263.0" layoutY="63.0" text="Version 2.0">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+        <Label layoutX="182.0" layoutY="95.0" text="HeapStats is licensed under the GNU General Public License version 2." />
+        <Label layoutX="175.0" layoutY="116.0" text="Copyright © 2011-2015 Nippon Telegraph and Telephone Corporation" />
+        <Button layoutX="354.0" layoutY="141.0" mnemonicParsing="false" onAction="#onOKClick" text="OK" />
+        <Accordion fx:id="accordion" layoutX="14.0" layoutY="171.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="171.5">
+            <panes>
+                <TitledPane fx:id="pluginPane" expanded="true" text="%about.plugin">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <TableView fx:id="pluginTable" layoutX="14.0" layoutY="-25.5" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <columns>
+                                        <TableColumn fx:id="pluinTableNameColumn" editable="false" prefWidth="224.9999634027481" text="%about.plugin.name" />
+                                        <TableColumn fx:id="pluginTableLicenseColumn" editable="false" minWidth="0.0" prefWidth="336.0000305175781" text="%about.plugin.license" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane expanded="false" text="%about.library_licenses">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <TableView fx:id="libraryTable" layoutX="39.0" layoutY="-32.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <columns>
+                                        <TableColumn fx:id="libraryTablePluginColumn" editable="false" prefWidth="170.9999634027481" text="%about.plugin.name" />
+                                        <TableColumn fx:id="libraryTableLibraryColumn" editable="false" prefWidth="120.99996948242188" text="%about.plugin.library" />
+                                        <TableColumn fx:id="libraryTableLicenseColumn" editable="false" prefWidth="268.0000305175781" text="%about.plugin.license" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+            </panes>
+        </Accordion>
+    </children>
+</AnchorPane>

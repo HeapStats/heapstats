@@ -1,0 +1,33 @@
+/target/
+
+syntax: regexp
+# Ignore all {.classpath,.project,.settings/*} files except for folders in
+# eclipse
+#
+# Using negative lookahead expression
+^(?!eclipse).*\.(settings|project|classpath)
+
+syntax: glob
+target/*
+bin/*
+*~
+*.versionsBackup
+.deps/
+.dirstamp
+agent/.cproject
+agent/src/.deps/*
+config.log
+config.status
+agent/heapstats.conf
+autom4te.cache/
+agent/attacher/dist/*.jar
+agent/attacher/heapstats-attacher
+*.o
+*.lo
+*.Po
+*.la
+*.so
+*.so.*
+*.lai
+*.class
+Makefile

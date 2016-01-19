@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (C) 2014-2015 Yasumasa Suenaga
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<?import javafx.embed.swing.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="topAnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.tabs.RefTreeController">
+    <children>
+        <HBox prefHeight="34.0" prefWidth="238.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+            <children>
+                <Label text="%reftree.snapshot" />
+                <Label fx:id="snapshotLabel" prefHeight="15.0" prefWidth="149.0" />
+                <Label text="%reftree.direction" />
+                <RadioButton fx:id="radioParent" mnemonicParsing="false" selected="true" text="%reftree.parent">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="direction" />
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton mnemonicParsing="false" text="%reftree.child" toggleGroup="$direction" />
+                <Region maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0" prefHeight="15.0" prefWidth="15.0" />
+                <Label text="%reftree.sort" />
+                <RadioButton mnemonicParsing="false" text="%reftree.instance">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="sort" />
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="radioSize" mnemonicParsing="false" selected="true" text="%reftree.size" toggleGroup="$sort" />
+                <Region layoutX="756.0" layoutY="10.0" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0" prefHeight="15.0" prefWidth="15.0" />
+                <CheckBox fx:id="rankCheckBox" mnemonicParsing="false" selected="true" text="%reftree.ranking" />
+                <Region layoutX="453.0" layoutY="10.0" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0" prefHeight="15.0" prefWidth="15.0" />
+                <Button mnemonicParsing="false" onAction="#onOkClick" text="OK" />
+            </children>
+        </HBox>
+        <SwingNode fx:id="graphNode" layoutY="34.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
+    </children>
+</AnchorPane>

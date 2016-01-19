@@ -1,0 +1,10 @@
+#!/bin/sh
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libexecdir=@libexecdir@
+
+CLI_JAR="$libexecdir/heapstats-cli.jar"
+
+$JAVA_HOME/bin/java $JAVA_OPTS -jar $CLI_JAR $@
+

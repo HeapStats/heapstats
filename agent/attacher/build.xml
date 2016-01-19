@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!--
+     Copyright (C) 2015 Yasumasa Suenaga
+ 
+     This program is free software; you can redistribute it and/or
+     modify it under the terms of the GNU General Public License
+     as published by the Free Software Foundation; either version 2
+     of the License, or (at your option) any later version.
+ 
+     This program is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+ 
+     You should have received a copy of the GNU General Public License
+     along with this program; if not, write to the Free Software
+     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+     02110-1301, USA.
+-->
+ 
+<project name="attacher" default="all">
+ 
+  <property name="src.dir" value="src"/>
+  <property name="build.dir" value="build"/>
+  <property name="dist.dir" value="dist"/>
+  <property environment="env"/>
+ 
+  <target name="compile">
+    <javac srcdir="${src.dir}" destdir="${build.dir}" source="6" target="6"
+                        debug="on" classpath="${env.JAVA_HOME}/lib/tools.jar"
+                                                    includeantruntime="false"/>
+  </target>
+ 
+  <target name="clean">
+    <delete dir="${dist.dir}" includes="*.jar"/>
+    <delete dir="${build.dir}/jp" includeEmptyDirs="true"/>
+  </target>
+ 
+  <target name="jar" depends="compile">
+    <jar destfile="${dist.dir}/heapstats-attacher.jar">
+      <zipfileset dir="${build.dir}" excludes=".keep"/>
+    </jar>
+  </target>
+ 
+  <target name="all" depends="jar"/>
+
+</project>
+

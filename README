@@ -1,0 +1,78 @@
+HeapStats
+===================
+
+HeapStats is Java troubleshooting tool.
+This tool is composed of three programs:
+
+* Agent
+ * HeapStats JVMTI agent.
+* Analyzer
+ * HeapStats GUI analyzer.
+* CLI
+ * HeapStats commandline analyzer.
+
+
+## Agent ##
+
+You can attach HeapStats agent as below:
+
+* -agentlib:heapstats[=conf]
+ * If libheapstats.so is located at LD_LIBRARY_PATH, you can pass -agentlib option to java.
+* -agentpath:/path/to/heapstats[=conf]
+ * Pass libheapstats.so with -agentpath option to java.
+* heapstats-attacher
+ * If you want to attach HeapStats to existed process, you can use this script.
+
+If you want to set specified configuration, you can pass it to -agentlib/-agentpath after "=config file" .
+
+
+## Analyzer ##
+
+HeapStats analyzer is GUI application for analyzing HeapStats SnapShot.
+You can run it on any GUI environment which has JavaFX runtime.
+
+HeapStats analyzer supports JDP autodiscovery and Error Report Transmission.
+
+### JDP ###
+
+The automatic discovery function of JDP (Java Discovery Protocol) can be
+enabled by the following JVM options.
+
+```
+-Dcom.sun.management.jmxremote.port=<JMX port>
+-Dcom.sun.management.jmxremote.authenticate=<true|false>
+-Dcom.sun.management.jmxremote.ssl=<true|false>
+-Dcom.sun.management.jmxremote.autodiscovery=true
+```
+
+The JDP function sends a packet at regular intervals: 5 seconds by default.
+If analyzer can NOT receive a JDP packet from a monitoring JVM instance,
+the instance's name displayed on the screen will become orange.
+
+### Error Report Transmission ###
+
+OracleJDK can provide a real-time detection of JVM crash, but OpenJDK does
+NOT support it. In addition, OracleJDK needs to be run with the following options.
+
+```
+-XX:+TransmitErrorReport
+-XX:ErrorReportServer=<address>:<port (4711 by default)>
+```
+
+## CLI ##
+
+If you want to analyze HeapStats SnapShot on CUI environment, you can use HeapStats CLI.
+
+  $ java -jar heapstats-cli.jar
+
+If you want to see details, please run heapstats-cli with -help .
+
+## Contributing ##
+
+Contribution are most welcome! HeapStats is an open source project under the GNU General Public License, version 2.
+See [CONTRIBUTING.md](https://github.com/HeapStats/heapstats/blob/master/CONTRIBUTING.md) for details.
+
+## License ##
+
+ [GNU General Public License, version 2](https://github.com/HeapStats/heapstats/blob/master/COPYING)
+

@@ -1,0 +1,253 @@
+2016-01-18  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2793: MIB object type name fix
+
+2016-01-14  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2784: Fix configure to search /etc/alternatives/java correctly.
+	* Bug 2785: Change the order of searching JDK path at configure
+
+2016-01-12  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2783: Add CLI kick shell
+
+2016-01-03  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2772: IllegalStateException occurred when exclude filter was set in CLI.
+
+2015-12-14  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2771: Fix spec to copy heapstats-cli.jar correctly.
+
+2015-12-11  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2736: The Excluded classes are listed in "Class Search".
+	* Bug 2770: Analyzer and CLI binary packages should have prefix directory.
+
+2015-12-10  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2706: [REDO] Cannot show all Japanese chars in SnapShot Data tab.
+
+2015-12-09  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2745: The "Clear" button in "Class Search" does not clear the text field and list.
+	* Bug 2716: Displaying duplicate Exclude filter.
+	* Bug 2718: Title of "About" dialog.
+	* Bug 2708: Popup is hidden by mouse cursor in Resource Data tab.
+	* Bug 2706: Cannot show all Japanese chars in SnapShot Data tab.
+	* Bug 2705: Thread Recorder does not exist in menu bar.
+	* Bug 2704: There are words that is not localized into Japanese.
+	* Bug 2703: The Log Detail Data which time is out of specified range can be selected.
+	* Bug 2694: HeapStats process is not finished with [File]-[Exit] menu.
+	* Bug 2698: Charts are not cleared when another file is opened.
+	* Bug 2699: Class Search is not work properly.
+	* Bug 2715: TextBox which shows opened file should be read-only.
+	* Bug 2735: Whether the exclude filter is applied or not.
+
+2015-11-05  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2692: Incorrect option name in heapstats.conf
+
+2015-10-23  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2681: Update INSTALL and README
+
+2015-10-22  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2680: Add RPM package for HeapStats CLI
+
+2015-10-22  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2516: Update RPM SPEC file.
+
+2015-10-14  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2111: Bug 2111: [FX ANALYZER] Migrate HeapStats Analyzer to JavaFX.
+	  https://github.com/HeapStats/HeapStatsFXAnalyzer/tree/2.0-beta3
+	* Bug 2107: [ADD CONFIG] Add switch to collect reference data
+
+2015-08-26  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2597: Enable building sub-components.
+
+2015-08-24  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2593: [Performance] Replace memcpy operation of Thread Recorder to CPU instructions.
+	* Bug 2594: [Performance] Change mutex operation of Thread Recorder to spin-lock.
+	* Bug 2595: Resolve warning messages reported by compiler.
+
+2015-08-01  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2515: Reconstruct source tree.
+	* Bug 2549: Location of binaries should follow FHS.
+
+2015-07-17  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2536: "make install" should create symlink to libheapstats.so
+	* Bug 2538: [REFACTORING] AgentAttacher improvements
+
+2015-07-16  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2529: HeapStats agent should hook InstanceClassLoaderKlass after JDK-6964458
+
+2015-07-16  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2526: [REFACTORING] Clarify protected objects by a lock.
+
+2015-07-15  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2525: Prevent configure error on running rpmbuild without binutils-devel
+	* Contributed-by: Shinya TAKEBAYASHI <omoikanenomikoto@gmail.com>
+
+2015-07-14  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2506: [REFACTORING] Clean up coding style
+
+2015-07-09  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2504: Add preparation of mbean test.
+
+2015-07-06  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2424: [REFACTORING] Aggregate all configuration to TConfiguration
+	* Bug 2425: Add JMX method to get configuration list
+	* Bug 2435: Conscious of configuration value type in JMX interface.
+
+2015-06-19  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2452: JVM may crash when CMS GC occurs frequently.
+
+2015-06-19 Shinji Takao  <takao.shinji@lab.ntt.co.jp>
+
+	* Bug 2457: Cannot build HeapStats 2.0 agent on RHEL6
+
+2015-06-11 KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2113: [ADD CONFIG] Add switch to output HeapStats messages to logfile.
+
+2015-05-28 KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2382: Update Private Enterprise Number for SNMP.
+
+2015-05-24  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2378: JVM may crashe when class unload is occurred.
+
+2015-05-22  KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2376: Deadlock finder needs to return a original _thread_state to HotSpot VM.
+
+2015-05-22  KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2366: Change the calculation of g1StartAddr to create the bitmap for G1GC
+
+2015-05-22  KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2365: Adapt to G1GC hook points of JDK-8049421
+
+2015-05-19  KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2371: Fix attacher's message.
+
+2015-05-19  KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2370: Change bugs.sun.com to bugs.openjdk.java.net
+
+2015-05-17  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2110: [ONLINE ANALYSIS] Add JMX interface to collect snapshot data at online.
+
+2015-05-04  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2295: [ARM PORT] Support NEON instruction set.
+
+2015-05-02  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2291: Cannot build HeapStats 2.0 agent on Raspbian
+	* Bug 2234: [ARM PORT] Adapt to Cortex-A processor.
+
+2015-04-30  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2315: [THREAD STAT] Build failed after Bug 2109
+	* Bug 2322: [THREAD STAT] Build failed after Bug 2109 (auto variable)
+
+2015-04-29  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2109: [THREAD STAT] Collect thread scheduling data.
+
+2015-03-01  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2244: [REFACTORING] Implement JVMTI event callback chain.
+
+2015-02-28  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2108: [ADD CONFIG] Add switch to work deadlock detector.
+
+2015-02-17  KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2224: Improve the checking for std::regex.
+
+2015-02-17  KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2223: Cannot build HeapStats agent on Debian i386.
+
+2015-01-30  KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2114: Default values are different from binary-builtin and heapstats.conf.
+
+2015-01-29  KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2170: Cannot build HeapStats agent with old gcc, which does not support option "-msse4".
+
+2015-01-07  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2074: Migrate from PCRE to C++11 regex.
+
+2015-01-06  KUBOTA Yuji  <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2166: For some environment, forward declaring struct stat is not possible.
+
+2015-01-06  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2106: [ARM PORT] Port to ARM
+
+2015-01-05  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2105: [ARM PORT][REFACTORING] overrideFunc should be more simply.
+	* Bug 2134: [REGRESSION] JVM crash when HeapStats live attach is invoked.
+	* Bug 2149: [ONLINE ANALYSIS][REFACTORING] Refactoring TConfiguration.
+	* Bug 2156: [ONLINE ANALYSIS][REFACTORING] Refactoring global variables.
+
+2014-11-28  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2012: [REFACTORING] Separate HeapStats configuration structures from util.cpp
+	* Bug 2013: [REFACTORING] Integrate all optimized binaries.
+	* Bug 2017: JVM may crash with taking interval SnapShot when concurrent GC is occurred.
+
+2014-10-20  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 2011: [REFACTORING] Separate logging facility from util.hpp
+
+2014-10-16  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 1985: [REFACTORING] libtool removal
+	* Bug 1995: [REFACTORING] Separate CPU-optimized code.
+
+2014-09-07  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 1908: [REFACTORING] Separate feature to controll override functions from oopUtil.cpp
+	* Bug 1909: [REFACTORING] Move HS version collector to TJvmInfo.
+	* Bug 1910: [REFACTORING] Move SafePoint check to deadlock detector.
+
+2014-09-05  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 1906: [REFACTORING] Separate feature gathering variables/functions from oopUtil.cpp
+
+2014-09-02  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Bug 1902: [REFACTORING] Porting HotSpot version handler from 1.0
+
+2014-07-24  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	* Sync HeapStats 1.1
+

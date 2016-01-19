@@ -1,0 +1,83 @@
+#! /bin/sh
+
+
+#### Default values
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+
+HEAPSTATAS_DEFAULT_AGENT="$libdir/libheapstats.so"
+ATTACHER_PATH="$libexecdir/heapstats-attacher.jar"
+
+if [ -z "$JAVA_HOME" ]; then
+  JAVA_HOME="@JDK_DIR@"
+fi
+
+# Attach library path and argument string for attach library.
+ATTACH_LIB=""
+ATTACH_OPT=""
+
+
+#### Functions
+
+# Print help.
+function printHelp() {
+  echo "$0 /path/to/libheapstats [args]"
+  echo
+  echo "  - /path/to/libheapstats:"
+  echo "       Absolute path to libheapstats.so ."
+  echo "       If you set \"heapstats\", attacher try to load default"
+  echo "        HeapStats agent."
+  echo
+  echo "  - args:"
+  echo "       Arguments of libheapstats."
+  echo "       You can set configuration file to it."
+}
+
+# Check and parse argument.
+function checkArgument() {
+  if test $# -ge 1 ; then
+    if test "$1" = "heapstats" ; then
+      ATTACH_LIB="$HEAPSTATAS_DEFAULT_AGENT"
+    elif test -n "$1" ; then
+      ATTACH_LIB="$1"
+    fi
+  else
+    return 1
+  fi
+  
+  if test $# -ge 2 && test -n "$2" ; then
+    ATTACH_OPT="$2"
+  fi
+  return 0
+}
+
+
+#### Main routine
+
+checkArgument $*
+if test $? -ne 0 ; then
+  printHelp
+  exit 1
+fi
+
+# Check attacher.
+if test ! -f "$ATTACHER_PATH" ; then
+  echo "Attacher not found."
+  exit 2
+fi
+
+# Check tools.jar
+if [ ! -e "$JAVA_HOME/lib/tools.jar" ]; then
+  echo "tools.jar not found."
+  exit 3
+fi
+
+export CLASSPATH="$ATTACHER_PATH:$JAVA_HOME/lib/tools.jar"
+
+# Execute attacher.
+"$JAVA_HOME/bin/java" jp.co.ntt.oss.heapstats.attacher.AgentAttacher "$ATTACH_LIB" "$ATTACH_OPT"
+exit $?
+

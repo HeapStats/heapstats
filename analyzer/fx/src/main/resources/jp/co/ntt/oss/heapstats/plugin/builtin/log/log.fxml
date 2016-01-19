@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (C) 2014-2015 Yasumasa Suenaga
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="Log" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.log.LogController">
+    <children>
+        <Button layoutX="14.5" layoutY="14.0" mnemonicParsing="false" onAction="#onLogFileClick" text="%button.log" AnchorPane.leftAnchor="14.5" AnchorPane.topAnchor="14.0" />
+        <TextField fx:id="logFileList" editable="false" layoutX="114.0" layoutY="14.0" prefHeight="23.0" prefWidth="674.0" AnchorPane.leftAnchor="114.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="14.0" />
+        <Label layoutX="26.0" layoutY="49.0" text="%label.range" AnchorPane.leftAnchor="26.0" AnchorPane.topAnchor="49.0" />
+        <ComboBox fx:id="startCombo" layoutX="83.0" layoutY="45.0" prefHeight="23.0" prefWidth="176.0" AnchorPane.leftAnchor="83.0" AnchorPane.topAnchor="45.0" />
+        <Label layoutX="270.0" layoutY="49.0" text="-" AnchorPane.leftAnchor="270.0" AnchorPane.topAnchor="49.0" />
+        <ComboBox fx:id="endCombo" layoutX="292.0" layoutY="45.0" prefHeight="23.0" prefWidth="176.0" AnchorPane.leftAnchor="292.0" AnchorPane.topAnchor="45.0" />
+        <Button fx:id="okBtn" layoutX="752.0" layoutY="45.0" mnemonicParsing="false" onAction="#onOkClick" text="OK" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="45.0" />
+        <TabPane layoutX="14.0" layoutY="80.0" prefHeight="508.0" prefWidth="773.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="80.0">
+            <tabs>
+                <Tab text="%tab.resource">
+                    <content>
+                        <fx:include fx:id="logResources" source="tabs/resources.fxml" />
+                    </content>
+                </Tab>
+                <Tab text="%tab.detail">
+                    <content>
+                        <fx:include fx:id="logDetails" source="tabs/details.fxml" />
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+</AnchorPane>

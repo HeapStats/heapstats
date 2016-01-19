@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (C) 2015 Yasumasa Suenaga
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="423.0" prefWidth="473.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.jvmlive.mbean.HeapStatsMBeanController">
+    <children>
+        <Label fx:id="headerLabel" layoutX="14.25" layoutY="14.0" text="Label" />
+        <Label layoutX="14.0" layoutY="134.0" text="%dialog.config.current" />
+        <TableView fx:id="configTable" layoutY="64.0" prefHeight="259.0" prefWidth="473.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="164.0">
+            <columns>
+                <TableColumn fx:id="keyColumn" editable="false" prefWidth="147.0" text="config" />
+                <TableColumn fx:id="valueColumn" editable="true" prefWidth="290.0" text="value" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+        <Button layoutX="165.0" layoutY="129.0" mnemonicParsing="false" onAction="#onCommitBtnClick" text="%dialog.config.commit" />
+        <Button layoutX="14.0" layoutY="40.0" maxWidth="142.0" minWidth="142.0" mnemonicParsing="false" onAction="#onInvokeResourceBtnClick" prefWidth="142.0" text="%dialog.config.invokeResource" />
+        <Button layoutX="164.5" layoutY="40.0" maxWidth="142.0" minWidth="142.0" mnemonicParsing="false" onAction="#onInvokeAllBtnClick" prefWidth="142.0" text="%dialog.config.invokeArciveLog" />
+        <Button layoutX="314.0" layoutY="40.0" maxWidth="142.0" minWidth="142.0" mnemonicParsing="false" onAction="#onInvokeSnapShotBtnClick" prefWidth="142.0" text="%dialog.config.invokeSnapshot" />
+        <Button layoutX="14.0" layoutY="78.0" maxWidth="142.0" minWidth="142.0" mnemonicParsing="false" onAction="#onGetResourceBtnClick" prefWidth="142.0" text="%dialog.config.getResourceLog" />
+        <Button layoutX="165.0" layoutY="78.0" mnemonicParsing="false" onAction="#onGetSnapShotBtnClick" prefHeight="28.0" prefWidth="142.0" text="%dialog.config.getSnapShot" />
+    </children>
+</AnchorPane>

@@ -1,0 +1,99 @@
+/*
+ * Copyright (C) 2014-2015 Yasumasa Suenaga
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+/* 
+    Created on : 2014/05/11, 23:24:38
+    Author     : Yasumasa Suenaga
+*/
+
+
+/* Java CPU */
+#javaCPUChart .default-color0.chart-series-area-fill { -fx-fill: red; }
+#javaCPUChart .default-color0.chart-series-area-line { -fx-stroke: red; }
+#javaCPUChart .default-color0.area-legend-symbol { -fx-background-color: red, white; }
+
+#javaCPUChart .default-color1.chart-series-area-fill { -fx-fill: blue; }
+#javaCPUChart .default-color1.chart-series-area-line { -fx-stroke: blue; }
+#javaCPUChart .default-color1.area-legend-symbol { -fx-background-color: blue, white; }
+
+
+/* System CPU */
+#systemCPUChart .default-color0.chart-series-area-fill { -fx-fill: red; }
+#systemCPUChart .default-color0.chart-series-area-line { -fx-stroke: red; }
+#systemCPUChart .default-color0.area-legend-symbol { -fx-background-color: red, white; }
+
+#systemCPUChart .default-color1.chart-series-area-fill { -fx-fill: limegreen; }
+#systemCPUChart .default-color1.chart-series-area-line { -fx-stroke: limegreen; }
+#systemCPUChart .default-color1.area-legend-symbol { -fx-background-color: limegreen, white; }
+
+#systemCPUChart .default-color2.chart-series-area-fill { -fx-fill: blue; }
+#systemCPUChart .default-color2.chart-series-area-line { -fx-stroke: blue; }
+#systemCPUChart .default-color2.area-legend-symbol { -fx-background-color: blue, white; }
+
+#systemCPUChart .default-color3.chart-series-area-fill { -fx-fill: orange; }
+#systemCPUChart .default-color3.chart-series-area-line { -fx-stroke: orange; }
+#systemCPUChart .default-color3.area-legend-symbol { -fx-background-color: orange, white; }
+
+#systemCPUChart .default-color4.chart-series-area-fill { -fx-fill: violet; }
+#systemCPUChart .default-color4.chart-series-area-line { -fx-stroke: violet; }
+#systemCPUChart .default-color4.area-legend-symbol { -fx-background-color: violet, white; }
+
+#systemCPUChart .default-color5.chart-series-area-fill { -fx-fill: skyblue; }
+#systemCPUChart .default-color5.chart-series-area-line { -fx-stroke: skyblue; }
+#systemCPUChart .default-color5.area-legend-symbol { -fx-background-color: skyblue, white; }
+
+#systemCPUChart .default-color6.chart-series-area-fill { -fx-fill: bisque; }
+#systemCPUChart .default-color6.chart-series-area-line { -fx-stroke: bisque; }
+#systemCPUChart .default-color6.area-legend-symbol { -fx-background-color: bisque, white; }
+
+#systemCPUChart .default-color7.chart-series-area-fill { -fx-fill: darkgray; }
+#systemCPUChart .default-color7.chart-series-area-line { -fx-stroke: darkgray; }
+#systemCPUChart .default-color7.area-legend-symbol { -fx-background-color: darkgray, white; }
+
+#systemCPUChart .default-color8.chart-series-area-fill { -fx-fill: maroon; }
+#systemCPUChart .default-color8.chart-series-area-line { -fx-stroke: maroon; }
+#systemCPUChart .default-color8.area-legend-symbol { -fx-background-color: maroon, white; }
+
+
+/* Java Native Memory */
+
+/* VSZ */
+#javaMemoryChart .default-color0.chart-series-line { -fx-stroke: blue; }
+#javaMemoryChart .default-color0.chart-line-symbol { -fx-background-color: blue, white; }
+
+/* RSS */
+#javaMemoryChart .default-color1.chart-series-line { -fx-stroke: red; }
+#javaMemoryChart .default-color1.chart-line-symbol { -fx-background-color: red, white; }
+
+
+/* Safepoint chart */
+#safepointChart .chart-series-line { -fx-stroke: limegreen; }
+
+/* Safepoint time chart */
+#safepointTimeChart .chart-series-line { -fx-stroke: orange; }
+
+
+/* Thread chart */
+#threadChart .chart-series-line { -fx-stroke: red; }
+
+/* Monitor chart */
+#monitorChart .chart-series-line { -fx-stroke: blue; }
+
+/* Archive file area */
+#logArea { -fx-font-family: monospace ; }
+

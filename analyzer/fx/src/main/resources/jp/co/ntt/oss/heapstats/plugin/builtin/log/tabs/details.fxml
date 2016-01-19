@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (C) 2015 Nippon Telegraph and Telephone Corporation
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@/jp/co/ntt/oss/heapstats/plugin/builtin/log/log.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogDetailsController">
+    <children>
+        <Label text="%label.archive.time" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+        <ComboBox fx:id="archiveCombo" onAction="#onArchiveComboAction" prefWidth="176.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="6.0" />
+        <TableView fx:id="archiveEnvInfoTable" prefHeight="200.0" prefWidth="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
+            <columns>
+                <TableColumn fx:id="archiveKeyColumn" editable="false" prefWidth="200.0" sortable="false" />
+                <TableColumn fx:id="archiveVauleColumn" editable="false" prefWidth="500.0" sortable="false" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+        <Label text="%label.archive.file" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="250.0" />
+        <ComboBox fx:id="fileCombo" onAction="#onFileComboAction" prefWidth="176.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="247.0" />
+        <TextArea id="logArea" fx:id="logArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="280.0" />
+    </children>
+</AnchorPane>

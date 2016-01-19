@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (C) 2014-2015 Yasumasa Suenaga
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@/jp/co/ntt/oss/heapstats/plugin/builtin/jvmlive/jvmlive.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.jvmlive.JVMLiveController">
+    <children>
+        <Label layoutX="14.0" layoutY="10.0" text="%main.label.jvmlist" />
+        <ListView fx:id="jvmList" layoutX="14.0" layoutY="35.0" prefHeight="552.0" prefWidth="335.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="35.0" />
+        <TableView fx:id="detailTable" layoutX="360.0" layoutY="35.0" prefHeight="323.0" prefWidth="427.0" AnchorPane.leftAnchor="360.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="35.0">
+            <columns>
+                <TableColumn fx:id="jdpKey" prefWidth="212.0" />
+                <TableColumn fx:id="jdpValue" prefWidth="182.0" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+        <Label layoutX="361.0" layoutY="368.0" text="%main.label.crashhistory" />
+        <ListView id="crashlist" fx:id="crashList" layoutX="360.0" layoutY="392.0" onMouseClicked="#onCrashHistoryClicked" prefHeight="195.0" prefWidth="427.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="360.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="392.0">
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem fx:id="detailsMenu" mnemonicParsing="false" onAction="#onDetailsMenuClicked" text="Details" />
+                        <MenuItem fx:id="saveMenu" mnemonicParsing="false" onAction="#onSaveMenuClicked" text="Save to File" />
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+        </ListView>
+    </children>
+</AnchorPane>

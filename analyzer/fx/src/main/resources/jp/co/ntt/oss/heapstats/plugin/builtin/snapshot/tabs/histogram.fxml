@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (C) 2015 Nippon Telegraph and Telephone Corporation
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<?import java.lang.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane dividerPositions="0.3" focusTraversable="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.tabs.HistogramController">
+    <items>
+        <AnchorPane>
+            <children>
+                <SplitPane dividerPositions="0.5" focusTraversable="true" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                        <AnchorPane>
+                            <children>
+                                <Label text="%label.exclude" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
+                                <Button mnemonicParsing="false" onAction="#onAddClick" prefWidth="60.0" text="%button.add" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="3.0" />
+                                <Button mnemonicParsing="false" onAction="#onHiddenFilterApply" prefWidth="60.0" text="%button.apply" AnchorPane.leftAnchor="163.0" AnchorPane.topAnchor="3.0" />
+                                <TableView fx:id="excludeTable" editable="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="33.0">
+                                    <columns>
+                                        <TableColumn fx:id="hideColumn" prefWidth="45.0" sortable="false" text="%table.column.hide" />
+                                        <TableColumn fx:id="excludeNameColumn" editable="false" prefWidth="150.0" text="%table.column.filtername" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                        <AnchorPane>
+                            <children>
+                                <Label text="%label.classsearch" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="3.0" />
+                                <TextField fx:id="searchText" onKeyReleased="#onSearchTextChanged" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="20.0" />
+                                <ListView fx:id="searchList" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="48.0" />
+                                <Button fx:id="selectFilterApplyBtn" mnemonicParsing="false" onAction="#onSelectFilterApply" text="%button.apply" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="55.0" />
+                                <Button mnemonicParsing="false" onAction="#onSelectFilterClear" text="%button.clear" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                            </children>
+                        </AnchorPane>
+                    </items>
+                </SplitPane>
+            </children>
+        </AnchorPane>
+        <AnchorPane>
+            <children>
+                <SplitPane dividerPositions="0.5" focusTraversable="true" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                        <StackPane prefHeight="150.0" prefWidth="200.0">
+                            <children>
+                                <StackedAreaChart fx:id="topNChart" animated="false" legendVisible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <xAxis>
+                                        <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
+                                    </xAxis>
+                                    <yAxis>
+                                        <NumberAxis fx:id="topNYAxis" autoRanging="false" label="MB" side="LEFT" />
+                                    </yAxis>
+                                </StackedAreaChart>
+                                <AnchorPane fx:id="topNChartAnchor" mouseTransparent="true" />
+                            </children>
+                        </StackPane>
+                        <AnchorPane>
+                            <children>
+                                <TableView fx:id="lastDiffTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <columns>
+                                        <TableColumn fx:id="colorColumn" editable="false" prefWidth="75.0" sortable="false" />
+                                        <TableColumn fx:id="classNameColumn" editable="false" prefWidth="75.0" text="%table.column.classname" />
+                                        <TableColumn fx:id="classLoaderColumn" editable="false" prefWidth="75.0" text="%table.column.classloader" />
+                                        <TableColumn fx:id="instanceColumn" editable="false" prefWidth="75.0" text="%table.column.instances" />
+                                        <TableColumn fx:id="totalSizeColumn" editable="false" prefWidth="75.0" text="%table.column.totalsize" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </items>
+                </SplitPane>
+            </children>
+        </AnchorPane>
+    </items>
+</SplitPane>

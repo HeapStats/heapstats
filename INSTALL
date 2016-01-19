@@ -1,0 +1,64 @@
+--------------------------------------------------------------------------------
+                                 HOW TO INSTALL
+--------------------------------------------------------------------------------
+
+1. Pre-Requirements
+
+  Agent:
+    - Java SE 6 or later
+    - Maven2 or later
+    - Ant 1.8 or later
+    - pcre-devel 6 or later
+    - net-snmp-devel 5.3 or later
+    - binutils 2 or later
+
+  Analyzer:
+    - Java SE 8 or later
+    - JavaFX 8 or later
+    - Maven2 or later
+
+
+2. How to build
+
+  (1) run configure with path to JDK 8
+
+       $ ./configure --with-jdk=/path/to/JDK8
+
+      *HINT* HeapStats Analyzer requires JavaFX 8.
+             OpenJDK does not provide JavaFX. Open source JavaFX is OpenJFX.
+             If you have not installed OpenJFX, You have to pass OracleJDK8.
+
+  (2) run make
+       $ make
+
+      *HINT* If your machine does not have JavaFX (OpenJFX or OracleJDK),
+             you can avoid to build HeapStats Analyzer as below:
+
+               $ make agent  <- build HeapStats agent
+               $ make mbean  <- build HeapStats MBean
+               $ mvn -am -pl analyzer/cli package  <- build HeapStats CLI
+
+
+  configure script provides several useful options.
+  If you want to know them, please run "./configure --help" .
+
+
+3. How to install
+
+  run make install
+    $ su -
+    # cd /path/to/source
+    # make install
+
+
+4. How to rpmbuild
+
+  SPEC for rpmbuild is located at specs/heapstats.spec .
+  This SPEC can build two RPMs:
+
+    * heapstats:     HeapStats agent and MBean.
+    * heapstats-cli: HeapStats CLI.
+ 
+--------------------------------------------------------------------------------
+
+

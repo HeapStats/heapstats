@@ -1,0 +1,79 @@
+/*
+ * Copyright (C) 2015 Takashi Aoe
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+.rect-unused {
+    -fx-fill: transparent;
+}
+
+.rect-run {
+    -fx-fill: darkorange;
+    -fx-background-color: darkorange;
+}
+
+.rect-monitorwait {
+    -fx-fill: fuchsia;
+    -fx-background-color: fuchsia;
+}
+
+.rect-monitorcontended {
+    -fx-fill: limegreen;
+    -fx-background-color: limegreen;
+}
+
+.rect-threadsleep {
+    -fx-fill: lightskyblue;
+    -fx-background-color: lightskyblue;
+}
+
+.rect-park {
+    -fx-fill: mediumpurple;
+    -fx-background-color: mediumpurple;
+}
+
+.rect-filewrite {
+    -fx-fill: gold;
+    -fx-background-color: gold;
+}
+
+.rect-fileread {
+    -fx-fill: forestgreen;
+    -fx-background-color: forestgreen;
+}
+
+.rect-socketwrite {
+    -fx-fill: orangered;
+    -fx-background-color: orangered;
+}
+
+.rect-socketread {
+    -fx-fill: olive;
+    -fx-background-color: olive;
+}
+
+.rect-fusion {
+    -fx-fill: darkgray;
+    -fx-background-color: darkgray;
+}
+
+.rect-range-selected {
+    -fx-background-color: lime;
+}
+
+.rect-range-unselected {
+    -fx-background-color: grey;
+}
