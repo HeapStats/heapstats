@@ -31,3 +31,6 @@ agent/attacher/heapstats-attacher
 *.lai
 *.class
 Makefile
+
+# icedtea (mercurial)
+.hg*
