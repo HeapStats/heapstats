@@ -1,3 +1,7 @@
+2016-01-22  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2797: Sync docs and config between icedtea and github
+
 2016-01-18  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2793: MIB object type name fix

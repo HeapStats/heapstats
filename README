@@ -5,16 +5,23 @@ HeapStats is Java troubleshooting tool.
 This tool is composed of three programs:
 
 * Agent
- * HeapStats JVMTI agent.
+ * HeapStats JVMTI agent for gathering JavaVM runtime information continuously.
 * Analyzer
- * HeapStats GUI analyzer.
+ * HeapStats JavaFX GUI analyzer for analysis by various graphs.
 * CLI
  * HeapStats commandline analyzer.
 
 
 ## Agent ##
 
-You can attach HeapStats agent as below:
+Agent gathers various JavaVM runtime information such as the below.
+
+ * The amount of instances and total size per live object
+ * The reference relationship of objects on Java Heap
+ * Thread condition
+ * and more. More detailed is [here](http://icedtea.classpath.org/wiki/HeapStats/information_to_be_collected).
+
+You can attach HeapStats agent by any way of the following:
 
 * -agentlib:heapstats[=conf]
  * If libheapstats.so is located at LD_LIBRARY_PATH, you can pass -agentlib option to java.
@@ -66,6 +73,10 @@ If you want to analyze HeapStats SnapShot on CUI environment, you can use HeapSt
   $ java -jar heapstats-cli.jar
 
 If you want to see details, please run heapstats-cli with -help .
+
+## Documents and Binaries ##
+
+More detailed documents and released binaries are hosted at icedtea community: http://icedtea.classpath.org/wiki/HeapStats
 
 ## Contributing ##
 
