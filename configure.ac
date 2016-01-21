@@ -210,7 +210,7 @@ else
     else
       AC_MSG_CHECKING([for JAVA_HOME using java in /etc/alternatives])
       # We have to get JDK directory, not JRE directory
-      JDK_DIR=`$READLINK -f "$JAVA_PATH" 2>$DEVNULL | $SED -e 's:\(jre/\|\)bin/java::g' 2>$DEVNULL`
+      JDK_DIR=`$READLINK -f "$JAVA_PATH" 2>$DEVNULL | $SED -e 's:/\(jre/\|\)bin/java::g' 2>$DEVNULL`
       if test $? -ne 0 ; then
         JDK_DIR=""
         AC_MSG_RESULT([not found])
