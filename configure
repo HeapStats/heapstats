@@ -8179,7 +8179,7 @@ fi
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for JAVA_HOME using java in /etc/alternatives" >&5
 $as_echo_n "checking for JAVA_HOME using java in /etc/alternatives... " >&6; }
       # We have to get JDK directory, not JRE directory
-      JDK_DIR=`$READLINK -f "$JAVA_PATH" 2>$DEVNULL | $SED -e 's:\(jre/\|\)bin/java::g' 2>$DEVNULL`
+      JDK_DIR=`$READLINK -f "$JAVA_PATH" 2>$DEVNULL | $SED -e 's:/\(jre/\|\)bin/java::g' 2>$DEVNULL`
       if test $? -ne 0 ; then
         JDK_DIR=""
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found" >&5
