@@ -1,6 +1,7 @@
 2016-01-23  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2795:  [REFACTORING] Aggregate static variables for SNMP to trapSender.*
+	* Bug 2802: Agent build failed on Raspbian Jessie.
 
 2016-01-22  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 

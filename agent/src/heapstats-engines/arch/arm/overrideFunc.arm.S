@@ -3,7 +3,7 @@
  * \brief This file is used to override JVM inner function for ARM.<br>
  *        The function defined this file, used with v-table hook.<br>
  *        So in this file, all function is written by only assembler and macro.
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -105,7 +105,8 @@ header##_override_func_##ary_idx: ;                \
                                                    \
   /* Call callback function. */ ;                  \
   DO_JMP_TO_CALLBACK(header, ary_idx, oop_arg_idx) \
-  b .LORIGINAL_FUNC;
+  b .LORIGINAL_FUNC;                               \
+  .ltorg;
 
 #define OVERRIDE_DEFINE_WITHOUT_PERMCHECK(header, ary_idx, oop_arg_idx) \
   OVERRIDE_FUNC_DEFINE(header, ary_idx)            \
