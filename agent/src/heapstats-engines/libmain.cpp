@@ -74,25 +74,6 @@ int flagRunning = 0;
 long TElapsedTimer::clock_ticks = sysconf(_SC_CLK_TCK);
 
 /*!
- * \brief Datetime of agent initialization.
- */
-unsigned long int TTrapSender::initializeTime;
-
-/*!
- * \brief Mutex for TTrapSender.<br>
- * <br>
- * This mutex used in below process.<br>
- *   - TTrapSender::TTrapSender @ trapSender.hpp<br>
- *     To initialize SNMP trap section.<br>
- *   - TTrapSender::~TTrapSender @ trapSender.hpp<br>
- *     To finalize SNMP trap section.<br>
- *   - TTrapSender::sendTrap @ trapSender.hpp<br>
- *     To change SNMP trap section and send SNMP trap.<br>
- */
-pthread_mutex_t TTrapSender::senderMutex =
-    PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
-
-/*!
  * \brief Path of load configuration file at agent initialization.
  */
 char *loadConfigPath = NULL;

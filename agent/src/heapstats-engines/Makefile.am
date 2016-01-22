@@ -8,7 +8,8 @@ BASE_SOURCE     = libmain.cpp util.cpp symbolFinder.cpp vmStructScanner.cpp   \
                   archiveMaker.cpp cmdArchiver.cpp fsUtil.cpp                 \
                   jniZipArchiver.cpp deadlockFinder.cpp vmVariables.cpp       \
                   vmFunctions.cpp configuration.cpp overrider.cpp             \
-                  threadRecorder.cpp heapstatsMBean.cpp overrideFunc.S
+                  threadRecorder.cpp heapstatsMBean.cpp overrideFunc.S        \
+                  trapSender.cpp
 
 if USE_PCRE
   BASE_SOURCE += pcreRegex.cpp
