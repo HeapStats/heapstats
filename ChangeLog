@@ -1,6 +1,11 @@
+2016-01-23  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2795:  [REFACTORING] Aggregate static variables for SNMP to trapSender.*
+
 2016-01-22  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 2797: Sync docs and config between icedtea and github
+	* Bug 2801: Remove extra / to build debuginfo correctly
 
 2016-01-18  Yasumasa Suenaga <yasuenag@gmail.com>
 

@@ -127,7 +127,7 @@ am__libheapstats_engine_avx_2_0_so_SOURCES_DIST = libmain.cpp util.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
 	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
-	heapstatsMBean.cpp overrideFunc.S pcreRegex.cpp \
+	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/x86/x86BitMapMarker.cpp \
 	arch/x86/sse2/sse2BitMapMarker.cpp \
 	arch/x86/avx/avxBitMapMarker.cpp
@@ -162,6 +162,7 @@ am__objects_2 = libheapstats_engine_avx_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_avx_2_0_so-threadRecorder.$(OBJEXT) \
 	libheapstats_engine_avx_2_0_so-heapstatsMBean.$(OBJEXT) \
 	libheapstats_engine_avx_2_0_so-overrideFunc.$(OBJEXT) \
+	libheapstats_engine_avx_2_0_so-trapSender.$(OBJEXT) \
 	$(am__objects_1)
 am__dirstamp = $(am__leading_dot)dirstamp
 @AVX_TRUE@@X86_TRUE@am_libheapstats_engine_avx_2_0_so_OBJECTS =  \
@@ -184,7 +185,7 @@ am__libheapstats_engine_neon_2_0_so_SOURCES_DIST = libmain.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
 	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
-	heapstatsMBean.cpp overrideFunc.S pcreRegex.cpp \
+	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/arm/armBitMapMarker.cpp \
 	arch/arm/neon/neonBitMapMarker.cpp
 @USE_PCRE_TRUE@am__objects_3 = libheapstats_engine_neon_2_0_so-pcreRegex.$(OBJEXT)
@@ -218,6 +219,7 @@ am__objects_4 = libheapstats_engine_neon_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_neon_2_0_so-threadRecorder.$(OBJEXT) \
 	libheapstats_engine_neon_2_0_so-heapstatsMBean.$(OBJEXT) \
 	libheapstats_engine_neon_2_0_so-overrideFunc.$(OBJEXT) \
+	libheapstats_engine_neon_2_0_so-trapSender.$(OBJEXT) \
 	$(am__objects_3)
 @ARM_TRUE@am_libheapstats_engine_neon_2_0_so_OBJECTS =  \
 @ARM_TRUE@	$(am__objects_4) \
@@ -238,7 +240,7 @@ am__libheapstats_engine_none_2_0_so_SOURCES_DIST = libmain.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
 	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
-	heapstatsMBean.cpp overrideFunc.S pcreRegex.cpp \
+	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/arm/armBitMapMarker.cpp arch/x86/x86BitMapMarker.cpp
 @USE_PCRE_TRUE@am__objects_5 = libheapstats_engine_none_2_0_so-pcreRegex.$(OBJEXT)
 am__objects_6 = libheapstats_engine_none_2_0_so-libmain.$(OBJEXT) \
@@ -271,6 +273,7 @@ am__objects_6 = libheapstats_engine_none_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_none_2_0_so-threadRecorder.$(OBJEXT) \
 	libheapstats_engine_none_2_0_so-heapstatsMBean.$(OBJEXT) \
 	libheapstats_engine_none_2_0_so-overrideFunc.$(OBJEXT) \
+	libheapstats_engine_none_2_0_so-trapSender.$(OBJEXT) \
 	$(am__objects_5)
 @ARM_FALSE@@X86_TRUE@am_libheapstats_engine_none_2_0_so_OBJECTS =  \
 @ARM_FALSE@@X86_TRUE@	$(am__objects_6) \
@@ -293,7 +296,7 @@ am__libheapstats_engine_sse2_2_0_so_SOURCES_DIST = libmain.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
 	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
-	heapstatsMBean.cpp overrideFunc.S pcreRegex.cpp \
+	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/x86/x86BitMapMarker.cpp \
 	arch/x86/sse2/sse2BitMapMarker.cpp
 @USE_PCRE_TRUE@am__objects_7 = libheapstats_engine_sse2_2_0_so-pcreRegex.$(OBJEXT)
@@ -327,6 +330,7 @@ am__objects_8 = libheapstats_engine_sse2_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_sse2_2_0_so-threadRecorder.$(OBJEXT) \
 	libheapstats_engine_sse2_2_0_so-heapstatsMBean.$(OBJEXT) \
 	libheapstats_engine_sse2_2_0_so-overrideFunc.$(OBJEXT) \
+	libheapstats_engine_sse2_2_0_so-trapSender.$(OBJEXT) \
 	$(am__objects_7)
 @SSE2_TRUE@@X86_TRUE@am_libheapstats_engine_sse2_2_0_so_OBJECTS =  \
 @SSE2_TRUE@@X86_TRUE@	$(am__objects_8) \
@@ -347,7 +351,7 @@ am__libheapstats_engine_sse3_2_0_so_SOURCES_DIST = libmain.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
 	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
-	heapstatsMBean.cpp overrideFunc.S pcreRegex.cpp \
+	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/x86/x86BitMapMarker.cpp \
 	arch/x86/sse2/sse2BitMapMarker.cpp
 @USE_PCRE_TRUE@am__objects_9 = libheapstats_engine_sse3_2_0_so-pcreRegex.$(OBJEXT)
@@ -381,6 +385,7 @@ am__objects_10 = libheapstats_engine_sse3_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_sse3_2_0_so-threadRecorder.$(OBJEXT) \
 	libheapstats_engine_sse3_2_0_so-heapstatsMBean.$(OBJEXT) \
 	libheapstats_engine_sse3_2_0_so-overrideFunc.$(OBJEXT) \
+	libheapstats_engine_sse3_2_0_so-trapSender.$(OBJEXT) \
 	$(am__objects_9)
 @SSE3_TRUE@@X86_TRUE@am_libheapstats_engine_sse3_2_0_so_OBJECTS =  \
 @SSE3_TRUE@@X86_TRUE@	$(am__objects_10) \
@@ -401,7 +406,7 @@ am__libheapstats_engine_sse4_2_0_so_SOURCES_DIST = libmain.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
 	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
-	heapstatsMBean.cpp overrideFunc.S pcreRegex.cpp \
+	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/x86/x86BitMapMarker.cpp \
 	arch/x86/sse2/sse2BitMapMarker.cpp
 @USE_PCRE_TRUE@am__objects_11 = libheapstats_engine_sse4_2_0_so-pcreRegex.$(OBJEXT)
@@ -435,6 +440,7 @@ am__objects_12 = libheapstats_engine_sse4_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_sse4_2_0_so-threadRecorder.$(OBJEXT) \
 	libheapstats_engine_sse4_2_0_so-heapstatsMBean.$(OBJEXT) \
 	libheapstats_engine_sse4_2_0_so-overrideFunc.$(OBJEXT) \
+	libheapstats_engine_sse4_2_0_so-trapSender.$(OBJEXT) \
 	$(am__objects_11)
 @SSE4_TRUE@@X86_TRUE@am_libheapstats_engine_sse4_2_0_so_OBJECTS =  \
 @SSE4_TRUE@@X86_TRUE@	$(am__objects_12) \
@@ -592,6 +598,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+READLINK = @READLINK@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -658,7 +665,7 @@ BASE_SOURCE = libmain.cpp util.cpp symbolFinder.cpp \
 	jniZipArchiver.cpp deadlockFinder.cpp vmVariables.cpp \
 	vmFunctions.cpp configuration.cpp overrider.cpp \
 	threadRecorder.cpp heapstatsMBean.cpp overrideFunc.S \
-	$(am__append_1)
+	trapSender.cpp $(am__append_1)
 BASE_CXX_FLAGS = -I@JDK_DIR@/include -I@JDK_DIR@/include/linux -Wall        \
                   -Wno-strict-aliasing -fPIC @VMSTRUCTS_CXX_FLAGS@           \
                   @VMSTRUCTS_CXX_FLAGS@ -DDEFAULT_CONF_DIR=\"$(sysconfdir)\"
@@ -885,6 +892,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-symbolFinder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-threadRecorder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-timer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-trapSender.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-vmFunctions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-vmStructScanner.Po@am__quote@
@@ -916,6 +924,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-symbolFinder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-threadRecorder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-timer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-trapSender.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-vmFunctions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-vmStructScanner.Po@am__quote@
@@ -947,6 +956,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-symbolFinder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-threadRecorder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-timer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-trapSender.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-vmFunctions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-vmStructScanner.Po@am__quote@
@@ -978,6 +988,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-symbolFinder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-threadRecorder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-timer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-trapSender.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-vmFunctions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-vmStructScanner.Po@am__quote@
@@ -1009,6 +1020,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-symbolFinder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-threadRecorder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-timer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-trapSender.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-vmFunctions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-vmStructScanner.Po@am__quote@
@@ -1040,6 +1052,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-symbolFinder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-threadRecorder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-timer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-trapSender.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-vmFunctions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-vmStructScanner.Po@am__quote@
@@ -1580,6 +1593,20 @@ libheapstats_engine_avx_2_0_so-heapstatsMBean.obj: heapstatsMBean.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_avx_2_0_so-heapstatsMBean.obj `if test -f 'heapstatsMBean.cpp'; then $(CYGPATH_W) 'heapstatsMBean.cpp'; else $(CYGPATH_W) '$(srcdir)/heapstatsMBean.cpp'; fi`
 
+libheapstats_engine_avx_2_0_so-trapSender.o: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_avx_2_0_so-trapSender.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_avx_2_0_so-trapSender.Tpo -c -o libheapstats_engine_avx_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_avx_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_avx_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_avx_2_0_so-trapSender.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_avx_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+
+libheapstats_engine_avx_2_0_so-trapSender.obj: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_avx_2_0_so-trapSender.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_avx_2_0_so-trapSender.Tpo -c -o libheapstats_engine_avx_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_avx_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_avx_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_avx_2_0_so-trapSender.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_avx_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
+
 libheapstats_engine_avx_2_0_so-pcreRegex.o: pcreRegex.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_avx_2_0_so-pcreRegex.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_avx_2_0_so-pcreRegex.Tpo -c -o libheapstats_engine_avx_2_0_so-pcreRegex.o `test -f 'pcreRegex.cpp' || echo '$(srcdir)/'`pcreRegex.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_avx_2_0_so-pcreRegex.Tpo $(DEPDIR)/libheapstats_engine_avx_2_0_so-pcreRegex.Po
@@ -2042,6 +2069,20 @@ libheapstats_engine_neon_2_0_so-heapstatsMBean.obj: heapstatsMBean.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_neon_2_0_so-heapstatsMBean.obj `if test -f 'heapstatsMBean.cpp'; then $(CYGPATH_W) 'heapstatsMBean.cpp'; else $(CYGPATH_W) '$(srcdir)/heapstatsMBean.cpp'; fi`
 
+libheapstats_engine_neon_2_0_so-trapSender.o: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_neon_2_0_so-trapSender.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_neon_2_0_so-trapSender.Tpo -c -o libheapstats_engine_neon_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_neon_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_neon_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_neon_2_0_so-trapSender.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_neon_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+
+libheapstats_engine_neon_2_0_so-trapSender.obj: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_neon_2_0_so-trapSender.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_neon_2_0_so-trapSender.Tpo -c -o libheapstats_engine_neon_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_neon_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_neon_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_neon_2_0_so-trapSender.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_neon_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
+
 libheapstats_engine_neon_2_0_so-pcreRegex.o: pcreRegex.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_neon_2_0_so-pcreRegex.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_neon_2_0_so-pcreRegex.Tpo -c -o libheapstats_engine_neon_2_0_so-pcreRegex.o `test -f 'pcreRegex.cpp' || echo '$(srcdir)/'`pcreRegex.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_neon_2_0_so-pcreRegex.Tpo $(DEPDIR)/libheapstats_engine_neon_2_0_so-pcreRegex.Po
@@ -2489,6 +2530,20 @@ libheapstats_engine_none_2_0_so-heapstatsMBean.obj: heapstatsMBean.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='heapstatsMBean.cpp' object='libheapstats_engine_none_2_0_so-heapstatsMBean.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_none_2_0_so-heapstatsMBean.obj `if test -f 'heapstatsMBean.cpp'; then $(CYGPATH_W) 'heapstatsMBean.cpp'; else $(CYGPATH_W) '$(srcdir)/heapstatsMBean.cpp'; fi`
+
+libheapstats_engine_none_2_0_so-trapSender.o: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_none_2_0_so-trapSender.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_none_2_0_so-trapSender.Tpo -c -o libheapstats_engine_none_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_none_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_none_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_none_2_0_so-trapSender.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_none_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+
+libheapstats_engine_none_2_0_so-trapSender.obj: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_none_2_0_so-trapSender.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_none_2_0_so-trapSender.Tpo -c -o libheapstats_engine_none_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_none_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_none_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_none_2_0_so-trapSender.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_none_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
 
 libheapstats_engine_none_2_0_so-pcreRegex.o: pcreRegex.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_none_2_0_so-pcreRegex.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_none_2_0_so-pcreRegex.Tpo -c -o libheapstats_engine_none_2_0_so-pcreRegex.o `test -f 'pcreRegex.cpp' || echo '$(srcdir)/'`pcreRegex.cpp
@@ -2938,6 +2993,20 @@ libheapstats_engine_sse2_2_0_so-heapstatsMBean.obj: heapstatsMBean.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse2_2_0_so-heapstatsMBean.obj `if test -f 'heapstatsMBean.cpp'; then $(CYGPATH_W) 'heapstatsMBean.cpp'; else $(CYGPATH_W) '$(srcdir)/heapstatsMBean.cpp'; fi`
 
+libheapstats_engine_sse2_2_0_so-trapSender.o: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse2_2_0_so-trapSender.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse2_2_0_so-trapSender.Tpo -c -o libheapstats_engine_sse2_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse2_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_sse2_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_sse2_2_0_so-trapSender.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse2_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+
+libheapstats_engine_sse2_2_0_so-trapSender.obj: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse2_2_0_so-trapSender.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse2_2_0_so-trapSender.Tpo -c -o libheapstats_engine_sse2_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse2_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_sse2_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_sse2_2_0_so-trapSender.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse2_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
+
 libheapstats_engine_sse2_2_0_so-pcreRegex.o: pcreRegex.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse2_2_0_so-pcreRegex.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse2_2_0_so-pcreRegex.Tpo -c -o libheapstats_engine_sse2_2_0_so-pcreRegex.o `test -f 'pcreRegex.cpp' || echo '$(srcdir)/'`pcreRegex.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse2_2_0_so-pcreRegex.Tpo $(DEPDIR)/libheapstats_engine_sse2_2_0_so-pcreRegex.Po
@@ -3386,6 +3455,20 @@ libheapstats_engine_sse3_2_0_so-heapstatsMBean.obj: heapstatsMBean.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse3_2_0_so-heapstatsMBean.obj `if test -f 'heapstatsMBean.cpp'; then $(CYGPATH_W) 'heapstatsMBean.cpp'; else $(CYGPATH_W) '$(srcdir)/heapstatsMBean.cpp'; fi`
 
+libheapstats_engine_sse3_2_0_so-trapSender.o: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse3_2_0_so-trapSender.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse3_2_0_so-trapSender.Tpo -c -o libheapstats_engine_sse3_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse3_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_sse3_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_sse3_2_0_so-trapSender.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse3_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+
+libheapstats_engine_sse3_2_0_so-trapSender.obj: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse3_2_0_so-trapSender.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse3_2_0_so-trapSender.Tpo -c -o libheapstats_engine_sse3_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse3_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_sse3_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_sse3_2_0_so-trapSender.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse3_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
+
 libheapstats_engine_sse3_2_0_so-pcreRegex.o: pcreRegex.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse3_2_0_so-pcreRegex.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse3_2_0_so-pcreRegex.Tpo -c -o libheapstats_engine_sse3_2_0_so-pcreRegex.o `test -f 'pcreRegex.cpp' || echo '$(srcdir)/'`pcreRegex.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse3_2_0_so-pcreRegex.Tpo $(DEPDIR)/libheapstats_engine_sse3_2_0_so-pcreRegex.Po
@@ -3833,6 +3916,20 @@ libheapstats_engine_sse4_2_0_so-heapstatsMBean.obj: heapstatsMBean.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='heapstatsMBean.cpp' object='libheapstats_engine_sse4_2_0_so-heapstatsMBean.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse4_2_0_so-heapstatsMBean.obj `if test -f 'heapstatsMBean.cpp'; then $(CYGPATH_W) 'heapstatsMBean.cpp'; else $(CYGPATH_W) '$(srcdir)/heapstatsMBean.cpp'; fi`
+
+libheapstats_engine_sse4_2_0_so-trapSender.o: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse4_2_0_so-trapSender.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse4_2_0_so-trapSender.Tpo -c -o libheapstats_engine_sse4_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse4_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_sse4_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_sse4_2_0_so-trapSender.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse4_2_0_so-trapSender.o `test -f 'trapSender.cpp' || echo '$(srcdir)/'`trapSender.cpp
+
+libheapstats_engine_sse4_2_0_so-trapSender.obj: trapSender.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse4_2_0_so-trapSender.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse4_2_0_so-trapSender.Tpo -c -o libheapstats_engine_sse4_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse4_2_0_so-trapSender.Tpo $(DEPDIR)/libheapstats_engine_sse4_2_0_so-trapSender.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_sse4_2_0_so-trapSender.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse4_2_0_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
 
 libheapstats_engine_sse4_2_0_so-pcreRegex.o: pcreRegex.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse4_2_0_so-pcreRegex.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse4_2_0_so-pcreRegex.Tpo -c -o libheapstats_engine_sse4_2_0_so-pcreRegex.o `test -f 'pcreRegex.cpp' || echo '$(srcdir)/'`pcreRegex.cpp
