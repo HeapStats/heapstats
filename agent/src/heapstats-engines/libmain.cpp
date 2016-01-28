@@ -599,11 +599,9 @@ jint CommonInitialization(JavaVM *vm, jvmtiEnv **jvmti, char *options) {
 
   logger->flush();
 
-  /* Get now date and set time as agent init-time. */
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  TTrapSender::initializeTime =
-      (jlong)tv.tv_sec * 100 + (jlong)tv.tv_usec / 10000;
+  if (conf->SnmpSend()->get() && !TTrapSender::initialize()) {
+    return SNMP_SETUP_FAILED;
+  }
 
   /* Create thread instances that controlled snapshot trigger. */
   try {
@@ -680,6 +678,9 @@ JNIEXPORT void JNICALL Agent_OnUnload(JavaVM *vm) {
   /* Free allocated configuration file path string. */
   free(loadConfigPath);
   loadConfigPath = NULL;
+
+  /* Cleanup TTrapSender. */
+  TTrapSender::finalize();
 }
 
 /*!

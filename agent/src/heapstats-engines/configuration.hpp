@@ -291,6 +291,9 @@ class TConfiguration {
   /*!< SNMP trap community name. */
   TStringConfig *snmpComName;
 
+  /*!< NET-SNMP client library path. */
+  TStringConfig *snmpLibPath;
+
   /*!< Path of working directory for log archive. */
   TStringConfig *logDir;
 
@@ -443,6 +446,7 @@ class TConfiguration {
   TBooleanConfig *SnmpSend() { return snmpSend; }
   TStringConfig *SnmpTarget() { return snmpTarget; }
   TStringConfig *SnmpComName() { return snmpComName; }
+  TStringConfig *SnmpLibPath() { return snmpLibPath; }
   TStringConfig *LogDir() { return logDir; }
   TStringConfig *ArchiveCommand() { return archiveCommand; }
   TBooleanConfig *KillOnError() { return killOnError; }
@@ -526,6 +530,16 @@ class TConfiguration {
       *dest = (strcmp(val, "(NULL)") == 0) ? strdup("") : strdup(val);
     }
   }
+
+  static void setSnmpLibPath(TConfiguration *inst, char *val, char **dest) {
+    if (inst->isLoaded &&
+        ((val != NULL) && (*dest != NULL) && (strcmp(val, *dest) != 0))) {
+      throw "Cannot set snmp_libpath";
+    } else {
+      inst->ReadStringValue(inst, val, dest);
+    }
+  }
+
 };
 
 #endif  // CONFIGURATION_HPP

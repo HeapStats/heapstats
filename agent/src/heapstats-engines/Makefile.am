@@ -19,7 +19,7 @@ BASE_CXX_FLAGS  = -I@JDK_DIR@/include -I@JDK_DIR@/include/linux -Wall        \
                   -Wno-strict-aliasing -fPIC @VMSTRUCTS_CXX_FLAGS@           \
                   @VMSTRUCTS_CXX_FLAGS@ -DDEFAULT_CONF_DIR=\"$(sysconfdir)\"
 
-BASE_LD_FLAGS   = -shared @NET_SNMP_LIB_FLAGS@
+BASE_LD_FLAGS   = -shared
 
 BASE_CCAS_FLAGS = @CCASFLAGS@
 

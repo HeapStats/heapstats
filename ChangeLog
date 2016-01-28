@@ -1,3 +1,11 @@
+2016-03-15  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2794: Remove dependency on net-snmp-libs.
+
+2016-03-04 Shinji Takao  <takao.shinji@lab.ntt.co.jp>
+
+	* Bug 2796: Change default value: snmp_send to false.
+
 2016-03-05  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2870: JVM crash when oneway option is changed through JMX.

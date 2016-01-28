@@ -149,6 +149,45 @@
  */
 #define OID_METASPACEALERT OID_PEN ".6.0"
 
+/* Function type definition for NET-SNMP client library. */
+typedef netsnmp_log_handler *(*Tnetsnmp_register_loghandler)(int type, int pri);
+typedef void (*Tsnmp_sess_init)(netsnmp_session *);
+typedef netsnmp_pdu *(*Tsnmp_pdu_create)(int type);
+typedef void (*Tsnmp_free_pdu)(netsnmp_pdu *pdu);
+typedef int (*Tsnmp_close)(netsnmp_session *);
+typedef int (*Tsnmp_add_var)(netsnmp_pdu *, const oid *, size_t,
+                                                    char, const char *);
+typedef netsnmp_session *(*Tsnmp_add)(netsnmp_session *,
+                                      struct netsnmp_transport_s *,
+                                      int (*fpre_parse) (netsnmp_session *,
+                                                   struct netsnmp_transport_s
+                                                   *, void *, int),
+                                      int (*fpost_parse) (netsnmp_session *,
+                                                          netsnmp_pdu *, int));
+typedef netsnmp_transport *(*Tnetsnmp_transport_open_client)
+                                     (const char* application, const char* str);
+typedef netsnmp_transport *(*Tnetsnmp_tdomain_transport)(const char *str,
+                                                    int local,
+                                                    const char *default_domain);
+typedef int (*Tsnmp_send)(netsnmp_session *, netsnmp_pdu *);
+
+/*!
+ * \brief Structure for functions in NET-SNMP client library.
+ */
+typedef struct {
+  Tnetsnmp_register_loghandler   netsnmp_register_loghandler;
+  Tsnmp_sess_init                snmp_sess_init;
+  Tsnmp_pdu_create               snmp_pdu_create;
+  Tsnmp_free_pdu                 snmp_free_pdu;
+  Tsnmp_close                    snmp_close;
+  Tsnmp_add_var                  snmp_add_var;
+  Tsnmp_add                      snmp_add;
+  Tnetsnmp_transport_open_client netsnmp_transport_open_client;
+  Tnetsnmp_tdomain_transport     netsnmp_tdomain_transport;
+  Tsnmp_send                     snmp_send;
+} TNetSNMPFunctions;
+
+
 /*!
  * \brief This class is send trap to SNMP Manager.
  */
@@ -171,6 +210,17 @@ class TTrapSender {
    *     To change SNMP trap section and send SNMP trap.<br>
    */
   static pthread_mutex_t senderMutex;
+
+  /*!
+   * \brief TTrapSender initialization.
+   * \return true if succeeded.
+   */
+  static bool initialize(void);
+
+  /*!
+   * \brief TTrapSender global finalization.
+   */
+  static void finalize(void);
 
   /*!
    * \brief TrapSender constructor.
@@ -238,6 +288,19 @@ class TTrapSender {
 
  private:
   /*!
+   * \brief Flags whether libnetsnmp.so is loaded.
+   */
+  static bool is_netsnmp_loaded;
+  /*!
+   * \brief Library handle of libnetsnmp.so .
+   */
+  static void *libnetsnmp_handle;
+  /*!
+   * \brief Functions in NET-SNMP client library.
+   */
+  static TNetSNMPFunctions netSnmpFuncs;
+
+  /*!
    * \brief SNMP session information.
    */
   netsnmp_session session;
@@ -250,6 +313,13 @@ class TTrapSender {
    * \brief Allocated string set for PDU.
    */
   std::set<char *> strSet;
+
+  /*!
+   * \brief Get function address from libnetsnmp.
+   * \return true if succeeded.
+   */
+  static bool getProcAddressFromNetSNMPLib(void);
+
 };
 
 #endif  //_TRAP_SENDER_H

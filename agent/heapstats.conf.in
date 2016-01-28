@@ -59,6 +59,8 @@ thread_record_iotracer=@IOTRACER@
 snmp_send=false
 snmp_target=localhost
 snmp_comname=public
+# You can check library path with `net-snmp-config --netsnmp-libs`
+snmp_libpath=@LIBNETSNMP_PATH@
 
 logdir=./tmp
 archive_command=/usr/bin/zip %archivefile% -jr %logdir%

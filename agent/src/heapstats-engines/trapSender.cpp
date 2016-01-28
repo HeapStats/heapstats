@@ -24,6 +24,7 @@
 #include <net-snmp/net-snmp-config.h>
 #include <net-snmp/net-snmp-includes.h>
 #include <pthread.h>
+#include <dlfcn.h>
 
 #include "globals.hpp"
 #include "util.hpp"
@@ -49,6 +50,50 @@ unsigned long int TTrapSender::initializeTime;
 pthread_mutex_t TTrapSender::senderMutex =
                                 PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
 
+/*!
+ * \brief Flags whether libnetsnmp.so is loaded.
+ */
+bool TTrapSender::is_netsnmp_loaded = false;
+
+/*!
+ * \brief Library handle of libnetsnmp.so .
+ */
+void * TTrapSender::libnetsnmp_handle = NULL;
+
+/*!
+ * \brief Functions in NET-SNMP client library.
+ */
+TNetSNMPFunctions TTrapSender::netSnmpFuncs;
+
+
+/*!
+ * \brief TTrapSender initialization.
+ * \return true if succeeded.
+ */
+bool TTrapSender::initialize(void) {
+  /* Get now date and set time as agent init-time. */
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  TTrapSender::initializeTime =
+      (jlong)tv.tv_sec * 100 + (jlong)tv.tv_usec / 10000;
+
+  /* Load functions from libnetsnmp */
+  if (!getProcAddressFromNetSNMPLib()) {
+    return false;
+  }
+
+  return true;
+}
+
+/*!
+ * \brief TTrapSender global finalization.
+ */
+void TTrapSender::finalize(void) {
+  /* Unload library */
+  if (libnetsnmp_handle != NULL) {
+    dlclose(libnetsnmp_handle);
+  }
+}
 
 /*!
  * \brief TrapSender constructor.
@@ -61,7 +106,8 @@ TTrapSender::TTrapSender(int snmp, char *pPeer, char *pCommName, int port) {
   /* Lock to use in multi-thread. */
   ENTER_PTHREAD_SECTION(&senderMutex) {
     /* Disable NETSNMP logging. */
-    netsnmp_register_loghandler(NETSNMP_LOGHANDLER_NONE, LOG_EMERG);
+    netSnmpFuncs.netsnmp_register_loghandler(
+                               NETSNMP_LOGHANDLER_NONE, LOG_EMERG);
 
     /* If snmp target is illegal. */
     if (pPeer == NULL) {
@@ -70,7 +116,7 @@ TTrapSender::TTrapSender(int snmp, char *pPeer, char *pCommName, int port) {
     } else {
       /* Initialize session. */
       memset(&session, 0, sizeof(netsnmp_session));
-      snmp_sess_init(&session);
+      netSnmpFuncs.snmp_sess_init(&session);
       session.version = snmp;
       session.peername = strdup(pPeer);
       session.remote_port = port;
@@ -78,7 +124,7 @@ TTrapSender::TTrapSender(int snmp, char *pPeer, char *pCommName, int port) {
       session.community_len = (pCommName != NULL) ? strlen(pCommName) : 0;
 
       /* Make a PDU */
-      pPdu = snmp_pdu_create(SNMP_MSG_TRAP2);
+      pPdu = netSnmpFuncs.snmp_pdu_create(SNMP_MSG_TRAP2);
     }
   }
   /* Unlock to use in multi-thread. */
@@ -96,10 +142,10 @@ TTrapSender::~TTrapSender(void) {
 
     /* Free SNMP pdu. */
     if (pPdu != NULL) {
-      snmp_free_pdu(pPdu);
+      netSnmpFuncs.snmp_free_pdu(pPdu);
     }
     /* Close and free SNMP session. */
-    snmp_close(&session);
+    netSnmpFuncs.snmp_close(&session);
   }
   /* Unlock to use in multi-thread. */
   EXIT_PTHREAD_SECTION(&senderMutex)
@@ -171,7 +217,7 @@ int TTrapSender::addValue(oid id[], int len, const char *pValue, char type) {
   }
 
   /* Append variable. */
-  int error = snmp_add_var(pPdu, id, len, type, pStr);
+  int error = netSnmpFuncs.snmp_add_var(pPdu, id, len, type, pStr);
 
   /* Failure append variables. */
   if (error) {
@@ -208,15 +254,17 @@ int TTrapSender::sendTrap(void) {
 
   /* Open session. */
 #ifdef HAVE_NETSNMP_TRANSPORT_OPEN_CLIENT
-  netsnmp_session *sess = snmp_add(
-        &session, netsnmp_transport_open_client("snmptrap", session.peername),
-        NULL, NULL);
+  netsnmp_session *sess = netSnmpFuncs.snmp_add(
+        &session, netSnmpFuncs.netsnmp_transport_open_client(
+                                        "snmptrap", session.peername),
+                                                                  NULL, NULL);
 #else
   char target[256];
   snprintf(target, sizeof(target), "%s:%d", session.peername,
              session.remote_port);
-  netsnmp_session *sess = snmp_add(
-        &session, netsnmp_tdomain_transport(target, 0, "udp"), NULL, NULL);
+  netsnmp_session *sess = netSnmpFuncs.snmp_add(
+        &session, netSnmpFuncs.netsnmp_tdomain_transport(target, 0, "udp"),
+                                                                  NULL, NULL);
 #endif
 
   /* If failure open session. */
@@ -231,15 +279,15 @@ int TTrapSender::sendTrap(void) {
   }
 
   /* Send trap. */
-  int success = snmp_send(sess, pPdu);
+  int success = netSnmpFuncs.snmp_send(sess, pPdu);
 
   /* Clean up after send trap. */
-  snmp_close(sess);
+  netSnmpFuncs.snmp_close(sess);
 
   /* If failure send trap. */
   if (!success) {
     /* Free PDU. */
-    snmp_free_pdu(pPdu);
+    netSnmpFuncs.snmp_free_pdu(pPdu);
     logger->printWarnMsg("Send SNMP trap failed!");
   }
 
@@ -272,6 +320,54 @@ void TTrapSender::clearValues(void) {
   strSet.clear();
 
   /* Make a PDU. */
-  pPdu = snmp_pdu_create(SNMP_MSG_TRAP2);
+  pPdu = netSnmpFuncs.snmp_pdu_create(SNMP_MSG_TRAP2);
+}
+
+/*!
+ * \brief Get function address from libnetsnmp.
+ * \return true if succeeded.
+ */
+bool TTrapSender::getProcAddressFromNetSNMPLib(void) {
+  libnetsnmp_handle = dlopen(conf->SnmpLibPath()->get(), RTLD_NOW);
+
+  if (libnetsnmp_handle == NULL) {
+    logger->printCritMsg("Could not load libnetsnmp: %s", dlerror());
+    return false;
+  }
+
+  netSnmpFuncs.netsnmp_register_loghandler =
+                   (Tnetsnmp_register_loghandler)dlsym(
+                             libnetsnmp_handle, "netsnmp_register_loghandler");
+  netSnmpFuncs.snmp_sess_init = (Tsnmp_sess_init)dlsym(
+                                           libnetsnmp_handle, "snmp_sess_init");
+  netSnmpFuncs.snmp_pdu_create = (Tsnmp_pdu_create)dlsym(
+                                          libnetsnmp_handle, "snmp_pdu_create");
+  netSnmpFuncs.snmp_free_pdu = (Tsnmp_free_pdu)dlsym(
+                                            libnetsnmp_handle, "snmp_free_pdu");
+  netSnmpFuncs.snmp_close = (Tsnmp_close)dlsym(libnetsnmp_handle, "snmp_close");
+  netSnmpFuncs.snmp_add_var = (Tsnmp_add_var)dlsym(
+                                             libnetsnmp_handle, "snmp_add_var");
+  netSnmpFuncs.snmp_add = (Tsnmp_add)dlsym(libnetsnmp_handle, "snmp_add");
+  netSnmpFuncs.netsnmp_transport_open_client =
+                    (Tnetsnmp_transport_open_client)dlsym(
+                            libnetsnmp_handle, "netsnmp_transport_open_client");
+  netSnmpFuncs.netsnmp_tdomain_transport = (Tnetsnmp_tdomain_transport)dlsym(
+                                libnetsnmp_handle, "netsnmp_tdomain_transport");
+  netSnmpFuncs.snmp_send = (Tsnmp_send)dlsym(libnetsnmp_handle, "snmp_send");
+
+  if ((netSnmpFuncs.netsnmp_register_loghandler == NULL) ||
+      (netSnmpFuncs.snmp_sess_init == NULL) ||
+      (netSnmpFuncs.snmp_pdu_create == NULL) ||
+      (netSnmpFuncs.snmp_free_pdu == NULL) ||
+      (netSnmpFuncs.snmp_close == NULL) ||
+      (netSnmpFuncs.snmp_add_var == NULL) ||
+      (netSnmpFuncs.snmp_add == NULL) ||
+      (netSnmpFuncs.netsnmp_transport_open_client == NULL) ||
+      (netSnmpFuncs.snmp_send == NULL)) {
+    logger->printCritMsg("Could not load function(s) from libnetsnmp");
+    return false;
+  }
+
+  return true;
 }
 

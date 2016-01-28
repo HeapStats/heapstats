@@ -137,6 +137,9 @@ void TConfiguration::initializeConfig(const TConfiguration *src) {
     snmpComName =
         new TStringConfig(this, "snmp_comname", (char *)"public",
                           &setSnmpComName, (TStringConfig::TFinalizer) & free);
+    snmpLibPath =
+        new TStringConfig(this, "snmp_libpath", (char *)LIBNETSNMP_PATH,
+                          &setSnmpLibPath, (TStringConfig::TFinalizer) & free);
     logDir = new TStringConfig(this, "logdir", (char *)"./tmp",
                                &ReadStringValue,
                                (TStringConfig::TFinalizer) & free);
@@ -178,6 +181,7 @@ void TConfiguration::initializeConfig(const TConfiguration *src) {
     snmpSend = new TBooleanConfig(*src->snmpSend);
     snmpTarget = new TStringConfig(*src->snmpTarget);
     snmpComName = new TStringConfig(*src->snmpComName);
+    snmpLibPath = new TStringConfig(*src->snmpLibPath);
     logDir = new TStringConfig(*src->logDir);
     archiveCommand = new TStringConfig(*src->archiveCommand);
     killOnError = new TBooleanConfig(*src->killOnError);
@@ -215,6 +219,7 @@ void TConfiguration::initializeConfig(const TConfiguration *src) {
   configs.push_back(snmpSend);
   configs.push_back(snmpTarget);
   configs.push_back(snmpComName);
+  configs.push_back(snmpLibPath);
   configs.push_back(logDir);
   configs.push_back(archiveCommand);
   configs.push_back(killOnError);
@@ -542,6 +547,7 @@ void TConfiguration::printSetting(void) {
                        snmpSend->get() ? "true" : "false");
   logger->printInfoMsg("SNMP target = %s", snmpTarget->get());
   logger->printInfoMsg("SNMP community = %s", snmpComName->get());
+  logger->printInfoMsg("NET-SNMP client library path = %s", snmpLibPath->get());
 
   /* Output temporary log directory path. */
   logger->printInfoMsg("Temporary log directory = %s", logDir->get());
@@ -643,6 +649,11 @@ bool TConfiguration::validate(void) {
 
   /* SNMP check */
   if (snmpSend->get()) {
+    if (snmpLibPath->get() == NULL) {
+      logger->printWarnMsg("snmp_libpath must be set when snmp_send is set.");
+      result = false;
+    }
+
     if ((snmpTarget->get() == NULL) || (strlen(snmpTarget->get()) == 0)) {
       logger->printWarnMsg("snmp_target have to be set when snmp_send is set");
       result = false;

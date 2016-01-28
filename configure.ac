@@ -54,8 +54,6 @@ AC_CACHE_SAVE
 AC_CHECK_LIB([iberty], [main], [], [])
 AC_CHECK_LIB([bfd], [main], [],
   [AC_MSG_ERROR([BFD library was not found.])])
-AC_CHECK_LIB([netsnmp], [main], [],
-  [AC_MSG_ERROR([net-snmp library was not found.])])
 AC_CACHE_SAVE
 
 # Checks for common header files.
@@ -139,10 +137,6 @@ AC_CHECK_FUNCS([ syscall dl_iterate_phdr \
   madvise posix_fadvise munmap \
   gnu_get_libc_version gnu_get_libc_release ], [], \
   [AC_MSG_ERROR([Function was not found that need to test feature.])])
-AC_CHECK_FUNCS([netsnmp_transport_open_client],
-  [], [AC_CHECK_FUNCS([netsnmp_tdomain_transport], [],
-    [AC_MSG_ERROR([Function was not found in net-snmp library.])])
-  ])
 AC_CACHE_SAVE
 
 # set test macro state
@@ -300,18 +294,17 @@ AC_SUBST([VMSTRUCTS_CXX_FLAGS])
 
 # end VMStructs ----------------------------------------------------------------
 
-# get Net-SNMP-Config ----------------------------------------------------------
+# get default NET-SNMP client library path  ------------------------------------
+AC_PATH_PROGS([NET_SNMP_CFG_PATH], [net-snmp-config], [/bin:/sbin/:/usr/bin])
+LIBNETSNMP_PATH=`$NET_SNMP_CFG_PATH --netsnmp-libs | sed -e 's|^-L\(.\+\) -l\(.\+\)$|\1/lib\2.so|'`
 
-AC_PATH_PROGS([NET_SNMP_CFG_PATH], [net-snmp-config-x86_64 net-snmp-config], [net-snmp-config], 
-  [/bin:/sbin/:/usr/bin])
-
-NET_SNMP_LIB_FLAGS=`$NET_SNMP_CFG_PATH --agent-libs 2>$DEVNULL`
 if test $? -ne 0 ; then
-  AC_MSG_ERROR([Could not get LDFLAGS from net-snmp-cfg.])
+  AC_MSG_ERROR([Could not get path to libnetsnmp.so .])
 fi
-AC_SUBST([NET_SNMP_LIB_FLAGS])
 
-# end Net-SNMP-Config ----------------------------------------------------------
+AC_SUBST([LIBNETSNMP_PATH])
+AC_DEFINE_UNQUOTED([LIBNETSNMP_PATH], "$LIBNETSNMP_PATH")
+# end default NET-SNMP client library path  ------------------------------------
 
 # CPU optimization (x86 only) --------------------------------------------------
 if test x"$PROCESSOR_TYPE" = "xx86"; then
