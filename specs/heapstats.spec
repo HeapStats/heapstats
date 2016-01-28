@@ -14,7 +14,6 @@ Buildroot: /var/tmp/heapstats
 
 # Requires for running
 Requires: pcre >= 6
-Requires: net-snmp-libs >= 5.3
 
 # Requires for building
 BuildRequires: pcre-devel >= 6

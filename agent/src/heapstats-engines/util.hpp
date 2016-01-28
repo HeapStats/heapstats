@@ -156,6 +156,10 @@
  * \brief Configuration is not valid.
  */
 #define INVALID_CONFIGURATION 0x07
+/*!
+ * \brief SNMP setup failed.
+ */
+#define SNMP_SETUP_FAILED 0x08
 
 /*!
  * \brief This macro is notification catch signal to signal watcher thread.
