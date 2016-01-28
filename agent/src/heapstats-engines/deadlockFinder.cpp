@@ -1,7 +1,7 @@
 /*!
  * \file deadlockFinder.cpp
  * \brief This file is used by find deadlock.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -260,7 +260,7 @@ void JNICALL OnMonitorContendedEnterForDeadlock(jvmtiEnv *jvmti, JNIEnv *env,
   TMSecTime nowTime = (TMSecTime)getNowTimeSec();
 
   if (conf->SnmpSend()->get()) {
-    TDeadlockFinder::inst->sendSNMPTrap(nowTime, threadCnt);
+    TDeadlockFinder::inst->sendSNMPTrap(nowTime, threadCnt, threadName);
   }
 
   if (conf->TriggerOnLogLock()->get()) {
@@ -425,8 +425,10 @@ TDeadlockFinder::~TDeadlockFinder(void) { /* none. */ }
  * \brief Send SNMP trap which contains deadlock information.
  * \param nowTime The time of deadlock occurred.
  * \param threadCnt Number of threads which are related to deadlock.
+ * \param name Thread name of deadlock occurred.
  */
-void TDeadlockFinder::sendSNMPTrap(TMSecTime nowTime, int threadCnt) {
+void TDeadlockFinder::sendSNMPTrap(TMSecTime nowTime,
+                                        int threadCnt, const char *name) {
   /* Trap OID. */
   char trapOID[50] = OID_DEADLOCKALERT;
   oid OID_ALERT_DATE[] = {SNMP_OID_HEAPALERT, 1};
@@ -456,7 +458,7 @@ void TDeadlockFinder::sendSNMPTrap(TMSecTime nowTime, int threadCnt) {
                     SNMP_VAR_TYPE_COUNTER32);
 
     /* Set thread name. */
-    sender.addValue(OID_DEAD_NAME, OID_LENGTH(OID_DEAD_NAME), threadName,
+    sender.addValue(OID_DEAD_NAME, OID_LENGTH(OID_DEAD_NAME), name,
                     SNMP_VAR_TYPE_STRING);
 
     /* Send trap. */

@@ -1,3 +1,7 @@
+2016-01-29  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2817: Incorrect thread name in deadlock alert SNMP trap.
+
 2016-01-23  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2795:  [REFACTORING] Aggregate static variables for SNMP to trapSender.*

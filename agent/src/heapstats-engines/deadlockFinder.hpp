@@ -1,7 +1,7 @@
 /*!
  * \file deadlockFinder.hpp
  * \brief This file is used by find deadlock.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -148,8 +148,9 @@ class TDeadlockFinder : public TAgentThread {
    * \brief Send SNMP trap which contains deadlock information.
    * \param nowTime The time of deadlock occurred.
    * \param threadCnt Number of threads which are related to deadlock.
+   * \param name Thread name of deadlock occurred.
    */
-  void sendSNMPTrap(TMSecTime nowTime, int threadCnt);
+  void sendSNMPTrap(TMSecTime nowTime, int threadCnt, const char *name);
 
   /*!
    * \brief Check deadlock.
