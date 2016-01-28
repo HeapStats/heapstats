@@ -148,8 +148,9 @@ class TDeadlockFinder : public TAgentThread {
    * \brief Send SNMP trap which contains deadlock information.
    * \param nowTime The time of deadlock occurred.
    * \param threadCnt Number of threads which are related to deadlock.
+   * \param name Thread name of deadlock occurred.
    */
-  void sendSNMPTrap(TMSecTime nowTime, int threadCnt);
+  void sendSNMPTrap(TMSecTime nowTime, int threadCnt, const char *name);
 
   /*!
    * \brief Check deadlock.
