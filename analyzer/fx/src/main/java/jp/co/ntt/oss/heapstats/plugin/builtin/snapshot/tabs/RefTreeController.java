@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,6 +44,9 @@ import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -93,7 +96,7 @@ public class RefTreeController implements Initializable, MouseListener {
     private ObjectProperty<SnapShotHeader> currentSnapShotHeader;
 
     private LongProperty currentObjectTag;
-    
+
     private ResourceBundle resource;
 
     private void buildTab() {
@@ -293,13 +296,17 @@ public class RefTreeController implements Initializable, MouseListener {
      */
     @FXML
     private void onOkClick(ActionEvent event) {
-        
+
         if ((currentSnapShotHeader.get() == null)
-                || !currentSnapShotHeader.get().hasReferenceData()
                 || (currentObjectTag.get() == -1)){
             return;
+        } else if (!currentSnapShotHeader.get().hasReferenceData()) {
+            // Version 1.0.x or "collect_reftree=false" do not have reftree data
+            Alert dialog = new Alert(AlertType.ERROR, resource.getString("reftree.nodata"), ButtonType.OK);
+            dialog.show();
+            return;
         }
-        
+
         mxCell cell = (mxCell) graph.getDefaultParent();
         List<Object> removeCells = new ArrayList<>();
 
