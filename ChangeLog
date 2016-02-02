@@ -1,3 +1,7 @@
+2016-02-02  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2833: Improve the versioning by maven
+
 2016-02-01  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 2828: Warn if chosen snapshot do not have reference tree data
