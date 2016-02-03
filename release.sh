@@ -26,14 +26,17 @@ DATE=$(LANG=C date "+%Y-%m-%d")
 read -p "Is release date: ${DATE} ? (y/n) > " _check_date
 if [[ ${_check_date} != "y" && ${_check_date} != "Y" ]]; then
   read -p "Enter release date (YYYY-MM-DD) > " DATE
+  # simple verification to use `date`
   if [[ ! ${DATE} =~ [2-9][0-9][0-9][0-9]\-[0-1][0-9]\-[0-3][0-9] ]]; then
     echo "Enter correct date as YYYY-MM-DD"
     exit 1
   fi
+  # if wrong format, return error by `date`
   DATE=$(LANG=C date --date=${DATE} "+%Y-%m-%d")
 fi
 
 # Input new version
+# show current version by project.version from pom.xml
 CURRENT_VERSION=`sed -n 's#^\s\+<version>\(.\+\)</version>#\1#p' pom.xml`
 echo "Current version is ${CURRENT_VERSION}"
 read -p "Enter release version > " VERSION
@@ -44,7 +47,15 @@ fi
 
 # analyzer
 ## pom
+### parent has 1 version element
 sed -i -e "/^\s\+<version>/s#${CURRENT_VERSION}#${VERSION}#g" pom.xml
+### children have some version elements
+CHILDREN=($(find ./*/ -name "pom.xml" -type f))
+for child in ${CHILDREN[@]}; do
+  # replace version number between <parent> and </parent>
+  LINE=$(sed -n "/parent/=" ${child} | tr '\n' ',')
+  sed -i -e "${LINE:0:$((${#LINE}-1))}s#${CURRENT_VERSION}#${VERSION}#g" ${child}
+done
 ## Dialog
 sed -i -e "/Version/s#text=\"Version\s.\+\"#text=\"Version ${VERSION}\"#g" analyzer/fx/src/main/resources/jp/co/ntt/oss/heapstats/aboutDialog.fxml
 
@@ -73,8 +84,9 @@ sed -i "${LINE}i\* ${SPECDATE} ${AUTHOR}\n- Bump to ${VERSION}" ${SPECFILE}
 sed -i "1i${DATE}  ${AUTHOR}\n\n\t\* Bump to ${VERSION}\n" ChangeLog
 
 # NEWS
+## Add template
 sed -i "1iNew in release ${VERSION} (${DATE})\n\n* Fix some bugs\n" NEWS
-## Edit to add more detailed history
+## ... and edit to add more detailed history
 read -p "Press ENTER to edit NEWS ..."
 if [ -z ${EDITOR+x} ]; then
   vim NEWS
