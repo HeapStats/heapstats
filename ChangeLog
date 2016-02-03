@@ -1,3 +1,7 @@
+2016-02-03  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2840: Support maven 3.0 and 2.2
+
 2016-02-02  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 2833: Improve the versioning by maven
