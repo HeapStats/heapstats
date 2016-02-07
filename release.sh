@@ -68,6 +68,8 @@ autoconf
 # heapstats.spec
 SPECFILE=specs/heapstats.spec
 sed -i -e "/Version:/s#[0-9]\.[0-9]\.[0-9]#${VERSION}#g" ${SPECFILE}
+## heapstats-cli distribution
+sed -i -e "/heapstats-cli-${CURRENT_VERSION}/s#${CURRENT_VERSION}#${VERSION}#g" ${SPECFILE}
 ## Copyright
 YEAR=$(LANG=C date "+%Y")
 TO_YEAR=`sed -n 's#^Copyright\s(C)\s2011-\(.\+\)\sNippon.\+#\1#p' ${SPECFILE}`

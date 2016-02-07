@@ -1,3 +1,7 @@
+2016-02-09  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 2844: Add the release change of heapstats-2.0.1
+
 2016-02-03  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 2840: Support maven 3.0 and 2.2
