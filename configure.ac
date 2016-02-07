@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.59])
-AC_INIT([heapstats_agent], [2.0.0], [heapstats@icedtea.classpath.org])
+AC_INIT([HeapStats], [2.0.1], [heapstats@icedtea.classpath.org])
 m4_include([m4/compiler-opto])
 AC_DEFINE([HEAPSTATS_MAJOR_VERSION], ["2.0"])
 AC_CONFIG_SRCDIR([./agent/src])
