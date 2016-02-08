@@ -36,7 +36,7 @@
                 <Font size="36.0" />
             </font>
         </Label>
-        <Label layoutX="263.0" layoutY="63.0" text="Version 2.0">
+        <Label layoutX="263.0" layoutY="63.0" text="Version 2.0.trunk">
             <font>
                 <Font size="24.0" />
             </font>
