@@ -1,5 +1,10 @@
 2016-02-09  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
+	* Bug 2846: Fix typo in ReferenceTree Tab
+	* Contributed-by: n-agetsu <norito.agetsuma@gmail.com>
+
+2016-02-09  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
 	* Bug 2844: Add the release change of heapstats-2.0.1
 	* Bug 2845: Set version to 2.0.trunk
 
