@@ -598,6 +598,8 @@ JNIEXPORT jboolean JNICALL
   if (!env->ExceptionOccurred()) {
     if (new_conf.validate()) {
       conf->merge(&new_conf);
+      logger->printInfoMsg("Configuration has been changed through JMX.");
+      conf->printSetting();
       result = JNI_TRUE;
     } else {
       raiseException(env, "java/lang/IllegalArgumentException",
