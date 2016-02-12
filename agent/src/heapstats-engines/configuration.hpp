@@ -1,7 +1,7 @@
 /*!
  * \file configuration.hpp
  * \brief This file treats HeapStats configuration.
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -468,6 +468,8 @@ class TConfiguration {
   void initializeConfig(const TConfiguration *src);
 
   /* Setters */
+  static void setLogLevel(TConfiguration *inst, TLogLevel val, TLogLevel *dest);
+
   static void setOnewayBooleanValue(TConfiguration *inst, bool val,
                                     bool *dest) {
     if (inst->isLoaded && !(*dest) && val) {

@@ -1,7 +1,7 @@
 /*!
  * \file configuration.cpp
  * \brief This file treats HeapStats configuration.
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -99,7 +99,7 @@ void TConfiguration::initializeConfig(const TConfiguration *src) {
                                             &setOnewayBooleanValue);
     triggerOnLogLock = new TBooleanConfig(this, "trigger_on_loglock", true);
     rankLevel = new TIntConfig(this, "rank_level", 5);
-    logLevel = new TLogLevelConfig(this, "loglevel", INFO);
+    logLevel = new TLogLevelConfig(this, "loglevel", INFO, &setLogLevel);
     order = new TRankOrderConfig(this, "rank_order", DELTA);
     alertPercentage = new TIntConfig(this, "alert_percentage", 50);
     heapAlertPercentage = new TIntConfig(this, "javaheap_alert_percentage", 95);
@@ -770,3 +770,10 @@ bool TConfiguration::isSupportSignal(char const *sigName) {
 
   return false;
 }
+
+void TConfiguration::setLogLevel(TConfiguration *inst,
+                                 TLogLevel val, TLogLevel *dest) {
+  *dest = val;
+  logger->setLogLevel(val);
+}
+
