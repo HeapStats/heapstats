@@ -1,6 +1,7 @@
 2016-02-13  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug2847: LogLevel cannot change through JMX.
+	* Bug2848: Show new configuration when it changed through JMX.
 
 2016-02-09  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 

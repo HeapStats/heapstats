@@ -1,7 +1,7 @@
 /*!
  * \file heapstatsMBean.cpp
  * \brief JNI implementation for HeapStatsMBean.
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -598,6 +598,8 @@ JNIEXPORT jboolean JNICALL
   if (!env->ExceptionOccurred()) {
     if (new_conf.validate()) {
       conf->merge(&new_conf);
+      logger->printInfoMsg("Configuration has been changed through JMX.");
+      conf->printSetting();
       result = JNI_TRUE;
     } else {
       raiseException(env, "java/lang/IllegalArgumentException",
