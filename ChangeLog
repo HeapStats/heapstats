@@ -1,3 +1,7 @@
+2016-02-22  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2857: NPE occurs when user choose multiple exclude filter.
+
 2016-02-13  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug2847: LogLevel cannot change through JMX.
