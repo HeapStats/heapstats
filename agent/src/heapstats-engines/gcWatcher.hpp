@@ -1,7 +1,7 @@
 /*!
  * \file gcWatcher.hpp
  * \brief This file is used to take snapshot when finish garbage collection.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -74,6 +74,8 @@ class TGCWatcher : public TAgentThread {
     this->pJvmInfo->setFullGCFlag(isFullGC);
     return isFullGC;
   };
+
+  using TAgentThread::start;
 
   /*!
    * \brief Make and begin Jthread.

@@ -132,12 +132,17 @@ class TDeadlockFinder : public TAgentThread {
    */
   static void setCapabilities(jvmtiCapabilities *capabilities, bool isOnLoad);
 
+  using TAgentThread::start;
+
   /*!
    * \brief Make and begin Jthread.
    * \param jvmti [in] JVMTI environment object.
    * \param env   [in] JNI environment object.
    */
   void start(jvmtiEnv *jvmti, JNIEnv *env);
+
+  using TAgentThread::notify;
+
   /*!
    * \brief Notify occurred deadlock to this thread from other thread.
    * \param aTime [in] Time of occurred deadlock.
