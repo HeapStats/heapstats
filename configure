@@ -8082,10 +8082,14 @@ if test "${with_jdk+set}" = set; then :
 fi
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for JAVA_HOME using configure arguments" >&5
-$as_echo_n "checking for JAVA_HOME using configure arguments... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for JAVA_HOME using configure arguments and environment (\$JAVA_HOME)" >&5
+$as_echo_n "checking for JAVA_HOME using configure arguments and environment (\$JAVA_HOME)... " >&6; }
 if test -n "$with_jdk"; then
   JDK_DIR="$with_jdk"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $JDK_DIR" >&5
+$as_echo "$JDK_DIR" >&6; }
+elif test -n "$JAVA_HOME"; then
+  JDK_DIR="$JAVA_HOME"
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $JDK_DIR" >&5
 $as_echo "$JDK_DIR" >&6; }
 else

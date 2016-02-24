@@ -1,3 +1,7 @@
+2016-02-24  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2860: configure should regard $JAVA_HOME
+
 2016-02-22  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2857: NPE occurs when user choose multiple exclude filter.
