@@ -199,6 +199,9 @@ AC_MSG_CHECKING([for JAVA_HOME using configure arguments])
 if test -n "$with_jdk"; then
   JDK_DIR="$with_jdk"
   AC_MSG_RESULT($JDK_DIR)
+elif test -n "$JAVA_HOME"; then
+  JDK_DIR="$JAVA_HOME"
+  AC_MSG_RESULT($JDK_DIR)
 else
   AC_MSG_RESULT(none)
   AC_PATH_PROG([JAVA_PATH], [java], [], [/etc/alternatives])
