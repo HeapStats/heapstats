@@ -1,3 +1,7 @@
+2016-02-26  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2861: Avoid hiding overloaded virtual function warning.
+
 2016-02-24  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2860: configure should regard $JAVA_HOME
