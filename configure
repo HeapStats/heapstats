@@ -8088,6 +8088,10 @@ if test -n "$with_jdk"; then
   JDK_DIR="$with_jdk"
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $JDK_DIR" >&5
 $as_echo "$JDK_DIR" >&6; }
+elif test -n "$JAVA_HOME"; then
+  JDK_DIR="$JAVA_HOME"
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $JDK_DIR" >&5
+$as_echo "$JDK_DIR" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: none" >&5
 $as_echo "none" >&6; }
