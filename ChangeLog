@@ -1,6 +1,7 @@
 2016-02-26  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2861: Avoid hiding overloaded virtual function warning.
+	* Bug 2862: Typo in header guard macro name.
 
 2016-02-24  Yasumasa Suenaga <yasuenag@gmail.com>
 
