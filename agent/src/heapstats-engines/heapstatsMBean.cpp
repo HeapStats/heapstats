@@ -522,74 +522,86 @@ JNIEXPORT jboolean JNICALL
 
   for (std::list<TConfigElementSuper *>::iterator itr = configs.begin();
        itr != configs.end(); itr++) {
-    if (strcmp(opt, (*itr)->getConfigName()) == 0) {
-      switch ((*itr)->getConfigDataType()) {
-        case BOOLEAN:
-          if (env->IsAssignableFrom(valueCls, boolCls)) {
-            jboolean newval = env->CallBooleanMethod(value, boolValue);
-            ((TBooleanConfig *)*itr)->set((bool)newval);
-          } else {
-            raiseException(env, "java/lang/ClassCastException",
-                           "Cannot convert new configuration to Boolean.");
-          }
-          break;
-        case INTEGER:
-          if (env->IsAssignableFrom(valueCls, integerCls)) {
-            jint newval = env->CallIntMethod(value, intValue);
-            ((TIntConfig *)*itr)->set(newval);
-          } else {
-            raiseException(env, "java/lang/ClassCastException",
-                           "Cannot convert new configuration to Integer.");
-          }
-          break;
-        case LONG:
-          if (env->IsAssignableFrom(valueCls, longCls)) {
-            jlong newval = env->CallLongMethod(value, longValue);
-            ((TLongConfig *)*itr)->set(newval);
-          } else {
-            raiseException(env, "java/lang/ClassCastException",
-                           "Cannot convert new configuration to Long.");
-          }
-          break;
-        case LOGLEVEL:
-          for (int Cnt = 0; Cnt < env->GetArrayLength(logLevelArray); Cnt++) {
-            if (env->IsSameObject(
-                    env->GetObjectArrayElement(logLevelArray, Cnt), value)) {
-              ((TLogLevelConfig *)*itr)->set((TLogLevel)Cnt);
-              break;
-            }
-          }
-          break;
-        case RANKORDER:
-          for (int Cnt = 0; Cnt < env->GetArrayLength(rankOrderArray); Cnt++) {
-            if (env->IsSameObject(
-                    env->GetObjectArrayElement(rankOrderArray, Cnt), value)) {
-              ((TRankOrderConfig *)*itr)->set((TRankOrder)Cnt);
-              break;
-            }
-          }
-          break;
-        default:  // String
-
-          if (value == NULL) {
-            ((TStringConfig *)*itr)->set(NULL);
-          } else if (env->IsAssignableFrom(
-                         valueCls, env->FindClass("java/lang/String"))) {
-            char *val = (char *)env->GetStringUTFChars((jstring)value, NULL);
-
-            if (val == NULL) {
-              raiseException(env, "java/lang/RuntimeException",
-                             "Cannot get string in JNI");
+    try{
+      if (strcmp(opt, (*itr)->getConfigName()) == 0) {
+        switch ((*itr)->getConfigDataType()) {
+          case BOOLEAN:
+            if (env->IsAssignableFrom(valueCls, boolCls)) {
+              jboolean newval = env->CallBooleanMethod(value, boolValue);
+              ((TBooleanConfig *)*itr)->set((bool)newval);
             } else {
-              ((TStringConfig *)*itr)->set(val);
-              env->ReleaseStringUTFChars((jstring)value, val);
+              raiseException(env, "java/lang/ClassCastException",
+                             "Cannot convert new configuration to Boolean.");
             }
+            break;
+          case INTEGER:
+            if (env->IsAssignableFrom(valueCls, integerCls)) {
+              jint newval = env->CallIntMethod(value, intValue);
+              ((TIntConfig *)*itr)->set(newval);
+            } else {
+              raiseException(env, "java/lang/ClassCastException",
+                             "Cannot convert new configuration to Integer.");
+            }
+            break;
+          case LONG:
+            if (env->IsAssignableFrom(valueCls, longCls)) {
+              jlong newval = env->CallLongMethod(value, longValue);
+              ((TLongConfig *)*itr)->set(newval);
+            } else {
+              raiseException(env, "java/lang/ClassCastException",
+                             "Cannot convert new configuration to Long.");
+            }
+            break;
+          case LOGLEVEL:
+            for (int Cnt = 0; Cnt < env->GetArrayLength(logLevelArray); Cnt++) {
+              if (env->IsSameObject(
+                      env->GetObjectArrayElement(logLevelArray, Cnt), value)) {
+                ((TLogLevelConfig *)*itr)->set((TLogLevel)Cnt);
+                break;
+              }
+            }
+            break;
+          case RANKORDER:
+            for (int Cnt = 0;
+                 Cnt < env->GetArrayLength(rankOrderArray); Cnt++) {
+              if (env->IsSameObject(
+                      env->GetObjectArrayElement(rankOrderArray, Cnt), value)) {
+                ((TRankOrderConfig *)*itr)->set((TRankOrder)Cnt);
+                break;
+              }
+            }
+            break;
+          default:  // String
 
-          } else {
-            raiseException(env, "java/lang/RuntimeException",
-                           "Cannot support this configuration type.");
-          }
+            if (value == NULL) {
+              ((TStringConfig *)*itr)->set(NULL);
+            } else if (env->IsAssignableFrom(
+                           valueCls, env->FindClass("java/lang/String"))) {
+              char *val = (char *)env->GetStringUTFChars((jstring)value, NULL);
+
+              if (val == NULL) {
+                raiseException(env, "java/lang/RuntimeException",
+                               "Cannot get string in JNI");
+              } else {
+                ((TStringConfig *)*itr)->set(val);
+                env->ReleaseStringUTFChars((jstring)value, val);
+              }
+
+            } else {
+              raiseException(env, "java/lang/RuntimeException",
+                             "Cannot support this configuration type.");
+            }
+        }
       }
+    } catch (const char *msg) {
+      const char *const_msg = " cannot be set new value: ";
+      size_t msg_len = strlen(opt) + strlen(const_msg) + strlen(msg);
+      char *exception_msg = (char *)malloc(msg_len);
+      sprintf(exception_msg, "%s%s%s", opt, const_msg, msg);
+
+      raiseException(env, "java/lang/IllegalArgumentException", exception_msg);
+
+      free(exception_msg);
     }
   }
 

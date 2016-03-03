@@ -72,8 +72,8 @@ class TConfigElementSuper {
 template <typename T, TConfigDataType V>
 class TConfigElement : public TConfigElementSuper {
  public:
-  typedef void (*TSetter)(TConfiguration *inst, T value, T *dest);
-  typedef void (*TFinalizer)(T value);
+  typedef void (*TSetter)(TConfiguration *inst, T val, T *dest);
+  typedef void (*TFinalizer)(T val);
 
  private:
   /*!
@@ -85,11 +85,6 @@ class TConfigElement : public TConfigElementSuper {
    * \brief Configuration name in heapstats.conf .
    */
   const char *configName;
-
-  /*!
-   * \brief Configuration value.
-   */
-  T value;
 
   /*!
    * \brief Setter of this configuration.
@@ -106,6 +101,12 @@ class TConfigElement : public TConfigElementSuper {
    */
   TFinalizer finalizer;
 
+ protected:
+  /*!
+   * \brief Configuration value.
+   */
+  T value;
+
  public:
   TConfigElement(TConfiguration *cnf, const char *name, T initVal,
                  TSetter sttr = NULL, TFinalizer fnlzr = NULL) {
@@ -121,11 +122,9 @@ class TConfigElement : public TConfigElementSuper {
   TConfigElement(const TConfigElement<T, V> &src) {
     config = src.config;
     configName = strdup(src.configName);
-    value = (T)0;
     setter = src.setter;
     finalizer = src.finalizer;
-
-    set(src.value);
+    value = src.value;
   }
 
   virtual ~TConfigElement() {
@@ -170,9 +169,25 @@ class TConfigElement : public TConfigElementSuper {
 typedef TConfigElement<bool, BOOLEAN> TBooleanConfig;
 typedef TConfigElement<int, INTEGER> TIntConfig;
 typedef TConfigElement<jlong, LONG> TLongConfig;
-typedef TConfigElement<char *, STRING> TStringConfig;
 typedef TConfigElement<TLogLevel, LOGLEVEL> TLogLevelConfig;
 typedef TConfigElement<TRankOrder, RANKORDER> TRankOrderConfig;
+
+class TStringConfig : public TConfigElement<char *, STRING> {
+
+  public:
+    TStringConfig(TConfiguration *cnf, const char *name, char *initVal,
+                  TSetter sttr = NULL, TFinalizer fnlzr = NULL) :
+              TConfigElement<char *, STRING>(cnf, name, initVal, sttr, fnlzr) {}
+
+    /* Override copy constructor. */
+    TStringConfig(const TStringConfig &src) :
+                           TConfigElement<char *, STRING>(src) {
+      value = (src.value == NULL) ? NULL : strdup(src.value);
+    }
+
+    virtual ~TStringConfig() {}
+};
+
 
 /*!
  * \brief Configuration holder.
