@@ -54,12 +54,14 @@ TConfiguration::TConfiguration(TJvmInfo *info) {
  */
 TConfiguration::TConfiguration(const TConfiguration &src) {
   jvmInfo = src.jvmInfo;
-  isLoaded = src.isLoaded;
+  isLoaded = false; // Set to false to load configuration from src.
   alertThreshold = src.alertThreshold;
   heapAlertThreshold = src.heapAlertThreshold;
 
   /* Initialize each configurations. */
   initializeConfig(&src);
+
+  isLoaded = src.isLoaded;
 }
 
 /*!

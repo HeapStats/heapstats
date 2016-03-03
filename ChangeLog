@@ -1,3 +1,7 @@
+2016-03-05  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2870: JVM crash when oneway option is changed through JMX.
+
 2016-02-26  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2861: Avoid hiding overloaded virtual function warning.
