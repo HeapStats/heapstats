@@ -56,7 +56,7 @@ thread_record_filename=heapstats-thread-records.htr
 thread_record_iotracer=@IOTRACER@
 
 # Snmp setting
-snmp_send=true
+snmp_send=false
 snmp_target=localhost
 snmp_comname=public
 

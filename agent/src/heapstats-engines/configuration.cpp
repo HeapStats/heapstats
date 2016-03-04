@@ -130,7 +130,7 @@ void TConfiguration::initializeConfig(const TConfiguration *src) {
         (char *)DEFAULT_CONF_DIR "/IoTrace.class",
         &ReadStringValue, (TStringConfig::TFinalizer) & free);
     snmpSend =
-        new TBooleanConfig(this, "snmp_send", true, &setOnewayBooleanValue);
+        new TBooleanConfig(this, "snmp_send", false, &setOnewayBooleanValue);
     snmpTarget =
         new TStringConfig(this, "snmp_target", (char *)"localhost",
                           &setSnmpTarget, (TStringConfig::TFinalizer) & free);
