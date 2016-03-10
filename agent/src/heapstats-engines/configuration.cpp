@@ -54,12 +54,14 @@ TConfiguration::TConfiguration(TJvmInfo *info) {
  */
 TConfiguration::TConfiguration(const TConfiguration &src) {
   jvmInfo = src.jvmInfo;
-  isLoaded = src.isLoaded;
+  isLoaded = false; // Set to false to load configuration from src.
   alertThreshold = src.alertThreshold;
   heapAlertThreshold = src.heapAlertThreshold;
 
   /* Initialize each configurations. */
   initializeConfig(&src);
+
+  isLoaded = src.isLoaded;
 }
 
 /*!
@@ -99,7 +101,7 @@ void TConfiguration::initializeConfig(const TConfiguration *src) {
                                             &setOnewayBooleanValue);
     triggerOnLogLock = new TBooleanConfig(this, "trigger_on_loglock", true);
     rankLevel = new TIntConfig(this, "rank_level", 5);
-    logLevel = new TLogLevelConfig(this, "loglevel", INFO);
+    logLevel = new TLogLevelConfig(this, "loglevel", INFO, &setLogLevel);
     order = new TRankOrderConfig(this, "rank_order", DELTA);
     alertPercentage = new TIntConfig(this, "alert_percentage", 50);
     heapAlertPercentage = new TIntConfig(this, "javaheap_alert_percentage", 95);
@@ -128,7 +130,7 @@ void TConfiguration::initializeConfig(const TConfiguration *src) {
         (char *)DEFAULT_CONF_DIR "/IoTrace.class",
         &ReadStringValue, (TStringConfig::TFinalizer) & free);
     snmpSend =
-        new TBooleanConfig(this, "snmp_send", true, &setOnewayBooleanValue);
+        new TBooleanConfig(this, "snmp_send", false, &setOnewayBooleanValue);
     snmpTarget =
         new TStringConfig(this, "snmp_target", (char *)"localhost",
                           &setSnmpTarget, (TStringConfig::TFinalizer) & free);
@@ -781,3 +783,10 @@ bool TConfiguration::isSupportSignal(char const *sigName) {
 
   return false;
 }
+
+void TConfiguration::setLogLevel(TConfiguration *inst,
+                                 TLogLevel val, TLogLevel *dest) {
+  *dest = val;
+  logger->setLogLevel(val);
+}
+

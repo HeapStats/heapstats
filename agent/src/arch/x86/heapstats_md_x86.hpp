@@ -2,7 +2,7 @@
  * \file heapstats_md_x86.hpp
  * \brief Proxy library for HeapStats backend.
  *        This file implements x86 specific code for loading backend library.
- * Copyright (C) 2014 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
  */
 
 #ifndef HEAPSTATS_MD_X86_HPP
-#define HEAPSTATS_MX_X86_HPP
+#define HEAPSTATS_MD_X86_HPP
 
 #include "heapstats_md.hpp"
 

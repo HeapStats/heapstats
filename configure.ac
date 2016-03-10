@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.59])
-AC_INIT([heapstats_agent], [2.0.0], [heapstats@icedtea.classpath.org])
+AC_INIT([HeapStats], [2.0.trunk], [heapstats@icedtea.classpath.org])
 m4_include([m4/compiler-opto])
 AC_DEFINE([HEAPSTATS_MAJOR_VERSION], ["2.0"])
 AC_CONFIG_SRCDIR([./agent/src])
@@ -189,9 +189,12 @@ fi
 AC_ARG_WITH([jdk], AC_HELP_STRING([--with-jdk@<:@=PATH@:>@],
   [Path to JDK home directory. (default: follow symbolic links from /etc/alternatives/java)]))
 
-AC_MSG_CHECKING([for JAVA_HOME using configure arguments])
+AC_MSG_CHECKING([for JAVA_HOME using configure arguments and environment (\$JAVA_HOME)])
 if test -n "$with_jdk"; then
   JDK_DIR="$with_jdk"
+  AC_MSG_RESULT($JDK_DIR)
+elif test -n "$JAVA_HOME"; then
+  JDK_DIR="$JAVA_HOME"
   AC_MSG_RESULT($JDK_DIR)
 else
   AC_MSG_RESULT(none)

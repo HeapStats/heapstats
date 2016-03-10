@@ -23,9 +23,11 @@
     <parent>
         <groupId>jp.co.ntt.oss.heapstats</groupId>
         <artifactId>heapstats</artifactId>
-        <version>2.0</version>
+        <version>2.0.trunk</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
+
+    <groupId>jp.co.ntt.oss.heapstats</groupId>
     <artifactId>heapstats-cli</artifactId>
     <packaging>jar</packaging>
     <name>HeapStats CLI</name>
@@ -39,7 +41,7 @@
     <organization>
         <name>NTT OSS Center</name>
     </organization>
-    
+
     <build>
         <plugins>
             <plugin>

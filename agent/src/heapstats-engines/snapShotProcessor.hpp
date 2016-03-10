@@ -1,7 +1,7 @@
 /*!
  * \file snapShotProcessor.hpp
  * \brief This file is used to output ranking and call snapshot function.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,12 +46,16 @@ class TSnapShotProcessor : public TAgentThread {
    */
   virtual ~TSnapShotProcessor(void);
 
+  using TAgentThread::start;
+
   /*!
    * \brief Start parallel work by JThread.
    * \param jvmti [in] JVMTI environment information.
    * \param env   [in] JNI environment information.
    */
   void start(jvmtiEnv *jvmti, JNIEnv *env);
+
+  using TAgentThread::notify;
 
   /*!
    * \brief Notify output snapshot to this thread from other thread.

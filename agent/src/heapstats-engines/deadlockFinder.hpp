@@ -1,7 +1,7 @@
 /*!
  * \file deadlockFinder.hpp
  * \brief This file is used by find deadlock.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -132,12 +132,17 @@ class TDeadlockFinder : public TAgentThread {
    */
   static void setCapabilities(jvmtiCapabilities *capabilities, bool isOnLoad);
 
+  using TAgentThread::start;
+
   /*!
    * \brief Make and begin Jthread.
    * \param jvmti [in] JVMTI environment object.
    * \param env   [in] JNI environment object.
    */
   void start(jvmtiEnv *jvmti, JNIEnv *env);
+
+  using TAgentThread::notify;
+
   /*!
    * \brief Notify occurred deadlock to this thread from other thread.
    * \param aTime [in] Time of occurred deadlock.
@@ -148,8 +153,9 @@ class TDeadlockFinder : public TAgentThread {
    * \brief Send SNMP trap which contains deadlock information.
    * \param nowTime The time of deadlock occurred.
    * \param threadCnt Number of threads which are related to deadlock.
+   * \param name Thread name of deadlock occurred.
    */
-  void sendSNMPTrap(TMSecTime nowTime, int threadCnt);
+  void sendSNMPTrap(TMSecTime nowTime, int threadCnt, const char *name);
 
   /*!
    * \brief Check deadlock.

@@ -2,7 +2,7 @@
 
 Summary: A Java programming language debugging tool.
 Name: heapstats
-Version: 2.0.0
+Version: 2.0.trunk
 %define DIST_EXT 0%{?dist:%{dist}}%{!?dist:.el5}
 Release: %{DIST_EXT}
 License: GPLv2
@@ -23,7 +23,6 @@ BuildRequires: binutils >= 2
 BuildRequires: binutils-devel
 BuildRequires: autoconf
 BuildRequires: automake
-BuildRequires: libtool
 BuildRequires: maven
 
 %package cli
@@ -33,11 +32,11 @@ BuildArch: noarch
 
 %description
 A lightweight monitoring JVMTI agent for Java HotSpot VM.
-Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation.
+Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation.
 
 %description cli
 Commandline analysis tool for HeapStats.
-Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation.
+Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation.
 
 %prep
 %setup -q -n heapstats-2.0
@@ -77,7 +76,7 @@ cp ./agent/mib/HeapStatsMibs.txt $RPM_BUILD_ROOT/usr/share/snmp/mibs/
 # We do not privide FX analyzer.
 # So we install CLI analyzer manually.
 mkdir -p ${RPM_BUILD_ROOT}/%{_libexecdir}/heapstats
-cp -fR ./analyzer/cli/target/heapstats-cli-2.0-bin/heapstats-cli-2.0/* \
+cp -fR ./analyzer/cli/target/heapstats-cli-2.0-bin/heapstats-cli-2.0.trunk/* \
                                     ${RPM_BUILD_ROOT}%{_libexecdir}/heapstats/
 cp -f ./analyzer/cli/heapstats-cli ${RPM_BUILD_ROOT}%{_bindir}
 chmod a+x ${RPM_BUILD_ROOT}%{_bindir}/heapstats-cli
@@ -118,6 +117,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Mar 10 2016 Yasumasa Suenaga <yasuenag@gmail.com>
+- Remove dependency on net-snmp-libs.
+* Tue Feb 09 2016 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+- Set version to 2.0.trunk
 * Thu Oct 22 2015 Yasumasa Suenaga <yasuenag@gmail.com>
 - Add CLI package.
 - Add IoTrace class.
