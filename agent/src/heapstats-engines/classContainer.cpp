@@ -125,8 +125,12 @@ TClassContainer::TClassContainer(TClassContainer *base, bool needToClr)
     }
 
     /* Create trap sender. */
-    pSender = new TTrapSender(SNMP_VERSION_2c, conf->SnmpTarget()->get(),
-                              conf->SnmpComName()->get(), 162);
+    if (conf->SnmpSend()->get()) {
+      pSender = new TTrapSender(SNMP_VERSION_2c, conf->SnmpTarget()->get(),
+                                conf->SnmpComName()->get(), 162);
+    } else {
+      pSender = NULL;
+    }
 
     /* Create unloaded class information queue. */
     unloadedList = new TClassInfoQueue();
