@@ -1,6 +1,7 @@
 2016-03-15  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2794: Remove dependency on net-snmp-libs.
+	* Bug 2879: Unnecessary varbind is sent in log collection trap.
 
 2016-03-04 Shinji Takao  <takao.shinji@lab.ntt.co.jp>
 
