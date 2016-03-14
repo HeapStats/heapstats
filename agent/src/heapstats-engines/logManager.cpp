@@ -1062,7 +1062,6 @@ bool TLogManager::sendLogArchiveTrap(TInvokeCause cause, TMSecTime nowTime,
   if (conf->SnmpSend()->get()) {
     /* Trap OID. */
     char trapOID[50] = OID_LOGARCHIVE;
-    oid OID_ALERT_DATE[] = {SNMP_OID_HEAPALERT, 1};
     oid OID_LOG_PATH[] = {SNMP_OID_LOGARCHIVE, 1};
     oid OID_TROUBLE_DATE[] = {SNMP_OID_LOGARCHIVE, 2};
     /* Temporary buffer. */
@@ -1078,11 +1077,6 @@ bool TLogManager::sendLogArchiveTrap(TInvokeCause cause, TMSecTime nowTime,
 
       /* Setting trapOID. */
       sender.setTrapOID(trapOID);
-
-      /* Set alert date. */
-      snprintf(buff, 255, "%llu", (TMSecTime)getNowTimeSec());
-      sender.addValue(OID_ALERT_DATE, OID_LENGTH(OID_ALERT_DATE), buff,
-                      SNMP_VAR_TYPE_COUNTER64);
 
       /* Set log archive path. */
       sender.addValue(OID_LOG_PATH, OID_LENGTH(OID_LOG_PATH), realSendPath,

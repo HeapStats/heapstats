@@ -198,7 +198,6 @@ void JNICALL OnResourceExhausted(jvmtiEnv *jvmti, JNIEnv *env, jint flags,
   if (conf->SnmpSend()->get()) {
     /* Trap OID. */
     char trapOID[50] = OID_RESALERT;
-    oid OID_ALERT_DATE[] = {SNMP_OID_HEAPALERT, 1};
     oid OID_RES_FLAG[] = {SNMP_OID_RESALERT, 1};
     oid OID_RES_DESC[] = {SNMP_OID_RESALERT, 2};
     char buff[256] = {0};
@@ -213,11 +212,6 @@ void JNICALL OnResourceExhausted(jvmtiEnv *jvmti, JNIEnv *env, jint flags,
 
       /* Setting trapOID. */
       sender.setTrapOID(trapOID);
-
-      /* Set alert date. */
-      snprintf(buff, 255, "%llu", nowTime);
-      sender.addValue(OID_ALERT_DATE, OID_LENGTH(OID_ALERT_DATE), buff,
-                      SNMP_VAR_TYPE_COUNTER64);
 
       /* Set resource inforomation flags. */
       snprintf(buff, 255, "%d", flags);
