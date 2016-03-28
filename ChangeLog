@@ -1,3 +1,7 @@
+2016-03-28  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2895: Code duplication for HeapStats MBean
+
 2016-03-15  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2794: Remove dependency on net-snmp-libs.
