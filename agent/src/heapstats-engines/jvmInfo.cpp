@@ -36,6 +36,13 @@
 #include "util.hpp"
 #include "jvmInfo.hpp"
 
+#if USE_PCRE
+#include "pcreRegex.hpp"
+#else
+#include "cppRegex.hpp"
+#endif
+
+
 /*!
  * \brief TJvmInfo constructor.
  */
@@ -153,10 +160,30 @@ bool TJvmInfo::setHSVersion(jvmtiEnv *jvmti) {
        * This versioning equals to JDK version.
        */
       if (unlikely(result != 4)) {
-        logger->printCritMsg("Unsupported JVM version: %s (%d)", versionStr,
-                             result);
-        jvmti->Deallocate((unsigned char *)versionStr);
-        return false;
+        /*
+         * Support JDK 9 EA
+         */
+#if USE_PCRE
+        TPCRERegex versionRegex("^(\\d+)-ea\\+(\\d+)$", 9);
+#else
+        TCPPRegex versionRegex("^(\\d+)-ea\\+(\\d+)$");
+#endif
+        if (versionRegex.find(versionStr)) {
+          char *minorStr = versionRegex.group(1);
+          char *buildStr = versionRegex.group(2);
+
+          major = 1;
+          minor = (unsigned char)atoi(minorStr);
+          micro = 0;
+          build = (unsigned char)atoi(buildStr);
+
+          free(minorStr);
+          free(buildStr);
+        } else {
+          logger->printCritMsg("Unsupported JVM version: %s", versionStr);
+          jvmti->Deallocate((unsigned char *)versionStr);
+          return false;
+        }
       }
 
       /*
