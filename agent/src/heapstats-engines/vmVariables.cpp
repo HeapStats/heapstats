@@ -205,6 +205,9 @@ bool TVMVariables::getValuesFromVMStructs(void) {
       {"InstanceKlass", "_nonstatic_oop_map_size",
        &ofsNonstaticOopMapSizeAtInsKlass, NULL},
 
+      /* For JDK-8148047 */
+      {"Klass", "_vtable_len", &ofsVTableSizeAtInsKlass, NULL},
+
       /* End marker. */
       {NULL, NULL, NULL, NULL}};
 
