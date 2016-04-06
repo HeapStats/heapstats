@@ -1,7 +1,7 @@
 /*!
  * \file signalManager.hpp
  * \brief This file is used by signal handling.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,9 @@
 #ifndef _SIGNAL_MNGR_H
 #define _SIGNAL_MNGR_H
 
+#include <jni.h>
+#include <signal.h>
+
 #include "util.hpp"
 
 /*!
@@ -31,146 +34,62 @@
  *                     But this value is always null.
  * \param data    [in] Data of received signal.<br>
  *                     But this value is always null.
- * \sa Please see JDK source about "siginfo" and "data" is always null.<br>
- *     jdk/src/share/native/sun/misc/NativeSignalHandler.c
  * \warning Function must be signal-safe.
  */
-typedef void (*TSignalHandler)(int signo, void *siginfo, void *data);
+typedef void (*TSignalHandler)(int signo, siginfo_t *siginfo, void *data);
+
+typedef struct structSignalHandlerChain {
+  TSignalHandler handler;
+  structSignalHandlerChain *next;
+} TSignalHandlerChain;
+
+typedef struct {
+  int sig;
+  const char *name;
+} TSignalMap;
+
 
 /*!
  * \brief This class is handling signal.
  */
 class TSignalManager {
- public:
-  /*!
-   * \brief TSignalManager constructor.
-   * \param env  [in] JNI environment object.
-   * \param proc [in] Pointer of signal callback.
-   */
-  TSignalManager(JNIEnv *env, TSignalHandler proc);
 
-  /*!
-   * \brief TSignalManager destructor.
-   */
-  virtual ~TSignalManager(void);
+  private:
+    /*!
+     * \brief Signal number for this instance.
+     */
+    int signal;
 
-  /*!
-   * \brief Add signal which is handled.
-   * \param env     [in] JNI environment object.
-   * \param sigName [in] Name of signal.
-   * \return Process is succeed, if value is true.<br>
-   *         Process is failure, if value is false.
-   */
-  bool catchSignal(JNIEnv *env, char *sigName);
+    /*!
+     * \brief SR_Handler in HotSpot VM
+     */
+    static TSignalHandler SR_Handler;
 
-  /*!
-   * \brief Specify signal to ignore.
-   * \param env     [in] JNI environment object.
-   * \param sigName [in] Name of signal.
-   * \return Process is succeed, if value is true.<br>
-   *         Process is failure, if value is false.
-   */
-  bool ignoreSignal(JNIEnv *env, char *sigName);
+  public:
+    /*!
+     * \brief Find signal number from name.
+     * \param sig Signal name.
+     * \return Signal number. Return -1 if not found.
+     */
+    static int findSignal(const char *sig);
 
-  /*!
-   * \brief Terminate handling signal.
-   * \param env [in] JNI environment object.
-   */
-  void terminate(JNIEnv *env);
+    /*!
+     * \brief TSignalManager constructor.
+     * \param sig Signal string.
+     */
+    TSignalManager(const char *sig);
 
-  /*!
-   * \brief Global initialization.
-   * \param env [in] JNI environment object.
-   * \return Process is succeed, if value is true.<br>
-   *         Process is failure, if value is false.
-   * \warning Please call only once from main thread.
-   */
-  static bool globalInitialize(JNIEnv *env);
+    /*!
+     * \brief TSignalManager destructor.
+     */
+    virtual ~TSignalManager(void);
 
-  /*!
-   * \brief Global finalize.
-   * \param env [in] JNI environment object.
-   * \return Process is succeed, if value is true.<br>
-   *         Process is failure, if value is false.
-   * \warning Please call only once from main thread.
-   */
-  static bool globalFinalize(JNIEnv *env);
-
- protected:
-  /*!
-   * \brief Setting signal handle function.
-   * \param env     [in] JNI environment object.
-   * \param sigName [in] Name of signal.
-   * \param handler [in] Setting signal handler.
-   * \return Process is succeed, if value is true.<br>
-   *         Process is failure, if value is false.
-   */
-  virtual bool setSignalHandler(JNIEnv *env, char *sigName, jobject handler);
-
-  /*!
-   * \brief Convert string from C++ native to java.
-   * \param env       [in] JNI environment object.
-   * \param nativeStr [in] String in C++.
-   * \param javaStr   [in,out] String object in java.
-   * \return Process is succeed, if value is true.<br>
-   *         Process is failure, if value is false.
-   */
-  bool createJString(JNIEnv *env, char *nativeStr, jstring *javaStr);
-
-  /*!
-   * \brief Getting default signal handler in JVM.
-   * \param env [in] JNI environment object.
-   * \return Process is succeed, if value is true.<br>
-   *         Process is failure, if value is false.
-   */
-  static bool getDefaultSignalHandler(JNIEnv *env);
-
-  RELEASE_ONLY(private :)
-
-  /*!
-   * \brief Object of "NativeSignalHandler" class information.
-   */
-  static jclass classNativeHandler;
-  /*!
-   * \brief Object of "Signal" class information.
-   */
-  static jclass classSignal;
-  /*!
-   * \brief Object of "String" class information.
-   */
-  static jclass classString;
-
-  /*!
-   * \brief Constructor of "NativeSignalHandler" class.
-   */
-  static jmethodID nativeHandler_init;
-  /*!
-   * \brief Constructor of "Signal" class.
-   */
-  static jmethodID signal_init;
-  /*!
-   * \brief Constructor of "String" class.
-   */
-  static jmethodID string_init;
-  /*!
-   * \brief Method "handle" of "Signal" class.
-   */
-  static jmethodID signal_handle;
-
-  /*!
-   * \brief Default signal handler.
-   */
-  static jobject signal_DFL;
-
-  /*!
-   * \brief Flag of load initialize data.
-   */
-  static bool loadFlag;
-
-  /*!
-   * \brief Orignal signal handler.
-   */
-  jobject insSignalHandler;
+    /*!
+     * \brief Add signal handler.
+     * \param handler [in] Function pointer for signal handler.
+     * \return true if new signal handler is added.
+     */
+    bool addHandler(TSignalHandler handler);
 };
 
 #endif  // _SIGNAL_MNGR_H

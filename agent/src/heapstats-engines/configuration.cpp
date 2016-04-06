@@ -21,6 +21,7 @@
 
 #include "globals.hpp"
 #include "fsUtil.hpp"
+#include "signalManager.hpp"
 #include "configuration.hpp"
 
 #if USE_PCRE
@@ -272,7 +273,7 @@ void TConfiguration::ReadStringValue(TConfiguration *inst, char *value,
 void TConfiguration::ReadSignalValue(const char *value, char **dest) {
   if (value == NULL) {
     *dest = NULL;
-  } else if (isSupportSignal(value)) {
+  } else if (TSignalManager::findSignal(value) != -1) {
     if (*dest != NULL) {
       free(*dest);
     }
@@ -737,51 +738,6 @@ void TConfiguration::applyConfig(char *key, char *value) {
       }
     }
   }
-}
-
-/*!
- * \brief Check signal is supported by JVM.
- * \param sigName [in] Name of signal.
- * \return Signal is supported, if value is true.
- *         Otherwise, value is false.
- * \sa Please see below JDK source about JVM supported signal.<br>
- *     hotspot/src/os/linux/vm/jvm_linux.cpp
- */
-bool TConfiguration::isSupportSignal(char const *sigName) {
-  /* JVM supported signals. */
-  const char *supportSignals[] = {
-      /* POSIX signal. */
-      "SIGHUP",    "SIGINT",  "SIGQUIT", "SIGILL",  "SIGABRT",  "SIGFPE",
-      "SIGKILL",   "SIGSEGV", "SIGPIPE", "SIGALRM", "SIGTERM",  "SIGUSR1",
-      "SIGUSR2",   "SIGCHLD", "SIGCONT", "SIGSTOP", "SIGTSTP",  "SIGTTIN",
-      "SIGTTOU",   "SIGBUS",  "SIGPOLL", "SIGTRAP", "SIGURG",   "SIGVTALRM",
-      "SIGXCPU",   "SIGXFSZ", "SIGPROF",
-
-#ifdef SIGSYS
-      "SIGSYS",
-#endif
-
-      /* Non-POSIX signal. */
-      "SIGIOT",    "SIGIO",   "SIGCLD",  "SIGPWR",  "SIGWINCH",
-#ifdef SIGSTKFLT
-      "SIGSTKFLT",
-#endif
-
-      /* End flag. */
-      NULL
-      /* JVM was not supported below signal. */
-      /* "SIGINFO", "SIGLOST", "SIGEMT", "SIGUNUSED" and etc.. */
-  };
-
-  /* Search signal name. */
-  for (int sigIdx = 0; supportSignals[sigIdx] != NULL; sigIdx++) {
-    if (strcmp(sigName, supportSignals[sigIdx]) == 0) {
-      /* Found. */
-      return true;
-    }
-  }
-
-  return false;
 }
 
 void TConfiguration::setLogLevel(TConfiguration *inst,

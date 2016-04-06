@@ -1,7 +1,7 @@
 /*!
  * \file logmain.cpp
  * \brief This file is used common logging process.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -108,7 +108,7 @@ void intervalLogProc(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause) {
  * \param siginfo [in] Information of received signal.
  * \param data    [in] Data of received signal.
  */
-void normalLogProc(int signo, void *siginfo, void *data) {
+void normalLogProc(int signo, siginfo_t *siginfo, void *data) {
   /* Enable flag. */
   flagLogSignal = 1;
   NOTIFY_CATCH_SIGNAL;
@@ -120,7 +120,7 @@ void normalLogProc(int signo, void *siginfo, void *data) {
  * \param siginfo [in] Information of received signal.
  * \param data    [in] Data of received signal.
  */
-void anotherLogProc(int signo, void *siginfo, void *data) {
+void anotherLogProc(int signo, siginfo_t *siginfo, void *data) {
   /* Enable flag. */
   flagAllLogSignal = 1;
   NOTIFY_CATCH_SIGNAL;
@@ -365,45 +365,37 @@ void onVMInitForLog(jvmtiEnv *jvmti, JNIEnv *env) {
   flagLogSignal = 0;
   flagAllLogSignal = 0;
 
-  /* Signal enable flag. */
-  bool enableNormalSig = (conf->LogSignalNormal()->get() != NULL);
-  bool enableAllSig = (conf->LogSignalAll()->get() != NULL);
-
-  try {
-    /* Create instance for log signal. */
-    logSignalMngr = new TSignalManager(env, &normalLogProc);
-    logAllSignalMngr = new TSignalManager(env, &anotherLogProc);
-
-    if (conf->TriggerOnLogSignal()->get()) {
-      /* If "normal log signal" is designated. */
-      if (enableNormalSig) {
-        /* Enable signal handling. */
-        if (unlikely(!logSignalMngr->catchSignal(
-                env, conf->LogSignalNormal()->get()))) {
-          logger->printWarnMsg("Failure register normal log signal.");
-          /* Normal log signal is disable. */
-          conf->LogSignalNormal()->set(NULL);
-        }
+  /* Signal handler setup */
+  if (conf->LogSignalNormal()->get() != NULL) {
+    try {
+      logSignalMngr = new TSignalManager(conf->LogSignalNormal()->get());
+      if (!logSignalMngr->addHandler(&normalLogProc)) {
+        logger->printWarnMsg("Log normal signal handler setup is failed.");
+        conf->LogSignalNormal()->set(NULL);
       }
-
-      /* If "all log signal" is designated. */
-      if (enableAllSig) {
-        /* Enable signal handling. */
-        if (unlikely(!logAllSignalMngr->catchSignal(
-                env, conf->LogSignalAll()->get()))) {
-          logger->printWarnMsg("Failure register all log signal.");
-          /* All log signal is disable. */
-          conf->LogSignalAll()->set(NULL);
-        }
-      }
+    } catch (const char *errMsg) {
+      logger->printWarnMsg(errMsg);
+      conf->LogSignalNormal()->set(NULL);
+    } catch (...) {
+      logger->printWarnMsg("Log normal signal handler setup is failed.");
+      conf->LogSignalNormal()->set(NULL);
     }
-  } catch (const char *errMsg) {
-    logger->printWarnMsg(errMsg);
-    conf->TriggerOnLogSignal()->set(false);
+  }
 
-  } catch (...) {
-    logger->printWarnMsg("Signal handler start failed!");
-    conf->TriggerOnLogSignal()->set(false);
+  if (conf->LogSignalAll()->get() != NULL) {
+    try {
+      logAllSignalMngr = new TSignalManager(conf->LogSignalAll()->get());
+      if (!logAllSignalMngr->addHandler(&anotherLogProc)) {
+        logger->printWarnMsg("Log all signal handler setup is failed.");
+        conf->LogSignalAll()->set(NULL);
+      }
+    } catch (const char *errMsg) {
+      logger->printWarnMsg(errMsg);
+      conf->LogSignalAll()->set(NULL);
+    } catch (...) {
+      logger->printWarnMsg("Log all signal handler setup is failed.");
+      conf->LogSignalAll()->set(NULL);
+    }
   }
 }
 
@@ -413,30 +405,13 @@ void onVMInitForLog(jvmtiEnv *jvmti, JNIEnv *env) {
  * \param env   [in] JNI environment object.
  */
 void onVMDeathForLog(jvmtiEnv *jvmti, JNIEnv *env) {
-  /* Flag of signal enable. */
-  bool enableNormalSig = conf->Attach()->get() &&
-                         conf->TriggerOnLogSignal()->get() &&
-                         (conf->LogSignalNormal()->get() != NULL);
-  bool enableAllSig = conf->Attach()->get() &&
-                      conf->TriggerOnLogSignal()->get() &&
-                      (conf->LogSignalAll()->get() != NULL);
-
-  /* If normal log signal is enabled. */
-  if (likely(logSignalMngr != NULL)) {
-    /* Terminate normal log signal manager. */
-    if (enableNormalSig) {
-      logSignalMngr->ignoreSignal(env, conf->LogSignalNormal()->get());
-    }
-    logSignalMngr->terminate(env);
+  if (logSignalMngr != NULL) {
+    delete logSignalMngr;
+    logSignalMngr = NULL;
   }
-
-  /* If all log signal is enabled. */
-  if (likely(logAllSignalMngr != NULL)) {
-    /* Terminate all log signal manager. */
-    if (enableAllSig) {
-      logAllSignalMngr->ignoreSignal(env, conf->LogSignalAll()->get());
-    }
-    logAllSignalMngr->terminate(env);
+  if (logAllSignalMngr != NULL) {
+    delete logAllSignalMngr;
+    logAllSignalMngr = NULL;
   }
 }
 

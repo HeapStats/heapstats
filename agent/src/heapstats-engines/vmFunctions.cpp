@@ -1,7 +1,7 @@
 /*!
  * \file vmFunctions.cpp
  * \brief This file includes functions in HotSpot VM.<br>
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -145,6 +145,36 @@ bool TVMFunctions::getFunctionsFromSymbol(void) {
   if (unlikely(unsafePark == NULL)) {
     logger->printWarnMsg("Unsafe_Park() not found.");
     return false;
+  }
+
+  /* Search "get_thread" function symbol. */
+  get_thread = (TGet_thread) this->symFinder->findSymbol(GET_THREAD_SYMBOL);
+  if (get_thread == NULL) { // for JDK 9
+    /* Search "ThreadLocalStorage::thread" function symbol. */
+    get_thread = (TGet_thread) this->symFinder->findSymbol(
+                                              THREADLOCALSTORAGE_THREAD_SYMBOL);
+    if (unlikely(get_thread == NULL)) {
+      logger->printWarnMsg("ThreadLocalStorage::thread() not found.");
+      return false;
+    }
+  }
+
+  /* Search "UserHandler" function symbol. */
+  userHandler = (TUserHandler) this->symFinder->findSymbol(USERHANDLER_SYMBOL);
+  if (unlikely(userHandler == NULL)) {
+    logger->printWarnMsg("UserHandler() not found.");
+    return false;
+  }
+
+  /* Search "SR_handler" function symbol. */
+  sr_handler = (TSR_Handler) this->symFinder->findSymbol(SR_HANDLER_SYMBOL);
+  if (sr_handler == NULL) { // for OpenJDK
+    sr_handler = (TSR_Handler) this->symFinder->findSymbol(
+                                                    SR_HANDLER_SYMBOL_FALLBACK);
+    if (sr_handler == NULL) {
+      logger->printWarnMsg("SR_handler() not found.");
+      return false;
+    }
   }
 
   if (vmVal->getUseG1()) {

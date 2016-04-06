@@ -1,7 +1,7 @@
 /*!
  * \file vmFunctions.hpp
  * \brief This file includes functions in HotSpot VM.
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -92,6 +92,28 @@
  */
 #define UNSAFE_PARK_SYMBOL "Unsafe_Park"
 
+/*!
+ * \brief Symbol of get_thread()
+ */
+#define GET_THREAD_SYMBOL "get_thread"
+
+/*!
+ * \brief Symbol of ThreadLocalStorage::thread()
+ */
+#define THREADLOCALSTORAGE_THREAD_SYMBOL "_ZN18ThreadLocalStorage6threadEv"
+
+/*!
+ * \brief Symbol of UserHandler()
+ */
+#define USERHANDLER_SYMBOL "_ZL11UserHandleriPvS_"
+
+/*!
+ * \brief Symbol of SR_handler()
+ */
+#define SR_HANDLER_SYMBOL          "_ZL10SR_handleriP7siginfoP8ucontext"
+#define SR_HANDLER_SYMBOL_FALLBACK "_ZL10SR_handleriP9siginfo_tP8ucontext"
+
+
 /* Function type definition */
 
 /*!
@@ -156,6 +178,43 @@ typedef void *(*TGetThread)(void *oop);
 typedef void (*TUnsafe_Park)(JNIEnv *env, jobject unsafe, jboolean isAbsolute,
                              jlong time);
 
+/*!
+ * \brief JNI function of sun.misc.Unsafe#park() .
+ * \param env [in] JNI environment.
+ * \param unsafe [in] Unsafe object.
+ * \param isAbsolute [in] absolute.
+ * \param time [in] Park time.
+ */
+typedef void (*TUnsafe_Park)(JNIEnv *env, jobject unsafe, jboolean isAbsolute,
+                             jlong time);
+
+/*!
+ * \brief Get C++ Thread instance.
+ * \return C++ Thread instance of this thread context.
+ */
+typedef void *(*TGet_thread)();
+
+/*!
+ * \brief User signal handler for HotSpot.
+ * \param sig Signal number.
+ * \param siginfo Signal information.
+ * \param context Thread context.
+ */
+typedef void (*TUserHandler)(int sig, void *siginfo, void *context);
+
+/*!
+ * \brief Thread suspend/resume signal handler in HotSpot.
+ * \param sig Signal number.
+ * \param siginfo Signal information.
+ * \param context Thread context.
+ */
+typedef void (*TSR_Handler)(int sig, siginfo_t *siginfo, ucontext_t *context);
+
+
+/* Exported function in libjvm.so */
+extern "C" void *JVM_RegisterSignal(jint sig, void *handler);
+
+
 /* extern variables */
 extern "C" void *VTableForTypeArrayOopClosure[2];
 extern "C" THeap_IsInPermanent is_in_permanent;
@@ -194,6 +253,21 @@ class TVMFunctions {
    * \brief Function pointer for "Unsafe_Park()".
    */
   TUnsafe_Park unsafePark;
+
+  /*!
+   * \brief Function pointer for "get_thread()".
+   */
+  TGet_thread get_thread;
+
+  /*!
+   * \brief Function pointer for "UserHandler".
+   */
+  TUserHandler userHandler;
+
+  /*!
+   * \brief Function pointer for "SR_handler".
+   */
+  TSR_Handler sr_handler;
 
   /* Class of HeapStats for scanning variables in HotSpot VM */
   TSymbolFinder *symFinder;
@@ -260,6 +334,14 @@ class TVMFunctions {
   }
 
   inline void *GetUnsafe_ParkPointer(void) { return (void *)unsafePark; }
+
+  inline void *GetThread(void) {
+    return get_thread();
+  }
+
+  inline void *GetUserHandlerPointer(void) { return (void *)userHandler; }
+
+  inline void *GetSRHandlerPointer(void) { return (void *)sr_handler; }
 };
 
 #endif  // VMFUNCTIONS_H
