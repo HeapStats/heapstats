@@ -36,6 +36,7 @@
  */
 #define SAFEPOINT_STATE_SYMBOL "_ZN20SafepointSynchronize6_stateE"
 
+
 /* extern variables */
 extern "C" void *collectedHeap;
 
@@ -276,6 +277,41 @@ class TVMVariables {
    */
   void *g1StartAddr;
 
+  /*!
+   * \brief offset of _osthread field in JavaThread.
+   */
+  off_t ofsJavaThreadOsthread;
+
+  /*!
+   * \brief offset of _threadObj field in JavaThread.
+   */
+  off_t ofsJavaThreadThreadObj;
+
+  /*!
+   * \brief offset of _thread_state field in JavaThread.
+   */
+  off_t ofsJavaThreadThreadState;
+
+  /*!
+   * \brief offset of _current_pending_monitor in Thread.
+   */
+  off_t ofsThreadCurrentPendingMonitor;
+
+  /*!
+   * \brief offset of _thread_id in OSThread.
+   */
+  off_t ofsOSThreadThreadId;
+
+  /*!
+   * \brief offset of _object in ObjectMonitor.
+   */
+  off_t ofsObjectMonitorObject;
+
+  /*!
+   * \brief Pointer of Threads_lock monitor in HotSpot.
+   */
+  void *threads_lock;
+
   /* Class of HeapStats for scanning variables in HotSpot VM */
   TSymbolFinder *symFinder;
   TVMStructScanner *vmScanner;
@@ -400,6 +436,17 @@ class TVMVariables {
   inline int getBitsPerWordMask() { return BitsPerWordMask; };
   inline int getSafePointState() { return *safePointState; };
   inline void *getG1StartAddr() { return g1StartAddr; };
+  inline off_t getOfsJavaThreadOsthread() { return ofsJavaThreadOsthread; };
+  inline off_t getOfsJavaThreadThreadObj() { return ofsJavaThreadThreadObj; };
+  inline off_t getOfsJavaThreadThreadState() {
+    return ofsJavaThreadThreadState;
+  };
+  inline off_t getOfsThreadCurrentPendingMonitor() {
+    return ofsThreadCurrentPendingMonitor;
+  };
+  inline off_t getOfsOSThreadThreadId() { return ofsOSThreadThreadId; };
+  inline off_t getOfsObjectMonitorObject() { return ofsObjectMonitorObject; };
+  inline void *getThreadsLock() { return threads_lock; };
 };
 
 #endif  // VMVARIABLES_H

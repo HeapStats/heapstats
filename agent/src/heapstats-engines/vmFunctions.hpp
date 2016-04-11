@@ -113,6 +113,44 @@
 #define SR_HANDLER_SYMBOL          "_ZL10SR_handleriP7siginfoP8ucontext"
 #define SR_HANDLER_SYMBOL_FALLBACK "_ZL10SR_handleriP9siginfo_tP8ucontext"
 
+/*!
+ * \brief Symbol of ObjectSynchronizer::get_lock_owner().
+ */
+#define GETLOCKOWNER_SYMBOL "_ZN18ObjectSynchronizer14get_lock_ownerE6Handleb"
+
+/*!
+ * \brief Symbol of ThreadSafepointState::create().
+ */
+#define THREADSAFEPOINTSTATE_CREATE_SYMBOL \
+  "_ZN20ThreadSafepointState6createEP10JavaThread"
+
+/*!
+ * \brief Symbol of ThreadSafepointState::destroy().
+ */
+#define THREADSAFEPOINTSTATE_DESTROY_SYMBOL \
+  "_ZN20ThreadSafepointState7destroyEP10JavaThread"
+
+/*!
+ * \brief Symbol of Monitor::lock().
+ */
+#define MONITOR_LOCK_SYMBOL "_ZN7Monitor4lockEv"
+
+/*!
+ * \brief Symbol of Monitor::lock_without_safepoint_check().
+ */
+#define MONITOR_LOCK_WTIHOUT_SAFEPOINT_CHECK_SYMBOL \
+  "_ZN7Monitor28lock_without_safepoint_checkEv"
+
+/*!
+ * \brief Symbol of Monitor::unlock().
+ */
+#define MONITOR_UNLOCK_SYMBOL "_ZN7Monitor6unlockEv"
+
+/*!
+ * \brief Symbol of Monitor::owned_by_self().
+ */
+#define MONITOR_OWNED_BY_SELF_SYMBOL "_ZNK7Monitor13owned_by_selfEv"
+
 
 /* Function type definition */
 
@@ -210,6 +248,35 @@ typedef void (*TUserHandler)(int sig, void *siginfo, void *context);
  */
 typedef void (*TSR_Handler)(int sig, siginfo_t *siginfo, ucontext_t *context);
 
+/*!
+ * \brief function type of
+ * "JavaThread* ObjectSynchronizer::get_lock_owner(Handle h_obj, bool doLock)".
+ * \param monitor_oop [in] Target monitor oop.
+ * \param doLock      [in] Enable oop lock.
+ * \return Monitor owner thread oop.<br>
+ *         Value is NULL, if owner is none.
+ */
+typedef void *(*TGetLockOwner)(void *monitor_oop, bool doLock);
+
+/*!
+ * \brief function type of common thread operation.
+ * \param thread [in] Target thread object is inner JVM class instance.
+ */
+typedef void (*TVMThreadFunction)(void *thread);
+
+/*!
+ * \brief function type of common monitor operation.
+ * \param monitor_oop [in] Target monitor oop.
+ */
+typedef void (*TVMMonitorFunction)(void *monitor_oop);
+
+/*!
+ * \brief function type of common monitor operation.
+ * \param monitor_oop [in] Target monitor oop.
+ * \return Thread is owned monitor.
+ */
+typedef bool (*TOwnedBySelf)(void *monitor_oop);
+
 
 /* Exported function in libjvm.so */
 extern "C" void *JVM_RegisterSignal(jint sig, void *handler);
@@ -268,6 +335,41 @@ class TVMFunctions {
    * \brief Function pointer for "SR_handler".
    */
   TSR_Handler sr_handler;
+
+  /*!
+   * \brief Function pointer for "ObjectSynchronizer::get_lock_owner()".
+   */
+  TGetLockOwner getLockOwner;
+
+  /*!
+   * \brief Function pointer for "ThreadSafepointState::create()".
+   */
+  TVMThreadFunction threadSafepointStateCreate;
+
+  /*!
+   * \brief Function pointer for "ThreadSafepointState::destroy()".
+   */
+  TVMThreadFunction threadSafepointStateDestroy;
+
+  /*!
+   * \brief Function pointer for "Monitor::lock()"
+   */
+  TVMMonitorFunction monitor_lock;
+
+  /*!
+   * \brief Function pointer for "Monitor::lock_without_safepoint_check()".
+   */
+  TVMMonitorFunction monitor_lock_without_safepoint_check;
+
+  /*!
+   * \brief Function pointer for "Monitor::unlock()".
+   */
+  TVMMonitorFunction monitor_unlock;
+
+  /*!
+   * \brief Function pointer for "Monitor::owned_by_self()".
+   */
+  TOwnedBySelf monitor_owned_by_self;
 
   /* Class of HeapStats for scanning variables in HotSpot VM */
   TSymbolFinder *symFinder;
@@ -342,6 +444,37 @@ class TVMFunctions {
   inline void *GetUserHandlerPointer(void) { return (void *)userHandler; }
 
   inline void *GetSRHandlerPointer(void) { return (void *)sr_handler; }
+
+  inline void *GetLockOwner(void *monitor_oop, bool doLock) {
+    return getLockOwner(monitor_oop, doLock);
+  }
+
+  inline void ThreadSafepointStateCreate(void *thread) {
+    threadSafepointStateCreate(thread);
+  }
+
+  inline void ThreadSafepointStateDestroy(void *thread) {
+    threadSafepointStateDestroy(thread);
+  }
+
+  inline void MonitorLock(void *monitor_oop) {
+    monitor_lock(monitor_oop);
+  }
+
+  inline void MonitorLockWithoutSafepointCheck(void *monitor_oop) {
+    monitor_lock_without_safepoint_check(monitor_oop);
+  }
+
+  inline void MonitorUnlock(void *monitor_oop) {
+    monitor_unlock(monitor_oop);
+  }
+
+  /*!
+   * \brief Function pointer for "Monitor::owned_by_self()".
+   */
+  inline bool MonitorOwnedBySelf(void *monitor_oop) {
+    return monitor_owned_by_self(monitor_oop);
+  }
 };
 
 #endif  // VMFUNCTIONS_H

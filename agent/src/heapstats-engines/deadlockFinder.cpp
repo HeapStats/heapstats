@@ -22,6 +22,7 @@
 #include <sys/syscall.h>
 
 #include "globals.hpp"
+#include "vmFunctions.hpp"
 #include "vmVariables.hpp"
 #include "libmain.hpp"
 #include "deadlockFinder.hpp"
@@ -52,53 +53,6 @@
  */
 #define THREAD_IN_JAVA 8
 
-/*!
- * \brief String of symbol which is function getting monitor's owner.
- */
-#define GETLOCKOWNER_SYMBOL "_ZN18ObjectSynchronizer14get_lock_ownerE6Handleb"
-
-/*!
- * \brief String of symbol which is function getting this thread.
- */
-#define GETTHISTHREAD_SYMBOL "_ZN18ThreadLocalStorage15get_thread_slowEv"
-
-/*!
- * \brief String of symbol which is function create ThreadSafepointState.
- */
-#define THREADSAFEPOINTSTATE_CREATE_SYMBOL \
-  "_ZN20ThreadSafepointState6createEP10JavaThread"
-
-/*!
- * \brief String of symbol which is function destroy ThreadSafepointState.
- */
-#define THREADSAFEPOINTSTATE_DESTROY_SYMBOL \
-  "_ZN20ThreadSafepointState7destroyEP10JavaThread"
-
-/*!
- * \brief String of symbol which is function monitor locking.
- */
-#define MONITOR_LOCK_SYMBOL "_ZN7Monitor4lockEv"
-
-/*!
- * \brief String of symbol which is function monitor locking.
- */
-#define MONITOR_LOCK_WTIHOUT_CHECK_SYMBOL \
-  "_ZN7Monitor28lock_without_safepoint_checkEv"
-
-/*!
- * \brief String of symbol which is function monitor unlocking.
- */
-#define MONITOR_UNLOCK_SYMBOL "_ZN7Monitor6unlockEv"
-
-/*!
- * \brief String of symbol which is function monitor owned by self.
- */
-#define MONITOR_OWNED_BY_SELF_SYMBOL "_ZNK7Monitor13owned_by_selfEv"
-
-/*!
- * \brief String of symbol which is function "Threads_lock" monitor.
- */
-#define THREADS_LOCK_SYMBOL "Threads_lock"
 
 /* Class static variables. */
 
@@ -107,86 +61,6 @@
  */
 TDeadlockFinder *TDeadlockFinder::inst = NULL;
 
-/*!
- * \brief Flag of deadlock is checkable now.
- */
-bool TDeadlockFinder::flagCheckableDeadlock = false;
-
-/*!
- * \brief Offset of field "osthread" in class "JavaThread".
- */
-off_t TDeadlockFinder::ofsJavaThreadOsthread = -1;
-
-/*!
- * \brief Offset of field "_threadObj" in class "JavaThread".
- */
-off_t TDeadlockFinder::ofsJavaThreadThreadObj = -1;
-
-/*!
- * \brief Offset of field "_thread_state" in class "JavaThread".
- */
-off_t TDeadlockFinder::ofsJavaThreadThreadState = -1;
-
-/*!
- * \brief Offset of field "_current_pending_monitor" in class "Thread".
- */
-off_t TDeadlockFinder::ofsThreadCurrentPendingMonitor = -1;
-
-/*!
- * \brief Offset of field "_thread_id" in class "OSThread".
- */
-off_t TDeadlockFinder::ofsOSThreadThreadId = -1;
-
-/*!
- * \brief Offset of field "_object" in class "ObjectMonitor".
- */
-off_t TDeadlockFinder::ofsObjectMonitorObject = -1;
-
-/*!
- * \brief Function pointer of "ObjectSynchronizer::get_lock_owner".
- */
-TVMGetLockOwnerFunction TDeadlockFinder::get_lock_owner = NULL;
-
-/*!
- * \brief Function pointer of "ThreadLocalStorage::get_thread_slow".
- */
-TVMGetThisThreadFunction TDeadlockFinder::get_this_thread = NULL;
-
-/*!
- * \brief Function pointer of "void ThreadSafepointState::create".
- */
-TVMThreadFunction TDeadlockFinder::threadSafepointStateCreate = NULL;
-
-/*!
- * \brief Function pointer of "void ThreadSafepointState::destroy".
- */
-TVMThreadFunction TDeadlockFinder::threadSafepointStateDestroy = NULL;
-
-/*!
- * \brief Function pointer of "void Monitor::lock()".
- */
-TVMMonitorFunction TDeadlockFinder::monitor_lock = NULL;
-
-/*!
- * \brief Function pointer of
- *        "void Monitor::lock_without_safepoint_check()".
- */
-TVMMonitorFunction TDeadlockFinder::monitor_lock_without_check = NULL;
-
-/*!
- * \brief Function pointer of "void Monitor::unlock()".
- */
-TVMMonitorFunction TDeadlockFinder::monitor_unlock = NULL;
-
-/*!
- * \brief Function pointer of "bool Monitor::owned_by_self()".
- */
-TVMOwnedBySelfFunction TDeadlockFinder::monitor_owned_by_self = NULL;
-
-/*!
- * \brief Variable pointer of "Threads_lock" monitor.
- */
-void *TDeadlockFinder::threads_lock = NULL;
 
 /* Common methods. */
 
@@ -292,76 +166,13 @@ bool TDeadlockFinder::globalInitialize(TDeadlockEventFunc event) {
   /* Variable for return code. */
   bool result = true;
 
-  /* Get function of ObjectSynchronizer::get_lock_owner(). */
-  get_lock_owner =
-      (TVMGetLockOwnerFunction)symFinder->findSymbol(GETLOCKOWNER_SYMBOL);
-
-  /* Get function of this thread with JVM inner class instance. */
-  get_this_thread =
-      (TVMGetThisThreadFunction)symFinder->findSymbol(GETTHISTHREAD_SYMBOL);
-
-  /* Get function of thread operation. */
-  threadSafepointStateCreate = (TVMThreadFunction)symFinder->findSymbol(
-      THREADSAFEPOINTSTATE_CREATE_SYMBOL);
-  threadSafepointStateDestroy = (TVMThreadFunction)symFinder->findSymbol(
-      THREADSAFEPOINTSTATE_DESTROY_SYMBOL);
-
-  /* Get function of monitor operation. */
-  monitor_lock = (TVMMonitorFunction)symFinder->findSymbol(MONITOR_LOCK_SYMBOL);
-  monitor_lock_without_check = (TVMMonitorFunction)symFinder->findSymbol(
-      MONITOR_LOCK_WTIHOUT_CHECK_SYMBOL);
-  monitor_unlock =
-      (TVMMonitorFunction)symFinder->findSymbol(MONITOR_UNLOCK_SYMBOL);
-  monitor_owned_by_self = (TVMOwnedBySelfFunction)symFinder->findSymbol(
-      MONITOR_OWNED_BY_SELF_SYMBOL);
-
-  /* Get function of "Threads_lock" monitor. */
-  threads_lock = symFinder->findSymbol(THREADS_LOCK_SYMBOL);
-
-  /* if failure get function pointer "get_lock_owner()". */
-  if (unlikely(get_lock_owner == NULL || get_this_thread == NULL ||
-               threadSafepointStateCreate == NULL ||
-               threadSafepointStateDestroy == NULL || monitor_lock == NULL ||
-               monitor_lock_without_check == NULL || monitor_unlock == NULL ||
-               monitor_owned_by_self == NULL || threads_lock == NULL)) {
-    logger->printWarnMsg("Failure search deadlock function's symbol.");
+  try {
+    inst = new TDeadlockFinder(event);
+  } catch (...) {
+    logger->printCritMsg("Cannot initialize TDeadlockFinder.");
     result = false;
   }
 
-  /* Symbol offsets. */
-  TOffsetNameMap symOffsetList[] = {
-      {"JavaThread", "_osthread", &ofsJavaThreadOsthread, NULL},
-      {"JavaThread", "_threadObj", &ofsJavaThreadThreadObj, NULL},
-      {"JavaThread", "_thread_state", &ofsJavaThreadThreadState, NULL},
-      {"Thread", "_current_pending_monitor", &ofsThreadCurrentPendingMonitor,
-       NULL},
-      {"OSThread", "_thread_id", &ofsOSThreadThreadId, NULL},
-      {"ObjectMonitor", "_object", &ofsObjectMonitorObject, NULL},
-      /* End marker. */
-      {NULL, NULL, NULL}};
-
-  /* Search offset. */
-  vmScanner->GetDataFromVMStructs(symOffsetList);
-
-  /* If failure get offset information. */
-  if (unlikely(ofsJavaThreadOsthread == -1 || ofsJavaThreadThreadObj == -1 ||
-               ofsJavaThreadThreadState == -1 ||
-               ofsThreadCurrentPendingMonitor == -1 ||
-               ofsOSThreadThreadId == -1 || ofsObjectMonitorObject == -1)) {
-    logger->printWarnMsg("Failure search offset in VMStructs.");
-    result = false;
-  }
-
-  if (result) {
-    try {
-      inst = new TDeadlockFinder(event);
-    } catch (...) {
-      logger->printCritMsg("Cannot initialize TDeadlockFinder.");
-      result = false;
-    }
-  }
-
-  flagCheckableDeadlock = result;
   return result;
 }
 
@@ -486,90 +297,91 @@ int TDeadlockFinder::checkDeadlock(jobject monitor, TDeadlockList **list) {
     return 0;
   }
 
+  TVMFunctions *vmFunc = TVMFunctions::getInstance();
+  TVMVariables *vmVal = TVMVariables::getInstance();
   int deadlockCount = 0;
-  if (likely(flagCheckableDeadlock)) {
-    void *thisThreadPtr = get_this_thread();
-    void *thread_lock = *(void **)threads_lock;
-    if (unlikely(thisThreadPtr == NULL || thread_lock == NULL)) {
-      /*
-       * Thread class in JVM and thread lock should be set.
-       * TDeadlockFinder::checkDeadlock() is called by MonitorContendedEnter
-       * JVMTI event. If this event is fired, current (this) thread must be
-       * live.
-       */
-      logger->printWarnMsg(
+  void *thisThreadPtr = vmFunc->GetThread();
+  void *thread_lock = *(void **)vmVal->getThreadsLock();
+  if (unlikely(thisThreadPtr == NULL || thread_lock == NULL)) {
+    /*
+     * Thread class in JVM and thread lock should be set.
+     * TDeadlockFinder::checkDeadlock() is called by MonitorContendedEnter
+     * JVMTI event. If this event is fired, current (this) thread must be
+     * live.
+     */
+    logger->printWarnMsg(
           "Deadlock detection failed: Cannot get current thread info.");
-      return 0;
+    return 0;
+  }
+
+  /* Get self thread id. */
+  pid_t threadId = syscall(SYS_gettid);
+
+  int *status = (int *)incAddress(thisThreadPtr,
+                                  vmVal->getOfsJavaThreadThreadState());
+  int original_status = *status;
+
+  /*
+   * Normally thread status is "_thread_in_native"
+   * when thread is running in JVMTI event.
+   * But thread status maybe changed "_thread_in_vm",
+   * if call "get_lock_owner" and set true to paramter "doLock".
+   * If VMThread found this thread has such status
+   * when call "examine_state_of_thread" at synchronizing safepoint,
+   * By JVM decided that the thread is waiting VM and callback,
+   * thread state at safepoint set "_call_back" flag.
+   * Besides, at end of JVMTI envent callback,
+   * thread was changed thread status to "_thread_in_native_trans"
+   * from "_thread_in_vm"
+   * and JVM check thread about running status at safepoint.
+   * JVM misunderstand deadlock occurred, so JVM abort by self.
+   * Why JVM misunderstood.
+   *  1, Safepoint code wait "_thread_in_native_trans" thread.
+   *  2, "_call_back" flag means wait VM and callback.
+   *  -> VMThread wait the thread and the thread wait VMThread.
+   *
+   * So thread status reset here by force.
+   */
+  *status = THREAD_IN_VM;
+
+  /* Check deadlock. */
+  bool foundDeadlock = findDeadLock(threadId, monitor);
+
+  if (unlikely(foundDeadlock)) {
+    /* Get threads. */
+    getLockedThreads(threadId, monitor, list);
+
+    /* Count list item. */
+    for (TDeadlockList *item = (*list); item != NULL; item = item->next) {
+      deadlockCount++;
     }
+  }
 
-    /* Get self thread id. */
-    pid_t threadId = syscall(SYS_gettid);
-
-    int *status = (int *)incAddress(thisThreadPtr, ofsJavaThreadThreadState);
-    int original_status = *status;
+  if (*status == THREAD_IN_VM) {
+    bool needLock = !vmFunc->MonitorOwnedBySelf(thread_lock);
 
     /*
-     * Normally thread status is "_thread_in_native"
-     * when thread is running in JVMTI event.
-     * But thread status maybe changed "_thread_in_vm",
-     * if call "get_lock_owner" and set true to paramter "doLock".
-     * If VMThread found this thread has such status
-     * when call "examine_state_of_thread" at synchronizing safepoint,
-     * By JVM decided that the thread is waiting VM and callback,
-     * thread state at safepoint set "_call_back" flag.
-     * Besides, at end of JVMTI envent callback,
-     * thread was changed thread status to "_thread_in_native_trans"
-     * from "_thread_in_vm"
-     * and JVM check thread about running status at safepoint.
-     * JVM misunderstand deadlock occurred, so JVM abort by self.
-     * Why JVM misunderstood.
-     *  1, Safepoint code wait "_thread_in_native_trans" thread.
-     *  2, "_call_back" flag means wait VM and callback.
-     *  -> VMThread wait the thread and the thread wait VMThread.
-     *
-     * So thread status reset here by force.
+     * Lock monitor to avoiding a collision
+     * with safepoint operation to "ThreadSafepointState".
+     * E.g. "examine_state_of_thread".
      */
-    *status = THREAD_IN_VM;
-
-    /* Check deadlock. */
-    bool foundDeadlock = findDeadLock(threadId, monitor);
-
-    if (unlikely(foundDeadlock)) {
-      /* Get threads. */
-      getLockedThreads(threadId, monitor, list);
-
-      /* Count list item. */
-      for (TDeadlockList *item = (*list); item != NULL; item = item->next) {
-        deadlockCount++;
+    if (likely(needLock)) {
+      if (isAtSafepoint()) {
+        vmFunc->MonitorLockWithoutSafepointCheck(thread_lock);
+      } else {
+        vmFunc->MonitorLock(thread_lock);
       }
     }
 
-    if (*status == THREAD_IN_VM) {
-      bool needLock = !monitor_owned_by_self(thread_lock);
+    /* Reset "_thread_state". */
+    *status = original_status;
+    /* Reset "_safepoint_state". */
+    vmFunc->ThreadSafepointStateDestroy(thisThreadPtr);
+    vmFunc->ThreadSafepointStateCreate(thisThreadPtr);
 
-      /*
-       * Lock monitor to avoiding a collision
-       * with safepoint operation to "ThreadSafepointState".
-       * E.g. "examine_state_of_thread".
-       */
-      if (likely(needLock)) {
-        if (isAtSafepoint()) {
-          monitor_lock_without_check(thread_lock);
-        } else {
-          monitor_lock(thread_lock);
-        }
-      }
-
-      /* Reset "_thread_state". */
-      *status = original_status;
-      /* Reset "_safepoint_state". */
-      threadSafepointStateDestroy(thisThreadPtr);
-      threadSafepointStateCreate(thisThreadPtr);
-
-      /* Release monitor. */
-      if (likely(needLock)) {
-        monitor_unlock(thread_lock);
-      }
+    /* Release monitor. */
+    if (likely(needLock)) {
+      vmFunc->MonitorUnlock(thread_lock);
     }
   }
 
@@ -673,6 +485,8 @@ void TDeadlockFinder::notify(jlong aTime) {
  * \param monitor [in] Monitor object of thread contended.
  */
 FASTCALL bool TDeadlockFinder::findDeadLock(pid_t startId, jobject monitor) {
+  TVMFunctions *vmFunc = TVMFunctions::getInstance();
+  TVMVariables *vmVal = TVMVariables::getInstance();
   void *threadPtr = NULL;
   int *status = NULL;
   void *nativeThread = NULL;
@@ -681,7 +495,7 @@ FASTCALL bool TDeadlockFinder::findDeadLock(pid_t startId, jobject monitor) {
   jobject monitorOop = NULL;
 
   /* Get owner thread of this monitor. */
-  threadPtr = get_lock_owner(monitor, !isAtSafepoint());
+  threadPtr = vmFunc->GetLockOwner(monitor, !isAtSafepoint());
 
   /* No deadlock (no owner thread of this monitor). */
   if (unlikely(threadPtr == NULL)) {
@@ -693,7 +507,8 @@ FASTCALL bool TDeadlockFinder::findDeadLock(pid_t startId, jobject monitor) {
 
   /* Get OSThread ptr related to JavaThread. */
   nativeThread =
-      (void *)*(ptrdiff_t *)incAddress(threadPtr, ofsJavaThreadOsthread);
+      (void *)*(ptrdiff_t *)incAddress(threadPtr,
+                                       vmVal->getOfsJavaThreadOsthread());
 
   /* If failure get native thread. */
   if (unlikely(nativeThread == NULL)) {
@@ -701,7 +516,7 @@ FASTCALL bool TDeadlockFinder::findDeadLock(pid_t startId, jobject monitor) {
   }
 
   /* Get nid (LWP ID). */
-  ownerId = (pid_t *)incAddress(nativeThread, ofsOSThreadThreadId);
+  ownerId = (pid_t *)incAddress(nativeThread, vmVal->getOfsOSThreadThreadId());
 
   /* If occurred deadlock. */
   if (unlikely(*ownerId == startId)) {
@@ -710,7 +525,7 @@ FASTCALL bool TDeadlockFinder::findDeadLock(pid_t startId, jobject monitor) {
   }
 
   /* Thread status check. */
-  status = (int *)incAddress(threadPtr, ofsJavaThreadThreadState);
+  status = (int *)incAddress(threadPtr, vmVal->getOfsJavaThreadThreadState());
   if ((*status == THREAD_IN_JAVA) || (*status == THREAD_IN_VM)) {
     /* Owner thread is running. */
     return false;
@@ -718,13 +533,14 @@ FASTCALL bool TDeadlockFinder::findDeadLock(pid_t startId, jobject monitor) {
 
   /* Get ObjectMonitor pointer. */
   contendedMonitor = (void *)*(ptrdiff_t *)incAddress(
-      threadPtr, ofsThreadCurrentPendingMonitor);
+                         threadPtr, vmVal->getOfsThreadCurrentPendingMonitor());
   /* If pointer is illegal. */
   if (unlikely(contendedMonitor == NULL)) {
     return false;
   }
 
-  monitorOop = (jobject)incAddress(contendedMonitor, ofsObjectMonitorObject);
+  monitorOop = (jobject)incAddress(contendedMonitor,
+                                   vmVal->getOfsObjectMonitorObject());
   /* If java thread already has monitor. */
   if (unlikely((monitorOop == NULL) || (monitorOop == monitor))) {
     return false;
@@ -744,6 +560,8 @@ FASTCALL bool TDeadlockFinder::findDeadLock(pid_t startId, jobject monitor) {
  */
 void TDeadlockFinder::getLockedThreads(pid_t startId, jobject monitor,
                                        TDeadlockList **list) {
+  TVMFunctions *vmFunc = TVMFunctions::getInstance();
+  TVMVariables *vmVal = TVMVariables::getInstance();
   pid_t *ownerId = NULL;
   TDeadlockList *listHead = NULL;
   TDeadlockList *oldRec = NULL;
@@ -758,7 +576,7 @@ void TDeadlockFinder::getLockedThreads(pid_t startId, jobject monitor,
     TDeadlockList *threadRec = NULL;
 
     /* Get owner thread of this monitor. */
-    threadPtr = get_lock_owner(monitor, !isAtSafepoint());
+    threadPtr = vmFunc->GetLockOwner(monitor, !isAtSafepoint());
 
     if (unlikely(threadPtr == NULL)) {
       /* Shouldn't reach to here. */
@@ -769,7 +587,8 @@ void TDeadlockFinder::getLockedThreads(pid_t startId, jobject monitor,
     }
 
     /* Convert to jni object. */
-    jThreadObj = (jthread)incAddress(threadPtr, ofsJavaThreadThreadObj);
+    jThreadObj = (jthread)incAddress(threadPtr,
+                                     vmVal->getOfsJavaThreadThreadObj());
 
     /* Create list item. */
     threadRec = (TDeadlockList *)malloc(sizeof(TDeadlockList));
@@ -794,7 +613,8 @@ void TDeadlockFinder::getLockedThreads(pid_t startId, jobject monitor,
 
     /* Get OSThread ptr related to JavaThread. */
     nativeThread =
-        (void *)*(ptrdiff_t *)incAddress(threadPtr, ofsJavaThreadOsthread);
+        (void *)*(ptrdiff_t *)incAddress(threadPtr,
+                                         vmVal->getOfsJavaThreadOsthread());
 
     if (unlikely(nativeThread == NULL)) {
       /* Shouldn't reach to here. */
@@ -805,7 +625,8 @@ void TDeadlockFinder::getLockedThreads(pid_t startId, jobject monitor,
     }
 
     /* Get nid (LWP ID). */
-    ownerId = (pid_t *)incAddress(nativeThread, ofsOSThreadThreadId);
+    ownerId = (pid_t *)incAddress(nativeThread,
+                                  vmVal->getOfsOSThreadThreadId());
 
     /* If all thread already has collected. */
     if (*ownerId == startId) {
@@ -814,7 +635,7 @@ void TDeadlockFinder::getLockedThreads(pid_t startId, jobject monitor,
 
     /* Get ObjectMonitor pointer. */
     contendedMonitor = (void *)*(ptrdiff_t *)incAddress(
-        threadPtr, ofsThreadCurrentPendingMonitor);
+                         threadPtr, vmVal->getOfsThreadCurrentPendingMonitor());
 
     if (unlikely(contendedMonitor == NULL)) {
       /* Shouldn't reach to here. */
@@ -824,7 +645,8 @@ void TDeadlockFinder::getLockedThreads(pid_t startId, jobject monitor,
       break;
     }
 
-    monitor = (jobject)incAddress(contendedMonitor, ofsObjectMonitorObject);
+    monitor = (jobject)incAddress(contendedMonitor,
+                                  vmVal->getOfsObjectMonitorObject());
 
     /* If illegal state. */
     if (unlikely(monitor == NULL)) {

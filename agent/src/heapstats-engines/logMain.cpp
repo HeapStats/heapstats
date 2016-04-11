@@ -315,18 +315,13 @@ void setThreadEnableForLog(jvmtiEnv *jvmti, JNIEnv *env, bool enable) {
     flagLogSignal = 0;
     flagAllLogSignal = 0;
 
-    if (likely(TDeadlockFinder::isCheckableDeadlock())) {
-      if (conf->TriggerOnLogLock()->get() && !abortionByDeadlock) {
-        /* Switch deadlock finder state. */
-        if (enable) {
-          TDeadlockFinder::getInstance()->start(jvmti, env);
-        } else {
-          TDeadlockFinder::getInstance()->stop();
-        }
+    if (conf->TriggerOnLogLock()->get() && !abortionByDeadlock) {
+      /* Switch deadlock finder state. */
+      if (enable) {
+        TDeadlockFinder::getInstance()->start(jvmti, env);
+      } else {
+        TDeadlockFinder::getInstance()->stop();
       }
-    } else {
-      /* Disable illegal flag. */
-      conf->TriggerOnLogLock()->set(false);
     }
   } catch (const char *errMsg) {
     logger->printWarnMsg(errMsg);

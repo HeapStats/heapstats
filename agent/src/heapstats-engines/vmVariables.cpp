@@ -75,6 +75,13 @@ TVMVariables::TVMVariables(TSymbolFinder *sym, TVMStructScanner *scan)
   BitsPerWordMask = 0;
   safePointState = NULL;
   g1StartAddr = NULL;
+  ofsJavaThreadOsthread = -1;
+  ofsJavaThreadThreadObj = -1;
+  ofsJavaThreadThreadState = -1;
+  ofsThreadCurrentPendingMonitor = -1;
+  ofsOSThreadThreadId = -1;
+  ofsObjectMonitorObject = -1;
+  threads_lock = NULL;
 
 #ifdef __LP64__
   HeapWordSize = 8;
@@ -147,6 +154,13 @@ bool TVMVariables::getUnrecognizedOptions(void) {
     *(flagList[i].flagPtr) = *tempPtr;
   }
 
+  /* Search "Threads_lock" symbol. */
+  threads_lock = symFinder->findSymbol("Threads_lock");
+  if (unlikely(threads_lock == NULL)) {
+    logger->printCritMsg("Threads_lock not found.");
+    return false;
+  }
+
 #ifdef __LP64__
   if (jvmInfo->isAfterCR6964458()) {
     bool *tempPtr = NULL;
@@ -181,6 +195,13 @@ bool TVMVariables::getValuesFromVMStructs(void) {
       {"oopDesc", "_metadata._compressed_klass", &ofsCoopKlassAtOop, NULL},
       {"oopDesc", "_mark", &ofsMarkAtOop, NULL},
       {"Klass", "_name", &ofsNameAtKlass, NULL},
+      {"JavaThread", "_osthread", &ofsJavaThreadOsthread, NULL},
+      {"JavaThread", "_threadObj", &ofsJavaThreadThreadObj, NULL},
+      {"JavaThread", "_thread_state", &ofsJavaThreadThreadState, NULL},
+      {"Thread", "_current_pending_monitor", &ofsThreadCurrentPendingMonitor,
+       NULL},
+      {"OSThread", "_thread_id", &ofsOSThreadThreadId, NULL},
+      {"ObjectMonitor", "_object", &ofsObjectMonitorObject, NULL},
 
       /*
        * For CR6990754.
@@ -216,6 +237,10 @@ bool TVMVariables::getValuesFromVMStructs(void) {
 
   if (unlikely(ofsKlassAtOop == -1 || ofsCoopKlassAtOop == -1 ||
                ofsNameAtKlass == -1 || ofsLengthAtSymbol == -1 ||
+               ofsJavaThreadOsthread == -1 || ofsJavaThreadThreadObj == -1 ||
+               ofsJavaThreadThreadState == -1 ||
+               ofsThreadCurrentPendingMonitor == -1 ||
+               ofsOSThreadThreadId == -1 || ofsObjectMonitorObject == -1 ||
                ofsBodyAtSymbol == -1 || ofsVTableSizeAtInsKlass == -1 ||
                ofsITableSizeAtInsKlass == -1 ||
                (!jvmInfo->isAfterCR7017732() &&
