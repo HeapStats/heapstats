@@ -1,3 +1,7 @@
+2016-04-11  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2925: [REGRESSION] Cannot attach HeapStats agent to live process
+
 2016-03-28  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2895: Code duplication for HeapStats MBean

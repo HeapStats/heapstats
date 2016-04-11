@@ -397,7 +397,7 @@ void TDeadlockFinder::setCapabilities(jvmtiCapabilities *capabilities,
    * See also:
    *   hotspot/src/share/vm/prims/jvmtiManageCapabilities.cpp
    */
-  if (!isOnLoad) {
+  if (isOnLoad) {
     capabilities->can_get_owned_monitor_stack_depth_info = 1;
     capabilities->can_get_current_contended_monitor = 1;
   }
