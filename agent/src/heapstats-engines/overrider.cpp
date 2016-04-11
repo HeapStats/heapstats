@@ -1,7 +1,7 @@
 /*!
  * \file overrider.cpp
  * \brief Controller of overriding functions in HotSpot VM.
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,6 +55,7 @@
  */
 DEFINE_OVERRIDE_FUNC_4(par);
 DEFINE_OVERRIDE_FUNC_5(par_6964458);
+DEFINE_OVERRIDE_FUNC_5(par_jdk9);
 
 /*!
  * \brief Override function for heap object on parallelOldGC.
@@ -179,6 +180,27 @@ THookFunctionInfo CR8000213_par_hook[] = {
 #define CR8049421_par_hook CR8000213_par_hook
 
 /*!
+ * \brief Pointer of hook information on parallelGC for after jdk 9.
+ */
+THookFunctionInfo jdk9_par_hook[] = {
+    HOOK_FUNC(par_jdk9, 0, "_ZTV13InstanceKlass",
+              "_ZN13InstanceKlass22oop_ms_adjust_pointersEP7oopDesc",
+              &callbackForParallelWithMarkCheck),
+    HOOK_FUNC(par_jdk9, 1, "_ZTV13ObjArrayKlass",
+              "_ZN13ObjArrayKlass22oop_ms_adjust_pointersEP7oopDesc",
+              &callbackForParallelWithMarkCheck),
+    HOOK_FUNC(par_jdk9, 2, "_ZTV14TypeArrayKlass",
+              "_ZN14TypeArrayKlass22oop_ms_adjust_pointersEP7oopDesc",
+              &callbackForParallelWithMarkCheck),
+    HOOK_FUNC(par_jdk9, 3, "_ZTV16InstanceRefKlass",
+              "_ZN16InstanceRefKlass22oop_ms_adjust_pointersEP7oopDesc",
+              &callbackForParallelWithMarkCheck),
+    HOOK_FUNC(par_jdk9, 4, "_ZTV24InstanceClassLoaderKlass",
+              "_ZN24InstanceClassLoaderKlass22oop_ms_adjust_pointersEP7oopDesc",
+              &callbackForParallelWithMarkCheck),
+    HOOK_FUNC_END};
+
+/*!
  * \brief Pointer of hook information on parallelGC.
  */
 THookFunctionInfo *par_hook = NULL;
@@ -263,6 +285,8 @@ THookFunctionInfo CR8000213_parOld_hook[] = {
  */
 #define CR8027746_parOld_hook CR8000213_parOld_hook
 #define CR8049421_parOld_hook CR8000213_parOld_hook
+/* TODO: We have to define valid hook for JDK 9 */
+#define jdk9_parOld_hook CR8049421_parOld_hook
 
 /*!
  * \brief Pointer of hook information on parallelOldGC.
@@ -362,6 +386,8 @@ THookFunctionInfo CR8000213_cms_new_hook[] = {
 */
 #define CR8027746_cms_new_hook CR8000213_cms_new_hook
 #define CR8049421_cms_new_hook CR8000213_cms_new_hook
+/* TODO: We have to define valid hook for JDK 9 */
+#define jdk9_cms_new_hook CR8049421_cms_new_hook
 
 /*!
  * \brief Pointer of hook information on CMSGC.
@@ -603,6 +629,9 @@ THookFunctionInfo CR8049421_g1_hook[] = {
         "oopDescP14G1CMOopClosure",
         &callbackForIterate),
     HOOK_FUNC_END};
+
+/* TODO: We have to define valid hook for JDK 9 */
+#define jdk9_g1_hook CR8049421_g1_hook
 
 /*!
  * \brief Pointer of hook information on G1GC.
@@ -1364,10 +1393,38 @@ bool switchOverrideFunction(THookFunctionInfo *list, bool enable) {
  * \param oop [in] Java heap object(OopDesc format).
  * \warning Param "oop" isn't usable for JVMTI and JNI.
  */
-void callbackForParallel(void *oop) {
+inline void callbackForParallelInternal(void *oop) {
   /* Invoke callback by GC. */
   gcCallbackFunc(oop, NULL);
   isInvokedParallelGC = true;
+}
+
+/*!
+ * \brief Callback function for parallel GC and user's GC.<br>
+ *        E.g. System.gc() in java code, JVMTI and etc..
+ * \param oop [in] Java heap object(OopDesc format).
+ * \warning Param "oop" isn't usable for JVMTI and JNI.
+ */
+void callbackForParallel(void *oop) {
+  callbackForParallelInternal(oop);
+}
+
+/*!
+ * \brief Callback function for parallel GC and user's GC.<br>
+ *        E.g. System.gc() in java code, JVMTI and etc..
+ *        This function checks markOop value.
+ * \param oop [in] Java heap object(OopDesc format).
+ * \warning Param "oop" isn't usable for JVMTI and JNI.
+ */
+void callbackForParallelWithMarkCheck(void *oop) {
+  TVMVariables *vmVal = TVMVariables::getInstance();
+  unsigned long markOop = *(ptrdiff_t *)incAddress(oop,
+                                                   vmVal->getOfsMarkAtOop());
+  uint64_t markValue = markOop & vmVal->getLockMaskInPlaceMarkOop();
+
+  if (markValue == vmVal->getMarkedValue()) {
+    callbackForParallelInternal(oop);
+  }
 }
 
 /*!

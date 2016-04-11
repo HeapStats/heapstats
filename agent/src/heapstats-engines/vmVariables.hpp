@@ -1,7 +1,7 @@
 /*!
  * \file vmVariables.hpp
  * \brief This file includes variables in HotSpot VM.
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -205,6 +205,12 @@ class TVMVariables {
   uint64_t lockMaskInPlaceMarkOop;
 
   /*!
+   * \brief GC mark value.<br>
+   *        Const value of marked_value in markOopDesc_place".
+   */
+  uint64_t marked_value;
+
+  /*!
    * \brief Pointer of CMS marking bitmap start word.
    */
   void *cmsBitMap_startWord;
@@ -382,6 +388,7 @@ class TVMVariables {
   inline uint64_t getLockMaskInPlaceMarkOop() {
     return lockMaskInPlaceMarkOop;
   };
+  inline uint64_t getMarkedValue() { return marked_value; };
   inline void *getCmsBitMap_startWord() { return cmsBitMap_startWord; };
   inline int getCmsBitMap_shifter() { return cmsBitMap_shifter; };
   inline size_t *getCmsBitMap_startAddr() { return cmsBitMap_startAddr; };

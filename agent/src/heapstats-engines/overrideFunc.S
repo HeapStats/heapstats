@@ -3,7 +3,7 @@
  * \brief This file is used to override JVM inner function.<br>
  *        The function defined this file, used with v-table hook.<br>
  *        So in this file, all function is written by only assembler and macro.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -226,6 +226,20 @@ OVERRIDE_DEFINE_WITHOUT_PERMCHECK(innerStart, 2, 2)
 /* For WatcherThread */
 /* WatcherThread::run() */
 OVERRIDE_DEFINE_WITHOUT_PERMCHECK(watcherThread, 0, 1)
+
+
+/* For JDK 9 Serial / Parallel GC hook */
+
+/* InstanceKlass::oop_ms_adjust_pointers(oopDesc*) */
+OVERRIDE_DEFINE(par_jdk9, 0, 2)
+/* ObjArrayKlass::oop_ms_adjust_pointers(oopDesc*) */
+OVERRIDE_DEFINE(par_jdk9, 1, 2)
+/* TypeArrayKlass::oop_ms_adjust_pointers(oopDesc*) */
+OVERRIDE_DEFINE(par_jdk9, 2, 2)
+/* InstanceRefKlass::oop_ms_adjust_pointers(oopDesc*) */
+OVERRIDE_DEFINE(par_jdk9, 3, 2)
+/* InstanceClassLoaderKlass::oop_ms_adjust_pointers(oopDesc*) */
+OVERRIDE_DEFINE(par_jdk9, 4, 2)
 
 
 #ifdef AVOID__i686

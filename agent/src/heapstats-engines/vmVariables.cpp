@@ -1,7 +1,7 @@
 /*!
  * \file vmVariables.cpp
  * \brief This file includes variables in HotSpot VM.<br>
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -68,6 +68,7 @@ TVMVariables::TVMVariables(TSymbolFinder *sym, TVMStructScanner *scan)
   narrowKlassOffsetBase = 0;
   narrowKlassOffsetShift = 0;
   lockMaskInPlaceMarkOop = 0;
+  marked_value = 0;
   cmsBitMap_startWord = NULL;
   cmsBitMap_shifter = 0;
   cmsBitMap_startAddr = NULL;
@@ -248,12 +249,13 @@ bool TVMVariables::getValuesFromVMStructs(void) {
 
   TLongConstMap longMap[] = {
       {"markOopDesc::lock_mask_in_place", &lockMaskInPlaceMarkOop},
+      {"markOopDesc::marked_value", &marked_value},
       /* End marker. */
       {NULL, NULL}};
 
   vmScanner->GetDataFromVMLongConstants(longMap);
 
-  if (unlikely(lockMaskInPlaceMarkOop == 0)) {
+  if (unlikely((lockMaskInPlaceMarkOop == 0) || (marked_value == 0))) {
     logger->printCritMsg("Cannot get values from VMLongConstants.");
     return false;
   }
@@ -264,7 +266,9 @@ bool TVMVariables::getValuesFromVMStructs(void) {
                            {NULL, NULL}};
 
   vmScanner->GetDataFromVMIntConstants(intMap);
+
   return true;
+
 }
 
 /*!
