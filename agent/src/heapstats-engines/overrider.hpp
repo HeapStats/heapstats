@@ -1,7 +1,7 @@
 /*!
  * \file overrider.hpp
  * \brief Controller of overriding functions in HotSpot VM.
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -162,7 +162,9 @@ typedef enum {
  * \brief Macro to select override function with CR.
  */
 #define SELECT_HOOK_FUNCS(prefix)              \
-  if (jvmInfo->isAfterCR8049421()) {           \
+  if (jvmInfo->isAfterJDK9()) {                \
+    prefix##_hook = jdk9_##prefix##_hook;      \
+  } else if (jvmInfo->isAfterCR8049421()) {    \
     prefix##_hook = CR8049421_##prefix##_hook; \
   } else if (jvmInfo->isAfterCR8027746()) {    \
     prefix##_hook = CR8027746_##prefix##_hook; \
@@ -227,6 +229,7 @@ typedef void *(*TGetClassLoader)(void *klassOop);
 
 /* extern functions (for overriding) */
 extern "C" void callbackForParallel(void *oop);
+extern "C" void callbackForParallelWithMarkCheck(void *oop);
 extern "C" void callbackForParOld(void *oop);
 extern "C" void callbackForDoOop(void **oop);
 extern "C" void callbackForDoNarrowOop(unsigned int *narrowOop);

@@ -323,16 +323,6 @@ class TConfiguration {
 
  protected:
   /*!
-   * \brief Check signal is supported by JVM.
-   * \param sigName [in] Name of signal.
-   * \return Signal is supported, if value is true.
-   *         Otherwise, value is false.
-   * \sa Please see below JDK source about JVM supported signal.<br>
-   *     hotspot/src/os/linux/vm/jvm_linux.cpp
-   */
-  bool isSupportSignal(char const *sigName);
-
-  /*!
    * \brief Read string value from configuration.
    * \param value [in] Value of this configuration.
    * \param dest [in] [out] Destination of this configuration.

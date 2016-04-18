@@ -1,7 +1,7 @@
 /*!
  * \file vmFunctions.cpp
  * \brief This file includes functions in HotSpot VM.<br>
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -144,6 +144,93 @@ bool TVMFunctions::getFunctionsFromSymbol(void) {
   unsafePark = (TUnsafe_Park) this->symFinder->findSymbol(UNSAFE_PARK_SYMBOL);
   if (unlikely(unsafePark == NULL)) {
     logger->printWarnMsg("Unsafe_Park() not found.");
+    return false;
+  }
+
+  /* Search "get_thread" function symbol. */
+  get_thread = (TGet_thread) this->symFinder->findSymbol(GET_THREAD_SYMBOL);
+  if (get_thread == NULL) { // for JDK 9
+    /* Search "ThreadLocalStorage::thread" function symbol. */
+    get_thread = (TGet_thread) this->symFinder->findSymbol(
+                                              THREADLOCALSTORAGE_THREAD_SYMBOL);
+    if (unlikely(get_thread == NULL)) {
+      logger->printWarnMsg("ThreadLocalStorage::thread() not found.");
+      return false;
+    }
+  }
+
+  /* Search "UserHandler" function symbol. */
+  userHandler = (TUserHandler) this->symFinder->findSymbol(USERHANDLER_SYMBOL);
+  if (unlikely(userHandler == NULL)) {
+    logger->printWarnMsg("UserHandler() not found.");
+    return false;
+  }
+
+  /* Search "SR_handler" function symbol. */
+  sr_handler = (TSR_Handler) this->symFinder->findSymbol(SR_HANDLER_SYMBOL);
+  if (sr_handler == NULL) { // for OpenJDK
+    sr_handler = (TSR_Handler) this->symFinder->findSymbol(
+                                                    SR_HANDLER_SYMBOL_FALLBACK);
+    if (sr_handler == NULL) {
+      logger->printWarnMsg("SR_handler() not found.");
+      return false;
+    }
+  }
+
+  /* Search "ObjectSynchronizer::get_lock_owner()" function symbol. */
+  getLockOwner = (TGetLockOwner) this->symFinder->findSymbol(
+                                                           GETLOCKOWNER_SYMBOL);
+  if (unlikely(getLockOwner == NULL)) {
+    logger->printWarnMsg("ObjectSynchronizer::get_lock_owner() not found.");
+    return false;
+  }
+
+  /* Search "ThreadSafepointState::create()" function symbol. */
+  threadSafepointStateCreate = (TVMThreadFunction) this->symFinder->findSymbol(
+                                            THREADSAFEPOINTSTATE_CREATE_SYMBOL);
+  if (unlikely(threadSafepointStateCreate == NULL)) {
+    logger->printWarnMsg("ThreadSafepointState::create() not found.");
+    return false;
+  }
+
+  /* Search "ThreadSafepointState::destroy()" function symbol. */
+  threadSafepointStateDestroy = (TVMThreadFunction) this->symFinder->findSymbol(
+                                           THREADSAFEPOINTSTATE_DESTROY_SYMBOL);
+  if (unlikely(threadSafepointStateDestroy == NULL)) {
+    logger->printWarnMsg("ThreadSafepointState::destroy() not found.");
+    return false;
+  }
+
+  /* Search "Monitor::lock()" function symbol. */
+  monitor_lock = (TVMMonitorFunction) this->symFinder->findSymbol(
+                                                           MONITOR_LOCK_SYMBOL);
+  if (unlikely(monitor_lock == NULL)) {
+    logger->printWarnMsg("Monitor::lock() not found.");
+    return false;
+  }
+
+  /* Search "Monitor::lock_without_safepoint_check()" function symbol. */
+  monitor_lock_without_safepoint_check =
+                    (TVMMonitorFunction) this->symFinder->findSymbol(
+                                   MONITOR_LOCK_WTIHOUT_SAFEPOINT_CHECK_SYMBOL);
+  if (unlikely(monitor_lock_without_safepoint_check == NULL)) {
+    logger->printWarnMsg("Monitor::lock_without_safepoint_check() not found.");
+    return false;
+  }
+
+  /* Search "Monitor::unlock()" function symbol. */
+  monitor_unlock = (TVMMonitorFunction) this->symFinder->findSymbol(
+                                                         MONITOR_UNLOCK_SYMBOL);
+  if (unlikely(monitor_unlock == NULL)) {
+    logger->printWarnMsg("Monitor::unlock() not found.");
+    return false;
+  }
+
+  /* Search "Monitor::owned_by_self()" function symbol. */
+  monitor_owned_by_self = (TOwnedBySelf) this->symFinder->findSymbol(
+                                                  MONITOR_OWNED_BY_SELF_SYMBOL);
+  if (unlikely(monitor_owned_by_self == NULL)) {
+    logger->printWarnMsg("Monitor::owned_by_self() not found.");
     return false;
   }
 

@@ -1,7 +1,7 @@
 /*!
  * \file vmVariables.hpp
  * \brief This file includes variables in HotSpot VM.
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,6 +35,7 @@
  * \brief String of symbol which is safepoint state variable.
  */
 #define SAFEPOINT_STATE_SYMBOL "_ZN20SafepointSynchronize6_stateE"
+
 
 /* extern variables */
 extern "C" void *collectedHeap;
@@ -205,6 +206,12 @@ class TVMVariables {
   uint64_t lockMaskInPlaceMarkOop;
 
   /*!
+   * \brief GC mark value.<br>
+   *        Const value of marked_value in markOopDesc_place".
+   */
+  uint64_t marked_value;
+
+  /*!
    * \brief Pointer of CMS marking bitmap start word.
    */
   void *cmsBitMap_startWord;
@@ -269,6 +276,41 @@ class TVMVariables {
    * \brief G1 start address.
    */
   void *g1StartAddr;
+
+  /*!
+   * \brief offset of _osthread field in JavaThread.
+   */
+  off_t ofsJavaThreadOsthread;
+
+  /*!
+   * \brief offset of _threadObj field in JavaThread.
+   */
+  off_t ofsJavaThreadThreadObj;
+
+  /*!
+   * \brief offset of _thread_state field in JavaThread.
+   */
+  off_t ofsJavaThreadThreadState;
+
+  /*!
+   * \brief offset of _current_pending_monitor in Thread.
+   */
+  off_t ofsThreadCurrentPendingMonitor;
+
+  /*!
+   * \brief offset of _thread_id in OSThread.
+   */
+  off_t ofsOSThreadThreadId;
+
+  /*!
+   * \brief offset of _object in ObjectMonitor.
+   */
+  off_t ofsObjectMonitorObject;
+
+  /*!
+   * \brief Pointer of Threads_lock monitor in HotSpot.
+   */
+  void *threads_lock;
 
   /* Class of HeapStats for scanning variables in HotSpot VM */
   TSymbolFinder *symFinder;
@@ -382,6 +424,7 @@ class TVMVariables {
   inline uint64_t getLockMaskInPlaceMarkOop() {
     return lockMaskInPlaceMarkOop;
   };
+  inline uint64_t getMarkedValue() { return marked_value; };
   inline void *getCmsBitMap_startWord() { return cmsBitMap_startWord; };
   inline int getCmsBitMap_shifter() { return cmsBitMap_shifter; };
   inline size_t *getCmsBitMap_startAddr() { return cmsBitMap_startAddr; };
@@ -393,6 +436,17 @@ class TVMVariables {
   inline int getBitsPerWordMask() { return BitsPerWordMask; };
   inline int getSafePointState() { return *safePointState; };
   inline void *getG1StartAddr() { return g1StartAddr; };
+  inline off_t getOfsJavaThreadOsthread() { return ofsJavaThreadOsthread; };
+  inline off_t getOfsJavaThreadThreadObj() { return ofsJavaThreadThreadObj; };
+  inline off_t getOfsJavaThreadThreadState() {
+    return ofsJavaThreadThreadState;
+  };
+  inline off_t getOfsThreadCurrentPendingMonitor() {
+    return ofsThreadCurrentPendingMonitor;
+  };
+  inline off_t getOfsOSThreadThreadId() { return ofsOSThreadThreadId; };
+  inline off_t getOfsObjectMonitorObject() { return ofsObjectMonitorObject; };
+  inline void *getThreadsLock() { return threads_lock; };
 };
 
 #endif  // VMVARIABLES_H

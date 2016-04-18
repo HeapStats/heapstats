@@ -48,41 +48,6 @@
 typedef void (*TDeadlockEventFunc)(jvmtiEnv *jvmti, JNIEnv *env,
                                    TInvokeCause cause);
 
-/*!
- * \brief function type of
- * "JavaThread* ObjectSynchronizer::get_lock_owner(Handle h_obj, bool doLock)".
- * \param monitor_oop [in] Target monitor oop.
- * \param doLock      [in] Enable oop lock.
- * \return Monitor owner thread oop.<br>
- *         Value is NULL, if owner is none.
- */
-typedef void *(*TVMGetLockOwnerFunction)(void *monitor_oop, bool doLock);
-
-/*!
- * \brief function type of
- *        "Thread* ThreadLocalStorage::get_thread_slow()".
- * \return Running this thread.
- */
-typedef void *(*TVMGetThisThreadFunction)(void);
-
-/*!
- * \brief function type of common thread operation.
- * \param thread [in] Target thread object is inner JVM class instance.
- */
-typedef void (*TVMThreadFunction)(void *thread);
-
-/*!
- * \brief function type of common monitor operation.
- * \param monitor_oop [in] Target monitor oop.
- */
-typedef void (*TVMMonitorFunction)(void *monitor_oop);
-
-/*!
- * \brief function type of common monitor operation.
- * \param monitor_oop [in] Target monitor oop.
- * \return Thread is owned monitor.
- */
-typedef bool (*TVMOwnedBySelfFunction)(void *monitor_oop);
 
 /*!
  * \brief This type is stored deadlock occurred thread list.
@@ -179,14 +144,6 @@ class TDeadlockFinder : public TAgentThread {
   const inline jlong getDeadlockTime(void) { return occurTime; };
 
   /*!
-   * \brief Get function initialized flag.
-   * \return Flag of deadlock is checkable now.
-   */
-  const static inline bool isCheckableDeadlock(void) {
-    return flagCheckableDeadlock;
-  };
-
-  /*!
    * \brief Get singleton instance of TDeadlockFinder.
    * \return Singleton instance of TDeadlockFinder.
    */
@@ -244,87 +201,6 @@ class TDeadlockFinder : public TAgentThread {
    */
   static void getLockedThreads(pid_t startId, jobject monitor,
                                TDeadlockList **list);
-
-  /*!
-   * \brief Flag of deadlock is checkable now.
-   */
-  static bool flagCheckableDeadlock;
-
-  /*!
-   * \brief Offset of field "osthread" in class "JavaThread".
-   */
-  static off_t ofsJavaThreadOsthread;
-
-  /*!
-   * \brief Offset of field "_threadObj" in class "JavaThread".
-   */
-  static off_t ofsJavaThreadThreadObj;
-
-  /*!
-   * \brief Offset of field "_thread_state" in class "JavaThread".
-   */
-  static off_t ofsJavaThreadThreadState;
-
-  /*!
-   * \brief Offset of field "_current_pending_monitor" in class "Thread".
-   */
-  static off_t ofsThreadCurrentPendingMonitor;
-
-  /*!
-   * \brief Offset of field "_thread_id" in class "OSThread".
-   */
-  static off_t ofsOSThreadThreadId;
-
-  /*!
-   * \brief Offset of field "_object" in class "ObjectMonitor".
-   */
-  static off_t ofsObjectMonitorObject;
-
-  /*!
-   * \brief Function pointer of "ObjectSynchronizer::get_lock_owner".
-   */
-  static TVMGetLockOwnerFunction get_lock_owner;
-
-  /*!
-   * \brief Function pointer of "ThreadLocalStorage::get_thread_slow".
-   */
-  static TVMGetThisThreadFunction get_this_thread;
-
-  /*!
-   * \brief Function pointer of "void ThreadSafepointState::create".
-   */
-  static TVMThreadFunction threadSafepointStateCreate;
-
-  /*!
-   * \brief Function pointer of "void ThreadSafepointState::destroy".
-   */
-  static TVMThreadFunction threadSafepointStateDestroy;
-
-  /*!
-   * \brief Function pointer of "void Monitor::lock()".
-   */
-  static TVMMonitorFunction monitor_lock;
-
-  /*!
-   * \brief Function pointer of
-   *        "void Monitor::lock_without_safepoint_check()".
-   */
-  static TVMMonitorFunction monitor_lock_without_check;
-
-  /*!
-   * \brief Function pointer of "void Monitor::unlock()".
-   */
-  static TVMMonitorFunction monitor_unlock;
-
-  /*!
-   * \brief Function pointer of "bool Monitor::owned_by_self()".
-   */
-  static TVMOwnedBySelfFunction monitor_owned_by_self;
-
-  /*!
-   * \brief Variable pointer of "Threads_lock" monitor.
-   */
-  static void *threads_lock;
 
  private:
   /*!

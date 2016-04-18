@@ -1,7 +1,7 @@
 /*!
  * \file vmVariables.cpp
  * \brief This file includes variables in HotSpot VM.<br>
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -68,12 +68,20 @@ TVMVariables::TVMVariables(TSymbolFinder *sym, TVMStructScanner *scan)
   narrowKlassOffsetBase = 0;
   narrowKlassOffsetShift = 0;
   lockMaskInPlaceMarkOop = 0;
+  marked_value = 0;
   cmsBitMap_startWord = NULL;
   cmsBitMap_shifter = 0;
   cmsBitMap_startAddr = NULL;
   BitsPerWordMask = 0;
   safePointState = NULL;
   g1StartAddr = NULL;
+  ofsJavaThreadOsthread = -1;
+  ofsJavaThreadThreadObj = -1;
+  ofsJavaThreadThreadState = -1;
+  ofsThreadCurrentPendingMonitor = -1;
+  ofsOSThreadThreadId = -1;
+  ofsObjectMonitorObject = -1;
+  threads_lock = NULL;
 
 #ifdef __LP64__
   HeapWordSize = 8;
@@ -146,6 +154,13 @@ bool TVMVariables::getUnrecognizedOptions(void) {
     *(flagList[i].flagPtr) = *tempPtr;
   }
 
+  /* Search "Threads_lock" symbol. */
+  threads_lock = symFinder->findSymbol("Threads_lock");
+  if (unlikely(threads_lock == NULL)) {
+    logger->printCritMsg("Threads_lock not found.");
+    return false;
+  }
+
 #ifdef __LP64__
   if (jvmInfo->isAfterCR6964458()) {
     bool *tempPtr = NULL;
@@ -180,6 +195,13 @@ bool TVMVariables::getValuesFromVMStructs(void) {
       {"oopDesc", "_metadata._compressed_klass", &ofsCoopKlassAtOop, NULL},
       {"oopDesc", "_mark", &ofsMarkAtOop, NULL},
       {"Klass", "_name", &ofsNameAtKlass, NULL},
+      {"JavaThread", "_osthread", &ofsJavaThreadOsthread, NULL},
+      {"JavaThread", "_threadObj", &ofsJavaThreadThreadObj, NULL},
+      {"JavaThread", "_thread_state", &ofsJavaThreadThreadState, NULL},
+      {"Thread", "_current_pending_monitor", &ofsThreadCurrentPendingMonitor,
+       NULL},
+      {"OSThread", "_thread_id", &ofsOSThreadThreadId, NULL},
+      {"ObjectMonitor", "_object", &ofsObjectMonitorObject, NULL},
 
       /*
        * For CR6990754.
@@ -205,6 +227,9 @@ bool TVMVariables::getValuesFromVMStructs(void) {
       {"InstanceKlass", "_nonstatic_oop_map_size",
        &ofsNonstaticOopMapSizeAtInsKlass, NULL},
 
+      /* For JDK-8148047 */
+      {"Klass", "_vtable_len", &ofsVTableSizeAtInsKlass, NULL},
+
       /* End marker. */
       {NULL, NULL, NULL, NULL}};
 
@@ -212,6 +237,10 @@ bool TVMVariables::getValuesFromVMStructs(void) {
 
   if (unlikely(ofsKlassAtOop == -1 || ofsCoopKlassAtOop == -1 ||
                ofsNameAtKlass == -1 || ofsLengthAtSymbol == -1 ||
+               ofsJavaThreadOsthread == -1 || ofsJavaThreadThreadObj == -1 ||
+               ofsJavaThreadThreadState == -1 ||
+               ofsThreadCurrentPendingMonitor == -1 ||
+               ofsOSThreadThreadId == -1 || ofsObjectMonitorObject == -1 ||
                ofsBodyAtSymbol == -1 || ofsVTableSizeAtInsKlass == -1 ||
                ofsITableSizeAtInsKlass == -1 ||
                (!jvmInfo->isAfterCR7017732() &&
@@ -245,12 +274,13 @@ bool TVMVariables::getValuesFromVMStructs(void) {
 
   TLongConstMap longMap[] = {
       {"markOopDesc::lock_mask_in_place", &lockMaskInPlaceMarkOop},
+      {"markOopDesc::marked_value", &marked_value},
       /* End marker. */
       {NULL, NULL}};
 
   vmScanner->GetDataFromVMLongConstants(longMap);
 
-  if (unlikely(lockMaskInPlaceMarkOop == 0)) {
+  if (unlikely((lockMaskInPlaceMarkOop == 0) || (marked_value == 0))) {
     logger->printCritMsg("Cannot get values from VMLongConstants.");
     return false;
   }
@@ -261,7 +291,9 @@ bool TVMVariables::getValuesFromVMStructs(void) {
                            {NULL, NULL}};
 
   vmScanner->GetDataFromVMIntConstants(intMap);
+
   return true;
+
 }
 
 /*!

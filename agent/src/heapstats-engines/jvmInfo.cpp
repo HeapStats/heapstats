@@ -1,7 +1,7 @@
 /*!
  * \file jvmInfo.cpp
  * \brief This file is used to get JVM performance information.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,6 +35,13 @@
 #include "globals.hpp"
 #include "util.hpp"
 #include "jvmInfo.hpp"
+
+#if USE_PCRE
+#include "pcreRegex.hpp"
+#else
+#include "cppRegex.hpp"
+#endif
+
 
 /*!
  * \brief TJvmInfo constructor.
@@ -153,10 +160,30 @@ bool TJvmInfo::setHSVersion(jvmtiEnv *jvmti) {
        * This versioning equals to JDK version.
        */
       if (unlikely(result != 4)) {
-        logger->printCritMsg("Unsupported JVM version: %s (%d)", versionStr,
-                             result);
-        jvmti->Deallocate((unsigned char *)versionStr);
-        return false;
+        /*
+         * Support JDK 9 EA
+         */
+#if USE_PCRE
+        TPCRERegex versionRegex("^(\\d+)-ea\\+(\\d+)$", 9);
+#else
+        TCPPRegex versionRegex("^(\\d+)-ea\\+(\\d+)$");
+#endif
+        if (versionRegex.find(versionStr)) {
+          char *minorStr = versionRegex.group(1);
+          char *buildStr = versionRegex.group(2);
+
+          major = 1;
+          minor = (unsigned char)atoi(minorStr);
+          micro = 0;
+          build = (unsigned char)atoi(buildStr);
+
+          free(minorStr);
+          free(buildStr);
+        } else {
+          logger->printCritMsg("Unsupported JVM version: %s", versionStr);
+          jvmti->Deallocate((unsigned char *)versionStr);
+          return false;
+        }
       }
 
       /*
@@ -396,9 +423,16 @@ void TJvmInfo::SearchInfoInVMStruct(VMStructSearchEntry *entries, int count) {
   for (int i = 0; i < count; i++) {
     /* If failure get target entry. */
     if (unlikely((*entries[i].entryValue) == NULL)) {
-      logger->printWarnMsg(
-          "Necessary information isn't found in performance data. Entry: %s",
-          entries[i].entryName);
+      /* JEP 220: Modular Run-Time Images */
+      if (!isAfterJDK9() && (
+          (strcmp(entries[i].entryName,
+                 "java.property.java.endorsed.dirs") == 0) ||
+          (strcmp(entries[i].entryName,
+                 "sun.property.sun.boot.class.path") == 0))) {
+        logger->printWarnMsg(
+             "Necessary information isn't found in performance data. Entry: %s",
+             entries[i].entryName);
+      }
     }
   }
 }
@@ -501,8 +535,12 @@ void TJvmInfo::detectDelayInfoAddress(void) {
   /* Refresh delay log data load flag. */
   loadDelayLogFlag = (_freqTime != NULL) && (_vmVersion != NULL) &&
                      (_vmName != NULL) && (_classPath != NULL) &&
-                     (_endorsedPath != NULL) && (_javaVersion != NULL) &&
-                     (_javaHome != NULL) && (_bootClassPath != NULL) &&
+                     (_javaVersion != NULL) && (_javaHome != NULL) &&
                      (_vmArgs != NULL) && (_vmFlags != NULL) &&
                      (_javaCommand != NULL) && (_tickTime != NULL);
+
+  /* JEP 220: Modular Run-Time Images */
+  if (!isAfterJDK9()) {
+    loadDelayLogFlag &= (_endorsedPath != NULL) && (_bootClassPath != NULL);
+  }
 }

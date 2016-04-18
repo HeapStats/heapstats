@@ -2,7 +2,7 @@
  * \file libmain.cpp
  * \brief This file is used to common works.<br>
  *        e.g. initialization, finalization, etc...
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -105,7 +105,7 @@ char *loadConfigPath = NULL;
  * \param siginfo [in] Information of received signal.
  * \param data    [in] Data of received signal.
  */
-void ReloadSigProc(int signo, void *siginfo, void *data) {
+void ReloadSigProc(int signo, siginfo_t *siginfo, void *data) {
   /* Enable flag. */
   flagReloadConfig = 1;
   NOTIFY_CATCH_SIGNAL;
@@ -265,36 +265,24 @@ void JNICALL OnVMInit(jvmtiEnv *jvmti, JNIEnv *env, jthread thread) {
     conf->validate();
   }
 
-  /* If failure signal initialization. */
-  if (unlikely(!TSignalManager::globalInitialize(env))) {
-    logger->printWarnMsg("Failure signal handler initialization.");
-    /* Disable many signal. */
-    conf->TriggerOnLogSignal()->set(false);
-    conf->ReloadSignal()->set(NULL);
-  }
-
   /* Initialize signal flag. */
   flagReloadConfig = 0;
 
   /* Start HeapStats agent threads. */
-  try {
-    reloadSigMngr = new TSignalManager(env, &ReloadSigProc);
-
-    /* Switch reload signal state. */
-    if (conf->ReloadSignal()->get() != NULL) {
-      /* Setting new reload signal. */
-      if (unlikely(
-              !reloadSigMngr->catchSignal(env, conf->ReloadSignal()->get()))) {
-        /* Reload configuration signal is disable. */
-        logger->printWarnMsg("Failure register reload configuration signal.");
+  if (conf->ReloadSignal()->get() != NULL) {
+    try {
+      reloadSigMngr = new TSignalManager(conf->ReloadSignal()->get());
+      if (!reloadSigMngr->addHandler(&ReloadSigProc)) {
+        logger->printWarnMsg("Reload signal handler setup is failed.");
         conf->ReloadSignal()->set(NULL);
       }
+    } catch (const char *errMsg) {
+      logger->printWarnMsg(errMsg);
+      conf->ReloadSignal()->set(NULL);
+    } catch (...) {
+      logger->printWarnMsg("Reload signal handler setup is failed.");
+      conf->ReloadSignal()->set(NULL);
     }
-
-  } catch (const char *errMsg) {
-    logger->printWarnMsg(errMsg);
-  } catch (...) {
-    logger->printWarnMsg("AgentThread start failed!");
   }
 
   /* Calculate alert limit. */
@@ -389,11 +377,6 @@ void JNICALL OnVMDeath(jvmtiEnv *jvmti, JNIEnv *env) {
 
   /* If reload log signal is enabled. */
   if (likely(reloadSigMngr != NULL)) {
-    /* Terminate reload signal manager. */
-    if (likely(conf->ReloadSignal()->get() != NULL)) {
-      reloadSigMngr->ignoreSignal(env, conf->ReloadSignal()->get());
-    }
-    reloadSigMngr->terminate(env);
     delete reloadSigMngr;
     reloadSigMngr = NULL;
   }
@@ -413,9 +396,6 @@ void JNICALL OnVMDeath(jvmtiEnv *jvmti, JNIEnv *env) {
                                 conf->ThreadRecordFileName()->get());
     }
   }
-
-  /* Signal finalization. */
-  TSignalManager::globalFinalize(env);
 }
 
 /*!
