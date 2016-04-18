@@ -1,3 +1,12 @@
+2016-04-18  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2911: [REFACTORING][JDK 9] Refactoring signal handling mechanism
+	* Bug 2912: [JDK 9] Support JDK 9 version string
+	* Bug 2913: [JDK 9] Adapt to JDK-8148047 
+	* Bug 2919: [JDK 9] Add Serial and Parallel GC hook for JDK 9
+	* Bug 2923: [REFACTORING][JDK 9] Refactoring deadlock finder
+	* Bug 2924: [JDK 9] Adapt to JEP 220
+
 2016-04-11  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2925: [REGRESSION] Cannot attach HeapStats agent to live process
