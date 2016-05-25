@@ -61,8 +61,9 @@ DEFINE_OVERRIDE_FUNC_5(par_jdk9);
  * \brief Override function for heap object on parallelOldGC.
  */
 DEFINE_OVERRIDE_FUNC_4(parOld);
-
 DEFINE_OVERRIDE_FUNC_5(parOld_6964458);
+DEFINE_OVERRIDE_FUNC_5(parOld_jdk9);
+
 /*!
  * \brief Override function for sweep at old gen on CMSGC.
  */
@@ -280,13 +281,32 @@ THookFunctionInfo CR8000213_parOld_hook[] = {
     HOOK_FUNC_END};
 
 /*!
+ * \brief Pointer of hook information on parallelOldGC for after jdk 9.
+ */
+THookFunctionInfo jdk9_parOld_hook[] = {
+    HOOK_FUNC(parOld_jdk9, 0, "_ZTV13InstanceKlass",
+              "_ZN13InstanceKlass22oop_pc_follow_contentsEP7oopDescP20ParCompactionManager",
+              &callbackForParOld),
+    HOOK_FUNC(parOld_jdk9, 1, "_ZTV13ObjArrayKlass",
+              "_ZN13ObjArrayKlass22oop_pc_follow_contentsEP7oopDescP20ParCompactionManager",
+              &callbackForParOld),
+    HOOK_FUNC(parOld_jdk9, 2, "_ZTV14TypeArrayKlass",
+              "_ZN14TypeArrayKlass22oop_pc_follow_contentsEP7oopDescP20ParCompactionManager",
+              &callbackForParOld),
+    HOOK_FUNC(parOld_jdk9, 3, "_ZTV16InstanceRefKlass",
+              "_ZN16InstanceRefKlass22oop_pc_follow_contentsEP7oopDescP20ParCompactionManager",
+              &callbackForParOld),
+    HOOK_FUNC(parOld_jdk9, 4, "_ZTV24InstanceClassLoaderKlass",
+              "_ZN24InstanceClassLoaderKlass22oop_pc_follow_contentsEP7oopDescP20ParCompactionManager",
+              &callbackForParOld),
+    HOOK_FUNC_END};
+
+/*!
  * \brief Pointers of hook information on parallelOldGC for several CRs.<br>
  *        These CRs have no impact on parallelOldGC, so refer to the last.
  */
 #define CR8027746_parOld_hook CR8000213_parOld_hook
 #define CR8049421_parOld_hook CR8000213_parOld_hook
-/* TODO: We have to define valid hook for JDK 9 */
-#define jdk9_parOld_hook CR8049421_parOld_hook
 
 /*!
  * \brief Pointer of hook information on parallelOldGC.

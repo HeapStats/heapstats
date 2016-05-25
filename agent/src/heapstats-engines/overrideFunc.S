@@ -241,6 +241,19 @@ OVERRIDE_DEFINE(par_jdk9, 3, 2)
 /* InstanceClassLoaderKlass::oop_ms_adjust_pointers(oopDesc*) */
 OVERRIDE_DEFINE(par_jdk9, 4, 2)
 
+/* For JDK 9 ParallelOld GC hook */
+
+/* InstanceKlass::oop_pc_follow_contents(oopDesc*, ParCompactionManager*) */
+OVERRIDE_DEFINE(parOld_jdk9, 0, 2)
+/* ObjArrayKlass::oop_pc_follow_contents(oopDesc*, ParCompactionManager*) */
+OVERRIDE_DEFINE(parOld_jdk9, 1, 2)
+/* TypeArrayKlass::oop_pc_follow_contents(oopDesc*, ParCompactionManager*) */
+OVERRIDE_DEFINE(parOld_jdk9, 2, 2)
+/* InstanceRefKlass::oop_pc_follow_contents(oopDesc*, ParCompactionManager*) */
+OVERRIDE_DEFINE(parOld_jdk9, 3, 2)
+/* InstanceClassLoaderKlass::oop_pc_follow_contents(oopDesc*, ParCompactionManager*) */
+OVERRIDE_DEFINE(parOld_jdk9, 4, 2)
+
 
 #ifdef AVOID__i686
 /* Restore definition. */
