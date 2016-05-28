@@ -74,6 +74,7 @@ DEFINE_OVERRIDE_FUNC_1(cms_sweep);
  */
 DEFINE_OVERRIDE_FUNC_4(cms_new);
 DEFINE_OVERRIDE_FUNC_5(cms_new_6964458);
+DEFINE_OVERRIDE_FUNC_5(cms_new_jdk9);
 
 /*!
  * \brief Override function for heap object on G1GC.
@@ -401,13 +402,33 @@ THookFunctionInfo CR8000213_cms_new_hook[] = {
     HOOK_FUNC_END};
 
 /*!
+ * \brief Pointer of hook information on CMSGC for JDK 9.
+ */
+THookFunctionInfo jdk9_cms_new_hook[] = {
+    HOOK_FUNC(cms_new_jdk9, 0, "_ZTV13InstanceKlass",
+              "_ZN13InstanceKlass17oop_oop_iterate_vEP7oopDescP18ExtendedOopClosure",
+              &callbackForIterate),
+    HOOK_FUNC(cms_new_jdk9, 1, "_ZTV13ObjArrayKlass",
+              "_ZN13ObjArrayKlass17oop_oop_iterate_vEP7oopDescP18ExtendedOopClosure",
+              &callbackForIterate),
+    HOOK_FUNC(
+        cms_new_jdk9, 2, "_ZTV14TypeArrayKlass",
+        "_ZN14TypeArrayKlass17oop_oop_iterate_vEP7oopDescP18ExtendedOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(cms_new_jdk9, 3, "_ZTV16InstanceRefKlass",
+              "_ZN16InstanceRefKlass17oop_oop_iterate_vEP7oopDescP18ExtendedOopClosure",
+              &callbackForIterate),
+    HOOK_FUNC(cms_new_jdk9, 4, "_ZTV24InstanceClassLoaderKlass",
+              "_ZN24InstanceClassLoaderKlass17oop_oop_iterate_vEP7oopDescP18ExtendedOopClosure",
+              &callbackForIterate),
+    HOOK_FUNC_END};
+
+/*!
 * \brief Pointers of hook information on CMSGC for several CRs.<br>
 *        These CRs have no impact on CMSGC, so refer to the last.
 */
 #define CR8027746_cms_new_hook CR8000213_cms_new_hook
 #define CR8049421_cms_new_hook CR8000213_cms_new_hook
-/* TODO: We have to define valid hook for JDK 9 */
-#define jdk9_cms_new_hook CR8049421_cms_new_hook
 
 /*!
  * \brief Pointer of hook information on CMSGC.

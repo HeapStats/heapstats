@@ -254,6 +254,19 @@ OVERRIDE_DEFINE(parOld_jdk9, 3, 2)
 /* InstanceClassLoaderKlass::oop_pc_follow_contents(oopDesc*, ParCompactionManager*) */
 OVERRIDE_DEFINE(parOld_jdk9, 4, 2)
 
+/* For JDK 9 ParNew GC hook */
+
+/* InstanceKlass::oop_oop_iterate_v(oopDesc*, ExtendedOopClosure*) */
+OVERRIDE_DEFINE(cms_new_jdk9, 0, 2)
+/* ObjArrayKlass::oop_oop_iterate_v(oopDesc*, ExtendedOopClosure*) */
+OVERRIDE_DEFINE(cms_new_jdk9, 1, 2)
+/* TypeArrayKlass::oop_oop_iterate_v(oopDesc*, ExtendedOopClosure*) */
+OVERRIDE_DEFINE(cms_new_jdk9, 2, 2)
+/* InstanceRefKlass::oop_oop_iterate_v(oopDesc*, ExtendedOopClosure*) */
+OVERRIDE_DEFINE(cms_new_jdk9, 3, 2)
+/* InstanceClassLoaderKlass::oop_oop_iterate_v(oopDesc*, ExtendedOopClosure*) */
+OVERRIDE_DEFINE(cms_new_jdk9, 4, 2)
+
 
 #ifdef AVOID__i686
 /* Restore definition. */
