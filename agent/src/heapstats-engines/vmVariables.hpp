@@ -312,6 +312,21 @@ class TVMVariables {
    */
   void *threads_lock;
 
+  /*!
+   * \brief Pointer of YoungGen in GenCollectedHeap.
+   */
+  void *youngGen;
+
+  /*!
+   * \brief Start address of YoungGen.
+   */
+  void *youngGenStartAddr;
+
+  /*!
+   * \brief sizeof YoungGen.
+   */
+  size_t youngGenSize;
+
   /* Class of HeapStats for scanning variables in HotSpot VM */
   TSymbolFinder *symFinder;
   TVMStructScanner *vmScanner;
@@ -447,6 +462,9 @@ class TVMVariables {
   inline off_t getOfsOSThreadThreadId() { return ofsOSThreadThreadId; };
   inline off_t getOfsObjectMonitorObject() { return ofsObjectMonitorObject; };
   inline void *getThreadsLock() { return threads_lock; };
+  inline void *getYoungGen() const { return youngGen; };
+  inline void *getYoungGenStartAddr() const { return youngGenStartAddr; };
+  inline size_t getYoungGenSize() const { return youngGenSize; };
 };
 
 #endif  // VMVARIABLES_H

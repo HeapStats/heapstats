@@ -33,7 +33,7 @@ void *VTableForTypeArrayOopClosure[2] __attribute__((aligned(16)));
 /*!
  * \brief Function pointer for "is_in_permanent".
  */
-THeap_IsInPermanent is_in_permanent = NULL;
+THeap_IsIn is_in_permanent = NULL;
 
 /* Internal function */
 
@@ -83,18 +83,27 @@ bool TVMFunctions::getFunctionsFromSymbol(void) {
   /* Search "is_in_permanent" function symbol. */
   if (jvmInfo->isAfterCR6964458()) {
     /* Perm gen does not exist. */
-    is_in_permanent = (THeap_IsInPermanent)&dummyIsInPermanent;
+    is_in_permanent = (THeap_IsIn)&dummyIsInPermanent;
   } else if (vmVal->getUseParallel() || vmVal->getUseParOld()) {
-    is_in_permanent = (THeap_IsInPermanent) this->symFinder->findSymbol(
+    is_in_permanent = (THeap_IsIn) this->symFinder->findSymbol(
         IS_IN_PERM_ON_PARALLEL_GC_SYMBOL);
   } else {
-    is_in_permanent = (THeap_IsInPermanent) this->symFinder->findSymbol(
+    is_in_permanent = (THeap_IsIn) this->symFinder->findSymbol(
         IS_IN_PERM_ON_OTHER_GC_SYMBOL);
   }
 
   if (unlikely(is_in_permanent == NULL)) {
     logger->printCritMsg("is_in_permanent() not found.");
     return false;
+  }
+
+  /* Search "is_in" function symbol for ParNew GC when CMS GC is worked. */
+  if (vmVal->getUseCMS()) {
+    is_in = (THeap_IsIn) this->symFinder->findSymbol(IS_IN_SYMBOL);
+    if (unlikely(is_in == NULL)) {
+      logger->printCritMsg("is_in() not found.");
+      return false;
+    }
   }
 
   /* Search "GetObjectSize" function symbol. */

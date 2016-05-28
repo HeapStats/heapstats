@@ -107,7 +107,7 @@ DEFINE_OVERRIDE_FUNC_3(innerStart);
 DEFINE_OVERRIDE_FUNC_1(watcherThread);
 
 /*!
- * \brief Bitmap object for G1 GC.
+ * \brief Bitmap object for CMS and G1 GC.
  */
 TBitMapMarker *checkObjectMap = NULL;
 
@@ -893,7 +893,8 @@ bool initOverrider(void) {
  */
 void cleanupOverrider(void) {
   /* Cleanup. */
-  if (TVMVariables::getInstance()->getUseG1()) {
+  TVMVariables *vmVal = TVMVariables::getInstance();
+  if (vmVal->getUseCMS() || vmVal->getUseG1()) {
     delete checkObjectMap;
     checkObjectMap = NULL;
   }
@@ -939,6 +940,8 @@ int checkCMSState(TGCState state, bool *needSnapShot) {
         *needSnapShot = needSnapShotByCMSPhase;
         needSnapShotByCMSPhase = false;
       } else if (vmVal->getCMS_collectorState() == CMS_FINALMARKING) {
+        checkObjectMap->clear();
+
         /* switch hooking for CMS new generation. */
         switchOverrideFunction(cms_new_hook, true);
       }
@@ -1169,6 +1172,27 @@ bool setupForParallelOld(void) {
 bool setupForCMS(void) {
   SELECT_HOOK_FUNCS(cms_new);
 
+  TVMVariables *vmVal = TVMVariables::getInstance();
+  const void *startAddr = vmVal->getYoungGenStartAddr();
+  const size_t youngSize = vmVal->getYoungGenSize();
+
+/* Create bitmap to check object collected flag. */
+#ifdef AVX
+    checkObjectMap = new TAVXBitMapMarker(startAddr, youngSize);
+#elif(defined SSE2) || (defined SSE3) || (defined SSE4)
+    checkObjectMap = new TSSE2BitMapMarker(startAddr, youngSize);
+#elif PROCESSOR_ARCH == X86
+    checkObjectMap = new TX86BitMapMarker(startAddr, youngSize);
+#elif PROCESSOR_ARCH == ARM
+
+#ifdef NEON
+    checkObjectMap = new TNeonBitMapMarker(startAddr, youngSize);
+#else
+    checkObjectMap = new TARMBitMapMarker(startAddr, youngSize);
+#endif
+
+#endif
+
   if (unlikely(!setupOverrideFunction(cms_new_hook))) {
     logger->printCritMsg("Cannot setup to override CMS_new (ParNew GC).");
     return false;
@@ -1269,6 +1293,7 @@ bool setGCHookState(bool enable) {
     /* Switch CMS hooking at new generation. */
     switchOverrideFunction(cms_new_hook, enable);
     list = cms_sweep_hook;
+    checkObjectMap->clear();
   } else if (vmVal->getUseG1()) {
     /* If users select G1, we prepare TSnapShotContainer NOW! */
     snapshotByGC = TSnapShotContainer::getInstance();
@@ -1504,6 +1529,11 @@ void callbackForIterate(void *oop) {
     /* If object is in CMS gen.  */
     if ((ptrdiff_t)oop >= (ptrdiff_t)vmVal->getCmsBitMap_startWord()) {
       /* Skip. because collect object in CMS gen by callbackForSweep. */
+      return;
+    }
+
+    if (checkObjectMap->checkAndMark(oop)) {
+      /* Object is in young gen and already marked. */
       return;
     }
 
