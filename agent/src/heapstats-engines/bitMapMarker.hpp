@@ -1,7 +1,7 @@
 /*!
  * \file bitMapMarker.hpp
  * \brief This file is used to store and control of bit map.
- * Copyright (C) 2011-2014 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -80,7 +80,7 @@ class TBitMapMarker {
    * \param startAddr [in] Start address of Java heap.
    * \param size      [in] Max Java heap size.
    */
-  TBitMapMarker(void *startAddr, size_t size);
+  TBitMapMarker(const void *startAddr, const size_t size);
   /*!
    * \brief TBitMapMarker destructor.
    */
@@ -91,7 +91,7 @@ class TBitMapMarker {
    * \param addr [in] Oop address.
    * \return Designated pointer is existing in bitmap.
    */
-  inline bool isInZone(void *addr) {
+  inline bool isInZone(const void *addr) {
     return (this->beginAddr <= addr) && (this->endAddr >= addr);
   }
 
@@ -99,21 +99,21 @@ class TBitMapMarker {
    * \brief Mark GC-marked address in this bitmap.
    * \param addr [in] Oop address.
    */
-  virtual void setMark(void *addr) = 0;
+  virtual void setMark(const void *addr) = 0;
 
   /*!
    * \brief Get marked flag of designated pointer.
    * \param addr [in] Targer pointer.
    * \return Designated pointer is marked.
    */
-  virtual bool isMarked(void *addr);
+  virtual bool isMarked(const void *addr);
 
   /*!
    * \brief Check address which is already marked and set mark.
    * \param addr [in] Oop address.
    * \return Designated pointer is marked.
    */
-  virtual bool checkAndMark(void *addr) = 0;
+  virtual bool checkAndMark(const void *addr) = 0;
 
   /*!
    * \brief Clear bitmap flag.
@@ -138,7 +138,8 @@ class TBitMapMarker {
    *                    The bit flag is expressing target pointer.
    * \param mask  [out] A bitmask for getting only flag of target pointer.
    */
-  inline void getBlockAndMask(void *addr, ptrdiff_t **block, ptrdiff_t *mask) {
+  inline void getBlockAndMask(const void *addr,
+                              ptrdiff_t **block, ptrdiff_t *mask) {
     /*
      * Calculate bitmap offset.
      * offset = (address offset from top of JavaHeap) / (pointer size)

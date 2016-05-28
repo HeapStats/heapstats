@@ -1,7 +1,7 @@
 /*!
  * \file x86BitMapMarker.cpp
  * \brief This file is used to store and control of bit map.
- * Copyright (C) 2014 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@
  * \brief Mark GC-marked address in this bitmap.
  * \param addr [in] Oop address.
  */
-void TX86BitMapMarker::setMark(void *addr) {
+void TX86BitMapMarker::setMark(const void *addr) {
   /* Sanity check. */
   if (unlikely(!this->isInZone(addr))) {
     return;
@@ -60,7 +60,7 @@ void TX86BitMapMarker::setMark(void *addr) {
  * \param addr [in] Targer pointer.
  * \return Designated pointer is marked.
  */
-bool TX86BitMapMarker::isMarked(void *addr) {
+bool TX86BitMapMarker::isMarked(const void *addr) {
   /* Sanity check. */
   if (unlikely(!this->isInZone(addr))) {
     return false;
@@ -99,7 +99,7 @@ bool TX86BitMapMarker::isMarked(void *addr) {
  * \param addr [in] Oop address.
  * \return Designated pointer is marked.
  */
-bool TX86BitMapMarker::checkAndMark(void *addr) {
+bool TX86BitMapMarker::checkAndMark(const void *addr) {
   /* Sanity check. */
   if (unlikely(!this->isInZone(addr))) {
     return false;

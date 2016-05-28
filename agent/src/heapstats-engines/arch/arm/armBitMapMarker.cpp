@@ -1,7 +1,7 @@
 /*!
  * \file armBitMapMarker.cpp
  * \brief This file is used to store and control of bit map.
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@
  * \brief Mark GC-marked address in this bitmap.
  * \param addr [in] Oop address.
  */
-void TARMBitMapMarker::setMark(void *addr) {
+void TARMBitMapMarker::setMark(const void *addr) {
   /* Sanity check. */
   if (unlikely(!this->isInZone(addr))) {
     return;
@@ -60,7 +60,7 @@ void TARMBitMapMarker::setMark(void *addr) {
  * \param addr [in] Oop address.
  * \return Designated pointer is marked.
  */
-bool TARMBitMapMarker::checkAndMark(void *addr) {
+bool TARMBitMapMarker::checkAndMark(const void *addr) {
   /* Sanity check. */
   if (unlikely(!this->isInZone(addr))) {
     return false;

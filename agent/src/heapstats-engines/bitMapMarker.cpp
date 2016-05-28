@@ -1,7 +1,7 @@
 /*!
  * \file bitMapMarker.cpp
  * \brief This file is used to store and control of bit map.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,7 +30,7 @@
  * \param startAddr [in] Start address of Java heap.
  * \param size      [in] Max Java heap size.
  */
-TBitMapMarker::TBitMapMarker(void *startAddr, size_t size) {
+TBitMapMarker::TBitMapMarker(const void *startAddr, const size_t size) {
   /* Sanity check. */
   if (unlikely(startAddr == NULL || size <= 0)) {
     throw - 1;
@@ -39,7 +39,7 @@ TBitMapMarker::TBitMapMarker(void *startAddr, size_t size) {
   /* Initialize setting. */
   size_t alignedSize = ALIGN_SIZE_UP(size, systemPageSize);
 
-  this->beginAddr = startAddr;
+  this->beginAddr = const_cast<void *>(startAddr);
   this->endAddr = incAddress(this->beginAddr, alignedSize);
   this->bitmapSize = ALIGN_SIZE_UP(alignedSize >> MEMALIGN_BIT, systemPageSize);
   this->bitmapAddr = mmap(NULL, this->bitmapSize, PROT_READ | PROT_WRITE,
@@ -70,7 +70,7 @@ TBitMapMarker::~TBitMapMarker() {
  * \param addr [in] Targer pointer.
  * \return Designated pointer is marked.
  */
-bool TBitMapMarker::isMarked(void *addr) {
+bool TBitMapMarker::isMarked(const void *addr) {
   /* Sanity check. */
   if (unlikely(!this->isInZone(addr))) {
     return false;

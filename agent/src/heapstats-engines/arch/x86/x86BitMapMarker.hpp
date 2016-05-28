@@ -1,7 +1,7 @@
 /*!
  * \file x86BitMapMarker.hpp
  * \brief This file is used to store and control of bit map.
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,7 +34,7 @@ class TX86BitMapMarker : public TBitMapMarker {
    * \param startAddr [in] Start address of Java heap.
    * \param size      [in] Max Java heap size.
    */
-  TX86BitMapMarker(void *startAddr, size_t size)
+  TX86BitMapMarker(const void *startAddr, const size_t size)
       : TBitMapMarker(startAddr, size){};
 
   /*!
@@ -46,21 +46,21 @@ class TX86BitMapMarker : public TBitMapMarker {
    * \brief Mark GC-marked address in this bitmap.
    * \param addr [in] Oop address.
    */
-  virtual void setMark(void *addr);
+  virtual void setMark(const void *addr);
 
   /*!
    * \brief Get marked flag of designated pointer.
    * \param addr [in] Targer pointer.
    * \return Designated pointer is marked.
    */
-  virtual bool isMarked(void *addr);
+  virtual bool isMarked(const void *addr);
 
   /*!
    * \brief Check address which is already marked and set mark.
    * \param addr [in] Oop address.
    * \return Designated pointer is marked.
    */
-  virtual bool checkAndMark(void *addr);
+  virtual bool checkAndMark(const void *addr);
 };
 
 #endif  // X86BITMAPMARKER_HPP
