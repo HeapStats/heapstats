@@ -158,6 +158,20 @@ typedef enum {
   DEFINE_OVERRIDE_FUNC_N(prefix, 9)     \
   DEFINE_OVERRIDE_FUNC_N(prefix, 10)
 
+#define DEFINE_OVERRIDE_FUNC_12(prefix) \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 0)     \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 1)     \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 2)     \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 3)     \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 4)     \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 5)     \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 6)     \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 7)     \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 8)     \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 9)     \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 10)    \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 11)
+
 /*!
  * \brief Macro to select override function with CR.
  */

@@ -81,6 +81,7 @@ DEFINE_OVERRIDE_FUNC_5(cms_new_jdk9);
  */
 DEFINE_OVERRIDE_FUNC_9(g1);
 DEFINE_OVERRIDE_FUNC_11(g1_6964458);
+DEFINE_OVERRIDE_FUNC_12(g1_jdk9);
 
 /*!
  * \brief Override function for cleanup and System.gc() event on G1GC.
@@ -671,8 +672,59 @@ THookFunctionInfo CR8049421_g1_hook[] = {
         &callbackForIterate),
     HOOK_FUNC_END};
 
-/* TODO: We have to define valid hook for JDK 9 */
-#define jdk9_g1_hook CR8049421_g1_hook
+/*!
+ * \brief Pointer of hook information on G1GC for after JDK 9.
+ */
+THookFunctionInfo jdk9_g1_hook[] = {
+    HOOK_FUNC(
+        g1_jdk9, 0, "_ZTV16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE",
+        "_ZN16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE6do_oopEPP7oopDesc",
+        &callbackForDoOop),
+    HOOK_FUNC(
+        g1_jdk9, 1, "_ZTV16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE",
+        "_ZN16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE6do_oopEPj",
+        &callbackForDoNarrowOop),
+    HOOK_FUNC(
+        g1_jdk9, 2, "_ZTV13InstanceKlass",
+        "_ZN13InstanceKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 3, "_ZTV13ObjArrayKlass",
+        "_ZN13ObjArrayKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 4, "_ZTV14TypeArrayKlass",
+        "_ZN14TypeArrayKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 5, "_ZTV16InstanceRefKlass",
+        "_ZN16InstanceRefKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 6, "_ZTV24InstanceClassLoaderKlass",
+        "_ZN24InstanceClassLoaderKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 7, "_ZTV13InstanceKlass",
+        "_ZN13InstanceKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 8, "_ZTV13ObjArrayKlass",
+        "_ZN13ObjArrayKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 9, "_ZTV14TypeArrayKlass",
+        "_ZN14TypeArrayKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 10, "_ZTV16InstanceRefKlass",
+        "_ZN16InstanceRefKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 11, "_ZTV24InstanceClassLoaderKlass",
+        "_ZN24InstanceClassLoaderKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC_END};
 
 /*!
  * \brief Pointer of hook information on G1GC.
