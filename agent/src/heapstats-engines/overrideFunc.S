@@ -181,10 +181,10 @@ OVERRIDE_DEFINE(g1_6964458, 10, 2)
 
 /* CMCleanUp::do_void() */
 OVERRIDE_DEFINE_WITHOUT_PERMCHECK(g1Event, 0, 1)
-/* G1CollectedHeap::gc_prologue(bool) */
-OVERRIDE_DEFINE_WITHOUT_PERMCHECK(g1Event, 1, 2)
-/* G1CollectedHeap::gc_epilogue(bool) */
-OVERRIDE_DEFINE_WITHOUT_PERMCHECK(g1Event, 2, 2)
+/* VM_G1CollectFull::doit_prologue() */
+OVERRIDE_DEFINE_WITHOUT_PERMCHECK(g1Event, 1, 1)
+/* VM_G1CollectFull::doit_epilogue() */
+OVERRIDE_DEFINE_WITHOUT_PERMCHECK(g1Event, 2, 1)
 
 /* for Klass relocation. */
 

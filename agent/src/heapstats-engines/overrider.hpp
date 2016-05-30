@@ -253,9 +253,9 @@ extern "C" void callbackForAdjustPtr(void *oop);
 extern "C" void callbackForDoAddr(void *oop);
 extern "C" void callbackForUpdatePtr(void *oop);
 extern "C" void callbackForJvmtiIterate(void *oop);
-extern "C" void callbackForG1Cleanup(void);
-extern "C" void callbackForG1Full(bool isFull);
-extern "C" void callbackForG1FullReturn(bool isFull);
+extern "C" void callbackForG1Cleanup(void *thisptr);
+extern "C" void callbackForG1Full(void *thisptr);
+extern "C" void callbackForG1FullReturn(void *thisptr);
 extern "C" void callbackForInnerGCStart(void);
 extern "C" void callbackForWatcherThreadRun(void);
 

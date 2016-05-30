@@ -737,10 +737,10 @@ THookFunctionInfo *g1_hook = NULL;
 THookFunctionInfo default_g1Event_hook[] = {
     HOOK_FUNC(g1Event, 0, "_ZTV9CMCleanUp", "_ZN9CMCleanUp7do_voidEv",
               &callbackForG1Cleanup),
-    HOOK_FUNC(g1Event, 1, "_ZTV15G1CollectedHeap",
-              "_ZN15G1CollectedHeap11gc_prologueEb", &callbackForG1Full),
-    HOOK_FUNC(g1Event, 2, "_ZTV15G1CollectedHeap",
-              "_ZN15G1CollectedHeap11gc_epilogueEb", &callbackForG1FullReturn),
+    HOOK_FUNC(g1Event, 1, "_ZTV16VM_G1CollectFull",
+              "_ZN15VM_GC_Operation13doit_prologueEv", &callbackForG1Full),
+    HOOK_FUNC(g1Event, 2, "_ZTV16VM_G1CollectFull",
+              "_ZN15VM_GC_Operation13doit_epilogueEv", &callbackForG1FullReturn),
     HOOK_FUNC_END};
 
 /*!
@@ -1703,8 +1703,9 @@ void callbackForJvmtiIterate(void *oop) {
 
 /*!
  * \brief Callback function for before G1 GC cleanup.
+ * \param thisptr [in] this pointer of caller C++ instance.
  */
-void callbackForG1Cleanup(void) {
+void callbackForG1Cleanup(void *thisptr) {
   if (likely(g1FinishCallbackFunc != NULL)) {
     /* Invoke callback. */
     g1FinishCallbackFunc();
@@ -1716,16 +1717,9 @@ void callbackForG1Cleanup(void) {
 
 /*!
  * \brief Callback function for before System.gc() on using G1GC.
- * \param isFull [in] Is this event FullGC?
+ * \param thisptr [in] this pointer of caller C++ instance.
  */
-void callbackForG1Full(bool isFull) {
-  /* This function must be processed when FullGC occurs.
-   * e.g. System.gc(), evacuation failure, etc...
-   */
-  if (!isFull) {
-    return;
-  }
-
+void callbackForG1Full(void *thisptr) {
   /*
    * Disable G1 callback function:
    *  OopClosure for typeArrayKlass is called by G1 FullCollection.
@@ -1739,16 +1733,9 @@ void callbackForG1Full(bool isFull) {
 
 /*!
  * \brief Callback function for after System.gc() on using G1GC.
- * \param isFull [in] Is this event FullGC?
+ * \param thisptr [in] this pointer of caller C++ instance.
  */
-void callbackForG1FullReturn(bool isFull) {
-  /* This function must be processed when FullGC occurs.
-   * e.g. System.gc(), evacuation failure, etc...
-   */
-  if (!isFull) {
-    return;
-  }
-
+void callbackForG1FullReturn(void *thisptr) {
   /* Restore G1 callback. */
   switchOverrideFunction(g1_hook, true);
 
