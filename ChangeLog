@@ -1,3 +1,13 @@
+2016-06-02  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2970: [JDK 9] Add ParallelOldGC hook for JDK 9
+	* Bug 2976: [REFACTORING][JDK 9] Use const declarations for TBitMapMarker
+	* Bug 2977: [REFACTORING][JDK 9] Add marking bitmap for ParNew GC at CMS Final Remark
+	* Bug 2978: [JDK 9] Add CMSGC hook for JDK 9
+	* Bug 2979: [JDK 9] Add G1GC hook for JDK 9
+	* Bug 2980: [REFACTORING][JDK 9] Change FullGC hookpoint for G1
+	* Bug 2981: [TESTBUG] Cannot test ParallelGC in snapshot test.sh
+
 2016-04-18  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2911: [REFACTORING][JDK 9] Refactoring signal handling mechanism
