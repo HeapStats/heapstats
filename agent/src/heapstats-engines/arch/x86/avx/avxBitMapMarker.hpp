@@ -2,7 +2,7 @@
  * \file avxBitMapMarker.hpp
  * \brief Storeing and Controlling G1 marking bitmap.
  *        This source is optimized for AVX instruction set.
- * Copyright (C) 2014 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ class TAVXBitMapMarker : public TSSE2BitMapMarker {
    * \param startAddr [in] Start address of Java heap.
    * \param size      [in] Max Java heap size.
    */
-  TAVXBitMapMarker(void *startAddr, size_t size)
+  TAVXBitMapMarker(const void *startAddr, const size_t size)
       : TSSE2BitMapMarker(startAddr, size){};
 
   /*!

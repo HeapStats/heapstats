@@ -61,8 +61,9 @@ DEFINE_OVERRIDE_FUNC_5(par_jdk9);
  * \brief Override function for heap object on parallelOldGC.
  */
 DEFINE_OVERRIDE_FUNC_4(parOld);
-
 DEFINE_OVERRIDE_FUNC_5(parOld_6964458);
+DEFINE_OVERRIDE_FUNC_5(parOld_jdk9);
+
 /*!
  * \brief Override function for sweep at old gen on CMSGC.
  */
@@ -73,12 +74,14 @@ DEFINE_OVERRIDE_FUNC_1(cms_sweep);
  */
 DEFINE_OVERRIDE_FUNC_4(cms_new);
 DEFINE_OVERRIDE_FUNC_5(cms_new_6964458);
+DEFINE_OVERRIDE_FUNC_5(cms_new_jdk9);
 
 /*!
  * \brief Override function for heap object on G1GC.
  */
 DEFINE_OVERRIDE_FUNC_9(g1);
 DEFINE_OVERRIDE_FUNC_11(g1_6964458);
+DEFINE_OVERRIDE_FUNC_12(g1_jdk9);
 
 /*!
  * \brief Override function for cleanup and System.gc() event on G1GC.
@@ -106,7 +109,7 @@ DEFINE_OVERRIDE_FUNC_3(innerStart);
 DEFINE_OVERRIDE_FUNC_1(watcherThread);
 
 /*!
- * \brief Bitmap object for G1 GC.
+ * \brief Bitmap object for CMS and G1 GC.
  */
 TBitMapMarker *checkObjectMap = NULL;
 
@@ -280,13 +283,32 @@ THookFunctionInfo CR8000213_parOld_hook[] = {
     HOOK_FUNC_END};
 
 /*!
+ * \brief Pointer of hook information on parallelOldGC for after jdk 9.
+ */
+THookFunctionInfo jdk9_parOld_hook[] = {
+    HOOK_FUNC(parOld_jdk9, 0, "_ZTV13InstanceKlass",
+              "_ZN13InstanceKlass22oop_pc_follow_contentsEP7oopDescP20ParCompactionManager",
+              &callbackForParOld),
+    HOOK_FUNC(parOld_jdk9, 1, "_ZTV13ObjArrayKlass",
+              "_ZN13ObjArrayKlass22oop_pc_follow_contentsEP7oopDescP20ParCompactionManager",
+              &callbackForParOld),
+    HOOK_FUNC(parOld_jdk9, 2, "_ZTV14TypeArrayKlass",
+              "_ZN14TypeArrayKlass22oop_pc_follow_contentsEP7oopDescP20ParCompactionManager",
+              &callbackForParOld),
+    HOOK_FUNC(parOld_jdk9, 3, "_ZTV16InstanceRefKlass",
+              "_ZN16InstanceRefKlass22oop_pc_follow_contentsEP7oopDescP20ParCompactionManager",
+              &callbackForParOld),
+    HOOK_FUNC(parOld_jdk9, 4, "_ZTV24InstanceClassLoaderKlass",
+              "_ZN24InstanceClassLoaderKlass22oop_pc_follow_contentsEP7oopDescP20ParCompactionManager",
+              &callbackForParOld),
+    HOOK_FUNC_END};
+
+/*!
  * \brief Pointers of hook information on parallelOldGC for several CRs.<br>
  *        These CRs have no impact on parallelOldGC, so refer to the last.
  */
 #define CR8027746_parOld_hook CR8000213_parOld_hook
 #define CR8049421_parOld_hook CR8000213_parOld_hook
-/* TODO: We have to define valid hook for JDK 9 */
-#define jdk9_parOld_hook CR8049421_parOld_hook
 
 /*!
  * \brief Pointer of hook information on parallelOldGC.
@@ -381,13 +403,33 @@ THookFunctionInfo CR8000213_cms_new_hook[] = {
     HOOK_FUNC_END};
 
 /*!
+ * \brief Pointer of hook information on CMSGC for JDK 9.
+ */
+THookFunctionInfo jdk9_cms_new_hook[] = {
+    HOOK_FUNC(cms_new_jdk9, 0, "_ZTV13InstanceKlass",
+              "_ZN13InstanceKlass17oop_oop_iterate_vEP7oopDescP18ExtendedOopClosure",
+              &callbackForIterate),
+    HOOK_FUNC(cms_new_jdk9, 1, "_ZTV13ObjArrayKlass",
+              "_ZN13ObjArrayKlass17oop_oop_iterate_vEP7oopDescP18ExtendedOopClosure",
+              &callbackForIterate),
+    HOOK_FUNC(
+        cms_new_jdk9, 2, "_ZTV14TypeArrayKlass",
+        "_ZN14TypeArrayKlass17oop_oop_iterate_vEP7oopDescP18ExtendedOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(cms_new_jdk9, 3, "_ZTV16InstanceRefKlass",
+              "_ZN16InstanceRefKlass17oop_oop_iterate_vEP7oopDescP18ExtendedOopClosure",
+              &callbackForIterate),
+    HOOK_FUNC(cms_new_jdk9, 4, "_ZTV24InstanceClassLoaderKlass",
+              "_ZN24InstanceClassLoaderKlass17oop_oop_iterate_vEP7oopDescP18ExtendedOopClosure",
+              &callbackForIterate),
+    HOOK_FUNC_END};
+
+/*!
 * \brief Pointers of hook information on CMSGC for several CRs.<br>
 *        These CRs have no impact on CMSGC, so refer to the last.
 */
 #define CR8027746_cms_new_hook CR8000213_cms_new_hook
 #define CR8049421_cms_new_hook CR8000213_cms_new_hook
-/* TODO: We have to define valid hook for JDK 9 */
-#define jdk9_cms_new_hook CR8049421_cms_new_hook
 
 /*!
  * \brief Pointer of hook information on CMSGC.
@@ -630,8 +672,59 @@ THookFunctionInfo CR8049421_g1_hook[] = {
         &callbackForIterate),
     HOOK_FUNC_END};
 
-/* TODO: We have to define valid hook for JDK 9 */
-#define jdk9_g1_hook CR8049421_g1_hook
+/*!
+ * \brief Pointer of hook information on G1GC for after JDK 9.
+ */
+THookFunctionInfo jdk9_g1_hook[] = {
+    HOOK_FUNC(
+        g1_jdk9, 0, "_ZTV16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE",
+        "_ZN16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE6do_oopEPP7oopDesc",
+        &callbackForDoOop),
+    HOOK_FUNC(
+        g1_jdk9, 1, "_ZTV16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE",
+        "_ZN16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE6do_oopEPj",
+        &callbackForDoNarrowOop),
+    HOOK_FUNC(
+        g1_jdk9, 2, "_ZTV13InstanceKlass",
+        "_ZN13InstanceKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 3, "_ZTV13ObjArrayKlass",
+        "_ZN13ObjArrayKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 4, "_ZTV14TypeArrayKlass",
+        "_ZN14TypeArrayKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 5, "_ZTV16InstanceRefKlass",
+        "_ZN16InstanceRefKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 6, "_ZTV24InstanceClassLoaderKlass",
+        "_ZN24InstanceClassLoaderKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 7, "_ZTV13InstanceKlass",
+        "_ZN13InstanceKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 8, "_ZTV13ObjArrayKlass",
+        "_ZN13ObjArrayKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 9, "_ZTV14TypeArrayKlass",
+        "_ZN14TypeArrayKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 10, "_ZTV16InstanceRefKlass",
+        "_ZN16InstanceRefKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk9, 11, "_ZTV24InstanceClassLoaderKlass",
+        "_ZN24InstanceClassLoaderKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC_END};
 
 /*!
  * \brief Pointer of hook information on G1GC.
@@ -644,10 +737,10 @@ THookFunctionInfo *g1_hook = NULL;
 THookFunctionInfo default_g1Event_hook[] = {
     HOOK_FUNC(g1Event, 0, "_ZTV9CMCleanUp", "_ZN9CMCleanUp7do_voidEv",
               &callbackForG1Cleanup),
-    HOOK_FUNC(g1Event, 1, "_ZTV15G1CollectedHeap",
-              "_ZN15G1CollectedHeap11gc_prologueEb", &callbackForG1Full),
-    HOOK_FUNC(g1Event, 2, "_ZTV15G1CollectedHeap",
-              "_ZN15G1CollectedHeap11gc_epilogueEb", &callbackForG1FullReturn),
+    HOOK_FUNC(g1Event, 1, "_ZTV16VM_G1CollectFull",
+              "_ZN15VM_GC_Operation13doit_prologueEv", &callbackForG1Full),
+    HOOK_FUNC(g1Event, 2, "_ZTV16VM_G1CollectFull",
+              "_ZN15VM_GC_Operation13doit_epilogueEv", &callbackForG1FullReturn),
     HOOK_FUNC_END};
 
 /*!
@@ -873,7 +966,8 @@ bool initOverrider(void) {
  */
 void cleanupOverrider(void) {
   /* Cleanup. */
-  if (TVMVariables::getInstance()->getUseG1()) {
+  TVMVariables *vmVal = TVMVariables::getInstance();
+  if (vmVal->getUseCMS() || vmVal->getUseG1()) {
     delete checkObjectMap;
     checkObjectMap = NULL;
   }
@@ -919,6 +1013,8 @@ int checkCMSState(TGCState state, bool *needSnapShot) {
         *needSnapShot = needSnapShotByCMSPhase;
         needSnapShotByCMSPhase = false;
       } else if (vmVal->getCMS_collectorState() == CMS_FINALMARKING) {
+        checkObjectMap->clear();
+
         /* switch hooking for CMS new generation. */
         switchOverrideFunction(cms_new_hook, true);
       }
@@ -1149,6 +1245,27 @@ bool setupForParallelOld(void) {
 bool setupForCMS(void) {
   SELECT_HOOK_FUNCS(cms_new);
 
+  TVMVariables *vmVal = TVMVariables::getInstance();
+  const void *startAddr = vmVal->getYoungGenStartAddr();
+  const size_t youngSize = vmVal->getYoungGenSize();
+
+/* Create bitmap to check object collected flag. */
+#ifdef AVX
+    checkObjectMap = new TAVXBitMapMarker(startAddr, youngSize);
+#elif(defined SSE2) || (defined SSE3) || (defined SSE4)
+    checkObjectMap = new TSSE2BitMapMarker(startAddr, youngSize);
+#elif PROCESSOR_ARCH == X86
+    checkObjectMap = new TX86BitMapMarker(startAddr, youngSize);
+#elif PROCESSOR_ARCH == ARM
+
+#ifdef NEON
+    checkObjectMap = new TNeonBitMapMarker(startAddr, youngSize);
+#else
+    checkObjectMap = new TARMBitMapMarker(startAddr, youngSize);
+#endif
+
+#endif
+
   if (unlikely(!setupOverrideFunction(cms_new_hook))) {
     logger->printCritMsg("Cannot setup to override CMS_new (ParNew GC).");
     return false;
@@ -1249,6 +1366,7 @@ bool setGCHookState(bool enable) {
     /* Switch CMS hooking at new generation. */
     switchOverrideFunction(cms_new_hook, enable);
     list = cms_sweep_hook;
+    checkObjectMap->clear();
   } else if (vmVal->getUseG1()) {
     /* If users select G1, we prepare TSnapShotContainer NOW! */
     snapshotByGC = TSnapShotContainer::getInstance();
@@ -1487,6 +1605,11 @@ void callbackForIterate(void *oop) {
       return;
     }
 
+    if (checkObjectMap->checkAndMark(oop)) {
+      /* Object is in young gen and already marked. */
+      return;
+    }
+
     /* Invoke callback by CMS GC. */
     cmsCallbackFunc(oop, NULL);
   } else if (vmVal->getUseG1()) {
@@ -1580,8 +1703,9 @@ void callbackForJvmtiIterate(void *oop) {
 
 /*!
  * \brief Callback function for before G1 GC cleanup.
+ * \param thisptr [in] this pointer of caller C++ instance.
  */
-void callbackForG1Cleanup(void) {
+void callbackForG1Cleanup(void *thisptr) {
   if (likely(g1FinishCallbackFunc != NULL)) {
     /* Invoke callback. */
     g1FinishCallbackFunc();
@@ -1593,16 +1717,9 @@ void callbackForG1Cleanup(void) {
 
 /*!
  * \brief Callback function for before System.gc() on using G1GC.
- * \param isFull [in] Is this event FullGC?
+ * \param thisptr [in] this pointer of caller C++ instance.
  */
-void callbackForG1Full(bool isFull) {
-  /* This function must be processed when FullGC occurs.
-   * e.g. System.gc(), evacuation failure, etc...
-   */
-  if (!isFull) {
-    return;
-  }
-
+void callbackForG1Full(void *thisptr) {
   /*
    * Disable G1 callback function:
    *  OopClosure for typeArrayKlass is called by G1 FullCollection.
@@ -1616,16 +1733,9 @@ void callbackForG1Full(bool isFull) {
 
 /*!
  * \brief Callback function for after System.gc() on using G1GC.
- * \param isFull [in] Is this event FullGC?
+ * \param thisptr [in] this pointer of caller C++ instance.
  */
-void callbackForG1FullReturn(bool isFull) {
-  /* This function must be processed when FullGC occurs.
-   * e.g. System.gc(), evacuation failure, etc...
-   */
-  if (!isFull) {
-    return;
-  }
-
+void callbackForG1FullReturn(void *thisptr) {
   /* Restore G1 callback. */
   switchOverrideFunction(g1_hook, true);
 

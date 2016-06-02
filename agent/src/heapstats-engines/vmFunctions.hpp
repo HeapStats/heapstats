@@ -40,6 +40,11 @@
 #define IS_IN_PERM_ON_OTHER_GC_SYMBOL "_ZNK10SharedHeap15is_in_permanentEPKv"
 
 /*!
+ * \brief Symbol of Generation::is_in()
+ */
+#define IS_IN_SYMBOL "_ZNK10Generation5is_inEPKv"
+
+/*!
  * \brief Symbol of "JvmtiEnv::GetObjectSize" macro.
  */
 #ifdef __x86_64__
@@ -157,11 +162,11 @@
 /*!
  * \brief This function is C++ heap class member.<br>
  *        So 1st arg must be set instance.
- * \param thisptr [in] SharedHeap/ParallelScavengeHeap object instance.
+ * \param thisptr [in] Instance of Java memory region.
  * \param oop     [in] Java object.
- * \return Java object is existing in perm gen.
+ * \return true if oop is in this region.
  */
-typedef bool (*THeap_IsInPermanent)(void *thisptr, void *oop);
+typedef bool (*THeap_IsIn)(const void *thisptr, const void *oop);
 
 /*!
  * \brief This function is C++ JvmtiEnv class member.<br>
@@ -284,7 +289,7 @@ extern "C" void *JVM_RegisterSignal(jint sig, void *handler);
 
 /* extern variables */
 extern "C" void *VTableForTypeArrayOopClosure[2];
-extern "C" THeap_IsInPermanent is_in_permanent;
+extern "C" THeap_IsIn is_in_permanent;
 
 /*!
  * \brief This class gathers/provides functions in HotSpot VM.
@@ -295,6 +300,11 @@ class TVMFunctions {
    * \brief Function pointer for "JvmtiEnv::GetObjectSize".
    */
   TJvmtiEnv_GetObjectSize getObjectSize;
+
+  /*!
+   * \brief Function pointer for "Generation::is_in".
+   */
+  THeap_IsIn is_in;
 
   /*!
    * \brief Function pointer for "java_lang_Class::as_klassOop".
@@ -416,6 +426,10 @@ class TVMFunctions {
 
   inline int GetObjectSize(void *thisptr, jobject object, jlong *size_ptr) {
     return getObjectSize(thisptr, object, size_ptr);
+  }
+
+  inline bool IsInYoung(const void *oop) {
+    return is_in(TVMVariables::getInstance()->getYoungGen(), oop);
   }
 
   inline void *AsKlassOop(void *mirror) { return asKlassOop(mirror); }

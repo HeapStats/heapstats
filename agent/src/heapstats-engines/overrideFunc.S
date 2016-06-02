@@ -181,10 +181,10 @@ OVERRIDE_DEFINE(g1_6964458, 10, 2)
 
 /* CMCleanUp::do_void() */
 OVERRIDE_DEFINE_WITHOUT_PERMCHECK(g1Event, 0, 1)
-/* G1CollectedHeap::gc_prologue(bool) */
-OVERRIDE_DEFINE_WITHOUT_PERMCHECK(g1Event, 1, 2)
-/* G1CollectedHeap::gc_epilogue(bool) */
-OVERRIDE_DEFINE_WITHOUT_PERMCHECK(g1Event, 2, 2)
+/* VM_G1CollectFull::doit_prologue() */
+OVERRIDE_DEFINE_WITHOUT_PERMCHECK(g1Event, 1, 1)
+/* VM_G1CollectFull::doit_epilogue() */
+OVERRIDE_DEFINE_WITHOUT_PERMCHECK(g1Event, 2, 1)
 
 /* for Klass relocation. */
 
@@ -240,6 +240,64 @@ OVERRIDE_DEFINE(par_jdk9, 2, 2)
 OVERRIDE_DEFINE(par_jdk9, 3, 2)
 /* InstanceClassLoaderKlass::oop_ms_adjust_pointers(oopDesc*) */
 OVERRIDE_DEFINE(par_jdk9, 4, 2)
+
+/* For JDK 9 ParallelOld GC hook */
+
+/* InstanceKlass::oop_pc_follow_contents(oopDesc*, ParCompactionManager*) */
+OVERRIDE_DEFINE(parOld_jdk9, 0, 2)
+/* ObjArrayKlass::oop_pc_follow_contents(oopDesc*, ParCompactionManager*) */
+OVERRIDE_DEFINE(parOld_jdk9, 1, 2)
+/* TypeArrayKlass::oop_pc_follow_contents(oopDesc*, ParCompactionManager*) */
+OVERRIDE_DEFINE(parOld_jdk9, 2, 2)
+/* InstanceRefKlass::oop_pc_follow_contents(oopDesc*, ParCompactionManager*) */
+OVERRIDE_DEFINE(parOld_jdk9, 3, 2)
+/* InstanceClassLoaderKlass::oop_pc_follow_contents(oopDesc*, ParCompactionManager*) */
+OVERRIDE_DEFINE(parOld_jdk9, 4, 2)
+
+/* For JDK 9 ParNew GC hook */
+
+/* InstanceKlass::oop_oop_iterate_v(oopDesc*, ExtendedOopClosure*) */
+OVERRIDE_DEFINE(cms_new_jdk9, 0, 2)
+/* ObjArrayKlass::oop_oop_iterate_v(oopDesc*, ExtendedOopClosure*) */
+OVERRIDE_DEFINE(cms_new_jdk9, 1, 2)
+/* TypeArrayKlass::oop_oop_iterate_v(oopDesc*, ExtendedOopClosure*) */
+OVERRIDE_DEFINE(cms_new_jdk9, 2, 2)
+/* InstanceRefKlass::oop_oop_iterate_v(oopDesc*, ExtendedOopClosure*) */
+OVERRIDE_DEFINE(cms_new_jdk9, 3, 2)
+/* InstanceClassLoaderKlass::oop_oop_iterate_v(oopDesc*, ExtendedOopClosure*) */
+OVERRIDE_DEFINE(cms_new_jdk9, 4, 2)
+
+/* For JDK 9 G1 GC hook */
+
+/* initial-mark */
+/* G1ParCopyClosure<(G1Barrier)0, (G1Mark)1, false>::do_oop(oopDesc**) */
+OVERRIDE_DEFINE(g1_jdk9, 0, 2)
+/* G1ParCopyClosure<(G1Barrier)0, (G1Mark)1, false>::do_oop(unsigned int*) */
+OVERRIDE_DEFINE(g1_jdk9, 1, 2)
+
+/* concurrent-root-region-scan */
+/* InstanceKlass::oop_oop_iterate_nv(oopDesc*, G1RootRegionScanClosure*) */
+OVERRIDE_DEFINE(g1_jdk9, 2, 2)
+/* ObjArrayKlass::oop_oop_iterate_nv(oopDesc*, G1RootRegionScanClosure*) */
+OVERRIDE_DEFINE(g1_jdk9, 3, 2)
+/* TypeArrayKlass::oop_oop_iterate_nv(oopDesc*, G1RootRegionScanClosure*) */
+OVERRIDE_DEFINE(g1_jdk9, 4, 2)
+/* InstanceRefKlass::oop_oop_iterate_nv(oopDesc*, G1RootRegionScanClosure*) */
+OVERRIDE_DEFINE(g1_jdk9, 5, 2)
+/* InstanceClassLoaderKlass::oop_oop_iterate_nv(oopDesc*, G1RootRegionScanClosure*) */
+OVERRIDE_DEFINE(g1_jdk9, 6, 2)
+
+/* concurrent-mark / remark */
+/* InstanceKlass::oop_oop_iterate_nv(oopDesc*, G1CMOopClosure*) */
+OVERRIDE_DEFINE(g1_jdk9, 7, 2)
+/* ObjArrayKlass::oop_oop_iterate_nv(oopDesc*, G1CMOopClosure*) */
+OVERRIDE_DEFINE(g1_jdk9, 8, 2)
+/* TypeArrayKlass::oop_oop_iterate_nv(oopDesc*, G1CMOopClosure*) */
+OVERRIDE_DEFINE(g1_jdk9, 9, 2)
+/* InstanceRefKlass::oop_oop_iterate_nv(oopDesc*, G1CMOopClosure*) */
+OVERRIDE_DEFINE(g1_jdk9, 10, 2)
+/* InstanceClassLoaderKlass::oop_oop_iterate_nv(oopDesc*, G1CMOopClosure*) */
+OVERRIDE_DEFINE(g1_jdk9, 11, 2)
 
 
 #ifdef AVOID__i686

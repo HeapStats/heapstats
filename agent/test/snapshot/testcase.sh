@@ -14,9 +14,9 @@ fi
 
 # Check1: Parallel
 echo "Check1-1: Parallel"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS Simple
+$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseParallelGC -XX:-UseParallelOldGC Simple
 echo "Check1-2: Parallel (-UseCOOP)"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:-UseCompressedOops Simple
+$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseParallelGC -XX:-UseParallelOldGC -XX:-UseCompressedOops Simple
 
 # Check2: ParallelOld
 echo "Check2-1: ParallelOld"

@@ -2,7 +2,7 @@
  * \file neonBitMapMarker.hpp
  * \brief Storeing and Controlling G1 marking bitmap.
  *        This source is optimized for NEON instruction set.
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ class TNeonBitMapMarker : public TARMBitMapMarker {
    * \param startAddr [in] Start address of Java heap.
    * \param size      [in] Max Java heap size.
    */
-  TNeonBitMapMarker(void *startAddr, size_t size)
+  TNeonBitMapMarker(const void *startAddr, const size_t size)
       : TARMBitMapMarker(startAddr, size){};
 
   /*!

@@ -1,7 +1,7 @@
 /*!
  * \file armBitMapMarker.hpp
  * \brief This file is used to store and control of bit map.
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@ class TARMBitMapMarker : public TBitMapMarker {
    * \param startAddr [in] Start address of Java heap.
    * \param size      [in] Max Java heap size.
    */
-  TARMBitMapMarker(void *startAddr, size_t size)
+  TARMBitMapMarker(const void *startAddr, const size_t size)
       : TBitMapMarker(startAddr, size){};
 
   /*!
@@ -48,14 +48,14 @@ class TARMBitMapMarker : public TBitMapMarker {
    * \brief Mark GC-marked address in this bitmap.
    * \param addr [in] Oop address.
    */
-  virtual void setMark(void *addr);
+  virtual void setMark(const void *addr);
 
   /*!
    * \brief Check address which is already marked and set mark.
    * \param addr [in] Oop address.
    * \return Designated pointer is marked.
    */
-  virtual bool checkAndMark(void *addr);
+  virtual bool checkAndMark(const void *addr);
 };
 
 #endif  // ARMBITMAPMARKER_HPP

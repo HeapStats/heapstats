@@ -82,6 +82,9 @@ TVMVariables::TVMVariables(TSymbolFinder *sym, TVMStructScanner *scan)
   ofsOSThreadThreadId = -1;
   ofsObjectMonitorObject = -1;
   threads_lock = NULL;
+  youngGen = NULL;
+  youngGenStartAddr = NULL;
+  youngGenSize = 0;
 
 #ifdef __LP64__
   HeapWordSize = 8;
@@ -366,6 +369,11 @@ bool TVMVariables::getCMSValuesFromVMStructs(void) {
   off_t offsetCmsShifter = -1;
   off_t offsetCmsMapAtCollector = -1;
   off_t offsetCmsVirtualSpace = -1;
+  off_t offsetGens = -1;
+  off_t offsetYoungGen = -1;
+  off_t offsetYoungGenReserved = -1;
+  off_t offsetMemRegionStart = -1;
+  off_t offsetMemRegionWordSize = -1;
   TOffsetNameMap ofsMap[] = {
       {"CMSBitMap", "_virtual_space", &offsetCmsVirtualSpace, NULL},
       {"CMSBitMap", "_bmStartWord", &offsetCmsStartWord, NULL},
@@ -373,6 +381,11 @@ bool TVMVariables::getCMSValuesFromVMStructs(void) {
       {"CMSCollector", "_markBitMap", &offsetCmsMapAtCollector, NULL},
       {"ConcurrentMarkSweepThread", "_collector", NULL, &cmsCollector},
       {"VirtualSpace", "_low", &offsetLowAtVirtualSpace, NULL},
+      {"GenCollectedHeap", "_gens", &offsetGens, NULL},
+      {"GenCollectedHeap", "_young_gen", &offsetYoungGen, NULL},
+      {"Generation", "_reserved", &offsetYoungGenReserved, NULL},
+      {"MemRegion", "_start", &offsetMemRegionStart, NULL},
+      {"MemRegion", "_word_size", &offsetMemRegionWordSize, NULL},
       /* End marker. */
       {NULL, NULL, NULL, NULL}};
 
@@ -401,6 +414,9 @@ bool TVMVariables::getCMSValuesFromVMStructs(void) {
   if (unlikely(offsetCmsVirtualSpace == -1 || offsetCmsStartWord == -1 ||
                offsetCmsShifter == -1 || offsetCmsMapAtCollector == -1 ||
                cmsCollector == NULL || offsetLowAtVirtualSpace == -1 ||
+               (offsetGens == -1 && offsetYoungGen == -1) ||
+               offsetYoungGenReserved == -1 || offsetMemRegionStart == -1 ||
+               offsetMemRegionWordSize == -1 ||
                *(void **)cmsCollector == NULL)) {
     logger->printCritMsg("Cannot get CMS values from VMStructs.");
     return false;
@@ -415,8 +431,19 @@ bool TVMVariables::getCMSValuesFromVMStructs(void) {
   ptrdiff_t virtSpace = cmsBitmapPtr + offsetCmsVirtualSpace;
   cmsBitMap_startAddr = *(size_t **)(virtSpace + offsetLowAtVirtualSpace);
 
+  youngGen = (offsetGens == -1) // JDK-8061802
+                ? *(void **)incAddress(collectedHeap, offsetYoungGen)
+                : *(void **)incAddress(collectedHeap, offsetGens);
+  void *youngGenReserved = incAddress(youngGen, offsetYoungGenReserved);
+  youngGenStartAddr =
+               *(void **)incAddress(youngGenReserved, offsetMemRegionStart);
+  size_t youngGenWordSize =
+               *(size_t *)incAddress(youngGenReserved, offsetMemRegionWordSize);
+  youngGenSize = youngGenWordSize * HeapWordSize;
+
   if (unlikely((cmsBitMap_startWord == NULL) ||
-               (cmsBitMap_startAddr == NULL))) {
+               (cmsBitMap_startAddr == NULL) ||
+               (youngGen == NULL) || (youngGenStartAddr == NULL))) {
     logger->printCritMsg("Cannot calculate CMS values.");
     return false;
   }
