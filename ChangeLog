@@ -1,3 +1,7 @@
+2016-06-16  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3023: [JDK 9] Search JDK shared-library correctly
+
 2016-06-02  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2970: [JDK 9] Add ParallelOldGC hook for JDK 9
