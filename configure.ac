@@ -230,7 +230,6 @@ AC_MSG_CHECKING([for JDK library using found JAVA_HOME])
 if test -z "$JDK_DIR" || test ! -d $JDK_DIR || test ! -r $JDK_DIR \
   || test ! -d $JDK_DIR/bin/ || test ! -r $JDK_DIR/bin/ \
   || test ! -d $JDK_DIR/include/ || test ! -r $JDK_DIR/include/ \
-  || test ! -d $JDK_DIR/jre/ || test ! -r $JDK_DIR/jre/ \
   || test ! -d $JDK_DIR/lib/ || test ! -r $JDK_DIR/lib/ ; then
   
   AC_MSG_RESULT([not found])
@@ -262,6 +261,10 @@ if test "$enable_vmstructs" = "yes" ; then
   do
     if test -d $JDK_DIR/jre/lib/$archPath/ ; then
       JVM_LIB_DIR=`$ECHO $JDK_DIR/jre/lib/$archPath 2>$DEVNULL`
+      break
+    elif test -d $JDK_DIR/lib/$archPath/ ; then
+      # JDK9 does not have jre directory
+      JVM_LIB_DIR=`$ECHO $JDK_DIR/lib/$archPath 2>$DEVNULL`
       break
     fi
   done
