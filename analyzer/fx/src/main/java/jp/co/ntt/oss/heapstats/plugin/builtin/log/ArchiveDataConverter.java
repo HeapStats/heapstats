@@ -32,8 +32,7 @@ public class ArchiveDataConverter extends StringConverter<ArchiveData>{
 
     @Override
     public String toString(ArchiveData object) {
-        LocalDateTimeConverter dateTimeConv = new LocalDateTimeConverter();
-        return dateTimeConv.toString(object.getDate());
+        return (object == null) ? null : (new LocalDateTimeConverter()).toString(object.getDate());
     }
 
     @Override

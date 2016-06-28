@@ -32,7 +32,7 @@ public class LogDataConverter extends StringConverter<LogData> {
     @Override
     public String toString(LogData object) {
         LocalDateTimeConverter dateTimeConv = new LocalDateTimeConverter();
-        return dateTimeConv.toString(object.getDateTime());
+        return (object == null) ? null : (new LocalDateTimeConverter()).toString(object.getDateTime());
     }
 
     /**

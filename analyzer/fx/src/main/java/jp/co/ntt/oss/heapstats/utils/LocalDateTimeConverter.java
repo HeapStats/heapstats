@@ -38,12 +38,12 @@ public class LocalDateTimeConverter extends StringConverter<LocalDateTime>{
     
     @Override
     public String toString(LocalDateTime object) {
-        return formatter.format(object);
+        return (object == null) ? null : formatter.format(object);
     }
 
     @Override
     public LocalDateTime fromString(String string) {
-        return LocalDateTime.parse(string, formatter);
+        return (string == null) ? null : LocalDateTime.parse(string, formatter);
     }
     
 }
