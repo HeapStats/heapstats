@@ -30,8 +30,7 @@ public class ThreadStatConverter extends StringConverter<ThreadStat>{
 
     @Override
     public String toString(ThreadStat object) {
-        LocalDateTimeConverter converter = new LocalDateTimeConverter();
-        return converter.toString(object.getTime());
+        return (object == null) ? null : (new LocalDateTimeConverter()).toString(object.getTime());
     }
 
     @Override
