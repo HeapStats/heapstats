@@ -28,6 +28,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,6 +62,9 @@ public class HeapStatsUtils {
 
     /* Resource bundle for HeapStats Analyzer. */
     private static ResourceBundle resource;
+    
+    /* Cached DatetTimeFormatter */
+    private static DateTimeFormatter formatter;
 
     public static Path getHeapStatsHomeDirectory() {
 
@@ -168,6 +172,10 @@ public class HeapStatsUtils {
         if (heapOrder == null) {
             prop.setProperty("heaporder", "true");
         }
+        
+        /* DateTime format */
+        prop.putIfAbsent("datetime_format", "yyyy/MM/dd HH:mm:ss");
+        formatter = DateTimeFormatter.ofPattern(prop.getProperty("datetime_format"));
 
         /* Add shutdown hook for saving current settings. */
         Runnable savePropImpl = () -> {
@@ -293,6 +301,14 @@ public class HeapStatsUtils {
      */
     public static ResourceBundle getResourceBundle() {
         return ResourceBundle.getBundle("HeapStatsResources", new Locale(getLanguage()));
+    }
+    
+    /**
+     * Get DataTimeFormatter which is initialized by datetime_format value in heapstats.properties.
+     * @return Instance of DateTimeFormatter.
+     */
+    public static DateTimeFormatter getDateTimeFormatter(){
+        return formatter;
     }
 
     /**

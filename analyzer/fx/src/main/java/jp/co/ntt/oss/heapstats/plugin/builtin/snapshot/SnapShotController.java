@@ -75,7 +75,6 @@ import jp.co.ntt.oss.heapstats.task.CSVDumpGC;
 import jp.co.ntt.oss.heapstats.task.CSVDumpHeap;
 import jp.co.ntt.oss.heapstats.task.ParseHeader;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
-import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
 import jp.co.ntt.oss.heapstats.utils.TaskAdapter;
 
 /**
@@ -399,10 +398,9 @@ public class SnapShotController extends PluginController implements Initializabl
 
         double startX = xAxis.getLayoutX() + xAxis.getStartMargin() - 1.0d;
         double yPos = yAxis.getLayoutY() + chartTitle.getLayoutY() + chartTitle.getHeight();
-        LocalDateTimeConverter converter = new LocalDateTimeConverter();
         List<Rectangle> rectList = summaryData.get().getRebootSuspectList()
                 .stream()
-                .map(d -> converter.toString(d))
+                .map(d -> d.format(HeapStatsUtils.getDateTimeFormatter()))
                 .map(s -> new Rectangle(xAxis.getDisplayPosition(s) + startX, yPos, 4d, yAxis.getHeight()))
                 .peek(r -> ((Rectangle) r).setStyle("-fx-fill: yellow;"))
                 .collect(Collectors.toList());

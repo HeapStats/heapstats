@@ -47,7 +47,6 @@ import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
 
 /**
  * FXML Controller class
@@ -113,8 +112,7 @@ public class ThreadRecorderController extends PluginController implements Initia
                 rangeEnd.set(newTime);
             }
             
-            LocalDateTimeConverter converter = new LocalDateTimeConverter();
-            target.setText(converter.toString(newTime));
+            target.setText(newTime.format(HeapStatsUtils.getDateTimeFormatter()));
         }
     }
 

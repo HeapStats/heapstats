@@ -75,7 +75,6 @@ import jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.BindingFilter;
 import jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.ChartColorManager;
 import jp.co.ntt.oss.heapstats.task.DiffCalculator;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
-import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
 import jp.co.ntt.oss.heapstats.utils.TaskAdapter;
 import jp.co.ntt.oss.heapstats.xml.binding.Filter;
 import jp.co.ntt.oss.heapstats.xml.binding.Filters;
@@ -234,8 +233,7 @@ public class HistogramController implements Initializable {
             seriesMap.put(objData.getName(), series);
         }
 
-        LocalDateTimeConverter converter = new LocalDateTimeConverter();
-        String time = converter.toString(header.getSnapShotDate());
+        String time = header.getSnapShotDate().format(HeapStatsUtils.getDateTimeFormatter());
         long yValue = instanceGraph.get() ? objData.getCount()
                 : objData.getTotalSize() / 1024 / 1024;
         XYChart.Data<String, Long> data = new XYChart.Data<>(time, yValue);

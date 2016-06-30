@@ -53,7 +53,6 @@ import jp.co.ntt.oss.heapstats.container.log.DiffData;
 import jp.co.ntt.oss.heapstats.container.log.LogData;
 import jp.co.ntt.oss.heapstats.container.log.SummaryData;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
-import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
 
 /**
  * FXML Controller class for "Resource Data" tab in LogData plugin.
@@ -322,9 +321,8 @@ public class LogResourcesController implements Initializable {
             return;
         }
 
-        LocalDateTimeConverter converter = new LocalDateTimeConverter();
         List<String> archiveDateList = archiveList.get().stream()
-                .map(a -> converter.toString(a.getDate()))
+                .map(a -> a.getDate().format(HeapStatsUtils.getDateTimeFormatter()))
                 .collect(Collectors.toList());
         chartGrid.getChildren().stream()
                 .filter(n -> n instanceof StackPane)
@@ -342,9 +340,8 @@ public class LogResourcesController implements Initializable {
             return;
         }
 
-        LocalDateTimeConverter converter = new LocalDateTimeConverter();
         List<String> suspectRebootDateList = suspectList.stream()
-                .map(d -> converter.toString(d))
+                .map(d -> d.format(HeapStatsUtils.getDateTimeFormatter()))
                 .collect(Collectors.toList());
         chartGrid.getChildren().stream()
                 .filter(n -> n instanceof StackPane)
@@ -393,8 +390,6 @@ public class LogResourcesController implements Initializable {
         /* Monitor contantion */
         private final ObservableList<XYChart.Data<String, Long>> monitorsBuf;
 
-        private final LocalDateTimeConverter converter;
-
         private final List<LogData> targetLogData;
 
         private final List<DiffData> targetDiffData;
@@ -422,14 +417,13 @@ public class LogResourcesController implements Initializable {
             threadsBuf = FXCollections.observableArrayList();
             monitorsBuf = FXCollections.observableArrayList();
 
-            converter = new LocalDateTimeConverter();
             this.targetLogData = targetLogData;
             this.targetDiffData = targetDiffData;
             totalLoopCount = targetDiffData.size() + targetLogData.size();
         }
 
         private void addDiffData(DiffData data) {
-            String time = converter.toString(data.getDateTime());
+            String time = data.getDateTime().format(HeapStatsUtils.getDateTimeFormatter());
 
             javaUserUsageBuf.add(new XYChart.Data<>(time, data.getJavaUserUsage()));
             javaSysUsageBuf.add(new XYChart.Data<>(time, data.getJavaSysUsage()));
@@ -450,7 +444,7 @@ public class LogResourcesController implements Initializable {
         }
 
         private void addLogData(LogData data) {
-            String time = converter.toString(data.getDateTime());
+            String time = data.getDateTime().format(HeapStatsUtils.getDateTimeFormatter());
 
             javaVSZUsageBuf.add(new XYChart.Data<>(time, data.getJavaVSSize() / 1024 / 1024));
             javaRSSUsageBuf.add(new XYChart.Data<>(time, data.getJavaRSSize() / 1024 / 1024));
