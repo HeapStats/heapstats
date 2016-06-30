@@ -8142,9 +8142,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for JDK library using found JAVA_HOME" >&5
 $as_echo_n "checking for JDK library using found JAVA_HOME... " >&6; }
 if test -z "$JDK_DIR" || test ! -d $JDK_DIR || test ! -r $JDK_DIR \
-  || test ! -d $JDK_DIR/bin/ || test ! -r $JDK_DIR/bin/ \
-  || test ! -d $JDK_DIR/include/ || test ! -r $JDK_DIR/include/ \
-  || test ! -d $JDK_DIR/lib/ || test ! -r $JDK_DIR/lib/ ; then
+  || test ! -d $JDK_DIR/bin/ || test ! -x $JDK_DIR/bin/javac ; then
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found" >&5
 $as_echo "not found" >&6; }

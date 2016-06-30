@@ -228,10 +228,8 @@ fi
 
 AC_MSG_CHECKING([for JDK library using found JAVA_HOME])
 if test -z "$JDK_DIR" || test ! -d $JDK_DIR || test ! -r $JDK_DIR \
-  || test ! -d $JDK_DIR/bin/ || test ! -r $JDK_DIR/bin/ \
-  || test ! -d $JDK_DIR/include/ || test ! -r $JDK_DIR/include/ \
-  || test ! -d $JDK_DIR/lib/ || test ! -r $JDK_DIR/lib/ ; then
-  
+  || test ! -d $JDK_DIR/bin/ || test ! -x $JDK_DIR/bin/javac ; then
+
   AC_MSG_RESULT([not found])
   AC_MSG_NOTICE([
     [Do you put java at non default directory ?]
