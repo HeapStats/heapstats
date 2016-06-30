@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,6 +42,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.util.converter.LocalDateTimeStringConverter;
 import jp.co.ntt.oss.heapstats.WindowController;
 import jp.co.ntt.oss.heapstats.container.log.ArchiveData;
 import jp.co.ntt.oss.heapstats.container.log.DiffData;
@@ -53,7 +54,6 @@ import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogDetailsController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesController;
 import jp.co.ntt.oss.heapstats.task.ParseLogFile;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
-import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
 import jp.co.ntt.oss.heapstats.utils.TaskAdapter;
 
 /**
@@ -94,8 +94,9 @@ public class LogController extends PluginController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb);
 
-        startCombo.setConverter(new LocalDateTimeConverter());
-        endCombo.setConverter(new LocalDateTimeConverter());
+        LocalDateTimeStringConverter converter = new LocalDateTimeStringConverter(HeapStatsUtils.getDateTimeFormatter(), null);
+        startCombo.setConverter(converter);
+        endCombo.setConverter(converter);
 
         okBtn.disableProperty().bind(startCombo.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(endCombo.getSelectionModel().selectedIndexProperty()));
         archiveList = new SimpleObjectProperty<>(FXCollections.emptyObservableList());

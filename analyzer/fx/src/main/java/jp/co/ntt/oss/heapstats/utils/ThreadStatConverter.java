@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,11 +27,10 @@ import jp.co.ntt.oss.heapstats.container.threadrecord.ThreadStat;
  * @author Yasumasa Suenaga
  */
 public class ThreadStatConverter extends StringConverter<ThreadStat>{
-
+    
     @Override
     public String toString(ThreadStat object) {
-        LocalDateTimeConverter converter = new LocalDateTimeConverter();
-        return converter.toString(object.getTime());
+        return object.getTime().format(HeapStatsUtils.getDateTimeFormatter());
     }
 
     @Override

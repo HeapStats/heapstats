@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -47,7 +47,6 @@ import java.util.stream.Collectors;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
 
 /**
  * FXML Controller class
@@ -113,8 +112,7 @@ public class ThreadRecorderController extends PluginController implements Initia
                 rangeEnd.set(newTime);
             }
             
-            LocalDateTimeConverter converter = new LocalDateTimeConverter();
-            target.setText(converter.toString(newTime));
+            target.setText(newTime.format(HeapStatsUtils.getDateTimeFormatter()));
         }
     }
 

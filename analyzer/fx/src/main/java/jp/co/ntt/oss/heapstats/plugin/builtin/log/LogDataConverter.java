@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@ package jp.co.ntt.oss.heapstats.plugin.builtin.log;
 
 import javafx.util.StringConverter;
 import jp.co.ntt.oss.heapstats.container.log.LogData;
-import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
+import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 
 /**
  * StringConverter for LogData. This class provides method to convert
@@ -27,12 +27,12 @@ import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
  *
  * @author Yasumasa Suenaga.
  */
+
 public class LogDataConverter extends StringConverter<LogData> {
 
     @Override
     public String toString(LogData object) {
-        LocalDateTimeConverter dateTimeConv = new LocalDateTimeConverter();
-        return dateTimeConv.toString(object.getDateTime());
+        return object.getDateTime().format(HeapStatsUtils.getDateTimeFormatter());
     }
 
     /**

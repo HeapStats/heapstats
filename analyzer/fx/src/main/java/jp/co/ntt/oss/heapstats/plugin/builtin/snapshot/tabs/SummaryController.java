@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2015-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,7 +43,6 @@ import javafx.scene.layout.AnchorPane;
 import jp.co.ntt.oss.heapstats.container.snapshot.SnapShotHeader;
 import jp.co.ntt.oss.heapstats.container.snapshot.SummaryData;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
-import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
 
 /**
  * FXML Controller class for "Summary Data" tab in SnapShot plugin.
@@ -182,8 +181,6 @@ public class SummaryController implements Initializable {
 
         private int processedIndex;
 
-        private final LocalDateTimeConverter converter;
-
         private final Consumer<XYChart<String, ? extends Number>> drawRebootSuspectLine;
 
         /* Java Heap Usage Chart */
@@ -209,7 +206,6 @@ public class SummaryController implements Initializable {
          */
         public CalculateGCSummaryTask(Consumer<XYChart<String, ? extends Number>> drawRebootSuspectLine) {
             this.drawRebootSuspectLine = drawRebootSuspectLine;
-            converter = new LocalDateTimeConverter();
 
             youngUsageBuf = FXCollections.observableArrayList();
             oldUsageBuf = FXCollections.observableArrayList();
@@ -221,7 +217,7 @@ public class SummaryController implements Initializable {
         }
 
         private void processSnapShotHeader(SnapShotHeader header) {
-            String time = converter.toString(header.getSnapShotDate());
+            String time = header.getSnapShotDate().format(HeapStatsUtils.getDateTimeFormatter());
 
             youngUsageBuf.add(new XYChart.Data<>(time, header.getNewHeap() / 1024 / 1024));
             oldUsageBuf.add(new XYChart.Data<>(time, header.getOldHeap() / 1024 / 1024));

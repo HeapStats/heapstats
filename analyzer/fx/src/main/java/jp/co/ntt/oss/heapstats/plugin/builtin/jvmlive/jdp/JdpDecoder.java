@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,7 +42,7 @@ import javafx.scene.control.ListView;
 import jp.co.ntt.oss.heapstats.fx.lambda.EventHandlerWrapper;
 import jp.co.ntt.oss.heapstats.jmx.JMXHelper;
 import jp.co.ntt.oss.heapstats.lambda.RunnableWrapper;
-import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
+import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 
 
 /**
@@ -172,7 +172,7 @@ public class JdpDecoder extends Task<Void>{
     private void setJdpTableKeyValue(JdpTableKeyValue val, Labeled jmxURL){
         switch(val.keyProperty().get()){
             case "Received Time":
-                val.valueProperty().set((new LocalDateTimeConverter()).toString(receivedTime));
+                val.valueProperty().set(receivedTime.format(HeapStatsUtils.getDateTimeFormatter()));
                 break;
 
             case "Address":
@@ -222,7 +222,7 @@ public class JdpDecoder extends Task<Void>{
             jmxProcPool.submit(new RunnableWrapper(() -> heapstatsValue.valueProperty().set(new JMXHelper(jmxServiceURL))));
             
             jdpTableKeyValue.set(FXCollections.observableArrayList(
-                    new JdpTableKeyValue("Received Time", (new LocalDateTimeConverter()).toString(receivedTime)),
+                    new JdpTableKeyValue("Received Time", receivedTime.format(HeapStatsUtils.getDateTimeFormatter())),
                     new JdpTableKeyValue("Address", sourceAddr.getAddress().getHostAddress()),
                     new JdpTableKeyValue("JDP Instance Name", instanceName),
                     new JdpTableKeyValue("Main Class", mainClass),

@@ -1,3 +1,7 @@
+2016-07-01  Yasumasa Suenaga <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3057: [JDK 9] HeapStats Analyzer could not start on JDK 9
+
 2016-07-01  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3023: [JDK 9] Search JDK shared-library correctly

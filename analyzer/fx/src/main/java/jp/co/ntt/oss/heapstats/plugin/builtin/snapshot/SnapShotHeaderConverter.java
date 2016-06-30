@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@ package jp.co.ntt.oss.heapstats.plugin.builtin.snapshot;
 import java.util.Optional;
 import javafx.util.StringConverter;
 import jp.co.ntt.oss.heapstats.container.snapshot.SnapShotHeader;
-import jp.co.ntt.oss.heapstats.utils.*;
+import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 
 /**
  * StringConverter for LocalDateTime of SnapShotHeader. <br/>
@@ -33,8 +33,8 @@ public class SnapShotHeaderConverter extends StringConverter<SnapShotHeader> {
     @Override
     public String toString(SnapShotHeader object) {
         return Optional.ofNullable(object)
-                .map(o -> (new LocalDateTimeConverter()).toString(o.getSnapShotDate()))
-                .orElse("");
+                       .map(o -> o.getSnapShotDate().format(HeapStatsUtils.getDateTimeFormatter()))
+                       .orElse(null);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,9 +18,10 @@
 
 package jp.co.ntt.oss.heapstats.plugin.builtin.log;
 
+import java.util.Optional;
 import javafx.util.StringConverter;
 import jp.co.ntt.oss.heapstats.container.log.ArchiveData;
-import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
+import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 
 /**
  * This class converts LocalDateTime in ArchiveData to String.
@@ -32,8 +33,9 @@ public class ArchiveDataConverter extends StringConverter<ArchiveData>{
 
     @Override
     public String toString(ArchiveData object) {
-        LocalDateTimeConverter dateTimeConv = new LocalDateTimeConverter();
-        return dateTimeConv.toString(object.getDate());
+        return Optional.ofNullable(object)
+                       .map(o -> o.getDate().format(HeapStatsUtils.getDateTimeFormatter()))
+                       .orElse(null);
     }
 
     @Override

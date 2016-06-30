@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2015-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -51,7 +51,6 @@ import jp.co.ntt.oss.heapstats.container.snapshot.SnapShotHeader;
 import jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.ChartColorManager;
 import jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.SnapShotHeaderConverter;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
-import jp.co.ntt.oss.heapstats.utils.LocalDateTimeConverter;
 
 /**
  * FXML Controller class for "SnapShot Data" tab in SnapShot plugin.
@@ -159,7 +158,7 @@ public class SnapshotController implements Initializable {
         ResourceBundle resource = ResourceBundle.getBundle("snapshotResources", new Locale(HeapStatsUtils.getLanguage()));
 
         summaryList.addAll(
-                new AbstractMap.SimpleEntry<>(resource.getString("snapshot.date"), (new LocalDateTimeConverter()).toString(header.getSnapShotDate())),
+                new AbstractMap.SimpleEntry<>(resource.getString("snapshot.date"), header.getSnapShotDate().format(HeapStatsUtils.getDateTimeFormatter())),
                 new AbstractMap.SimpleEntry<>(resource.getString("snapshot.hasreftree"), header.hasReferenceData() ? "Yes" : "N/A"),
                 new AbstractMap.SimpleEntry<>(resource.getString("snapshot.entries"), Long.toString(header.getNumEntries())),
                 new AbstractMap.SimpleEntry<>(resource.getString("snapshot.instances"), Long.toString(header.getNumInstances())),
