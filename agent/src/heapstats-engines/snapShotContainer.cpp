@@ -468,20 +468,40 @@ void TSnapShotContainer::mergeChildren(void) {
 
         /* Loop each children class. */
         TChildClassCounter *counter = srcClsCounter->child;
+        TChildClassCounter *prevCounter = NULL;
         while (counter != NULL) {
-          /* Search child class. */
-          TChildClassCounter *childClsData =
-              this->findChildClass(clsCounter, counter->objData->klassOop);
+          TObjectData *objData = counter->objData;
 
-          /* Register class as child class. */
-          if (unlikely(childClsData == NULL)) {
-            childClsData =
-                this->pushNewChildClass(clsCounter, counter->objData);
-          }
+          /*
+           * If the class of objData is already unloaded, we should remove
+           * reference to it from child object data.
+           */
+          if (objData->isRemoved) {
+            if (prevCounter == NULL) {
+              srcClsCounter->child = counter->next;
+            } else {
+              prevCounter->next = counter->next;
+            }
 
-          if (likely(childClsData != NULL)) {
-            /* Marge children class heap usage. */
-            this->addInc(childClsData->counter, counter->counter);
+            /* Deallocate TChildClassCounter. */
+            free(counter->counter);
+            free(counter);
+          } else {
+            /* Search child class. */
+            TChildClassCounter *childClsData =
+                      this->findChildClass(clsCounter, objData->klassOop);
+
+            /* Register class as child class. */
+            if (unlikely(childClsData == NULL)) {
+              childClsData = this->pushNewChildClass(clsCounter, objData);
+            }
+
+            if (likely(childClsData != NULL)) {
+              /* Marge children class heap usage. */
+              this->addInc(childClsData->counter, counter->counter);
+            }
+
+            prevCounter = counter;
           }
 
           counter = counter->next;
