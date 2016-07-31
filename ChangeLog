@@ -1,4 +1,8 @@
-2016-07-01  Yasumasa Suenaga <kubota.yuji@lab.ntt.co.jp>
+2016-07-31  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3104: SEGV in TSnapShotContainer::mergeChildren with Oracle JDK8u92
+
+2016-07-01  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3057: [JDK 9] HeapStats Analyzer could not start on JDK 9
 
