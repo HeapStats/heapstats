@@ -99,7 +99,7 @@ OVERRIDE_DEFINE(parOld_6964458, 4, 3)
  */
 
 /* SweepClosure::do_blk_careful(HeapWord*) */
-OVERRIDE_DEFINE_WITHOUT_PERMCHECK(cms_sweep, 0, 2)
+OVERRIDE_DEFINE(cms_sweep, 0, 2)
 
 /* instanceKlass::oop_oop_iterate_nv(oopDesc*, Par_MarkRefsIntoAndScanClosure*) */
 OVERRIDE_DEFINE(cms_new, 0, 2)

@@ -1,3 +1,7 @@
+2016-09-14  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3167: Fix incorrect message caused by class unloading in CMS.
+
 2016-07-31  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3104: SEGV in TSnapShotContainer::mergeChildren with Oracle JDK8u92
