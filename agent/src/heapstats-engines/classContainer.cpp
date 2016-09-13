@@ -194,7 +194,7 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop) {
   /* If failure getting class name. */
   if (unlikely(cur->className == NULL)) {
     /* Adding empty to list is deny. */
-    logger->printWarnMsg("Couldn't allocate counter memory!");
+    logger->printWarnMsg("Couldn't get class name!");
     free(cur);
     return NULL;
   }
