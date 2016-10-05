@@ -1,6 +1,7 @@
 2016-10-06  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2999: HeapStats agent should notify when ring buffer is overwritten
+	* Bug 3189: Invalid XML Schema
 
 2016-09-14  Yasumasa Suenaga <yasuenag@gmail.com>
 

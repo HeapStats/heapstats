@@ -35,7 +35,7 @@
   <xs:complexType name="filter">
     <xs:sequence>
       <xs:element name="classes" type="classes" minOccurs="0"/>
-      <xs:element name="hide" type="xs:boolean"/>
+      <xs:element name="visible" type="xs:boolean"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string"/>
   </xs:complexType>
