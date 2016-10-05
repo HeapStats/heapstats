@@ -175,7 +175,7 @@ public class HistogramController implements Initializable {
                 BindingFilter filter = (BindingFilter)getTableRow().getItem();
                 
                 if(!empty && (filter != null)){
-                    styleProperty().bind(Bindings.createStringBinding(() -> filter.appliedProperty().get() ? "-fx-text-fill: blue;" : "-fx-text-fill: black;", filter.appliedProperty()));
+                    styleProperty().bind(Bindings.createStringBinding(() -> filter.appliedProperty().get() ? "-fx-background-color: skyblue;" : "-fx-background-color: white;", filter.appliedProperty()));
                     setText(filter.getName());
                 }
 
