@@ -716,6 +716,8 @@ void TThreadRecorder::putEvent(jthread thread, TThreadEvent event,
     memcpy32(top_of_buffer, &eventRecord);
 
     if (unlikely(++top_of_buffer == end_of_buffer)) {
+      logger->printDebugMsg(
+                    "Ring buffer for Thread Recorder has been rewinded.");
       top_of_buffer = (TEventRecord *)record_buffer;
     }
   }
