@@ -1,3 +1,7 @@
+2016-10-06  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 2999: HeapStats agent should notify when ring buffer is overwritten
+
 2016-09-14  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3167: Fix incorrect message caused by class unloading in CMS.
