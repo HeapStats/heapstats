@@ -3,6 +3,7 @@
 	* Bug 2999: HeapStats agent should notify when ring buffer is overwritten
 	* Bug 3189: Invalid XML Schema
 	* Bug 3000: Color of enabled exclude filter is difficult to understand
+	* Bug 3187: Cannot run FXAnalyzer on NetBeans
 
 2016-09-14  Yasumasa Suenaga <yasuenag@gmail.com>
 
