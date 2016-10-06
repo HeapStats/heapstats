@@ -159,6 +159,7 @@ public class RefTreeController implements Initializable, MouseListener {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         resource = rb;
+        ReferenceCell.initialize();
         currentSnapShotHeader = new SimpleObjectProperty<>();
         currentObjectTag = new SimpleLongProperty();
         currentObjectTag.addListener((v, o, n) -> Optional.ofNullable(n).ifPresent(t -> buildTab()));

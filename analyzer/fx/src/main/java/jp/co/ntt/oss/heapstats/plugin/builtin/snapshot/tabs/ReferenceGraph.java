@@ -2,7 +2,7 @@
  * ReferenceGraph.java
  * Created on 2012/11/18
  *
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,6 +27,7 @@ import java.util.Map;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
+import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 
 /**
  * extends {@link mxGraph}<br>
@@ -56,6 +57,7 @@ public class ReferenceGraph extends mxGraph {
         edgeStyle.put(mxConstants.STYLE_STROKECOLOR, "#000000");
         edgeStyle.put(mxConstants.STYLE_FONTCOLOR, "#000000");
         edgeStyle.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_RIGHT);
+        edgeStyle.put(mxConstants.STYLE_FONTSIZE, HeapStatsUtils.getFontSizeOfRefTree());
 
         mxStylesheet style = new mxStylesheet();
         style.setDefaultEdgeStyle(edgeStyle);

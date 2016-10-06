@@ -2,7 +2,7 @@
  * ReferenceCell.java
  * Created on 2012/11/18
  *
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,7 +24,9 @@ package jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.tabs;
 import java.text.NumberFormat;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
+import com.mxgraph.util.mxConstants;
 import jp.co.ntt.oss.heapstats.container.snapshot.ObjectData;
+import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 
 /**
  * extends {@link mxCell}<br>
@@ -39,14 +41,23 @@ public class ReferenceCell extends mxCell {
     private static final long serialVersionUID = -4403355352725440764L;
 
     /**
+     * Defines the font size
+     */
+    private static String FONT_SIZE;
+    /**
+     * Defines the zoom ratio by font size ratio.
+     */
+    private static double ZOOM_RATIO;
+
+    /**
      * Defines the height of the cell.
      */
-    private static final int CELL_HEIGHT = 30;
+    private static int CELL_HEIGHT;
 
     /**
      * Define the width of the character in the cell.
      */
-    private static final int CHAR_WIDTH = 6;
+    private static int CHAR_WIDTH;
 
     /**
      * Information about the objects to display Map.
@@ -76,9 +87,10 @@ public class ReferenceCell extends mxCell {
             setValue(data.getName());
             setConnectable(false);
             setVertex(true);
+            setStyle("fontSize="+FONT_SIZE);
 
             if (root) {
-                setStyle("shape=ellipse;fillColor=red;fontColor=black");
+                setStyle("shape=ellipse;fillColor=red;fontColor=black;fontSize="+FONT_SIZE);
             }
 
             rootCell = root;
@@ -87,6 +99,17 @@ public class ReferenceCell extends mxCell {
         setConnectable(false);
         setGeometry(new mxGeometry(0, 0, CHAR_WIDTH * data.getName().length(), CELL_HEIGHT));
     }
+
+    /**
+     * Initialize to define the size.
+     */
+    public static void initialize() {
+        FONT_SIZE = String.valueOf(HeapStatsUtils.getFontSizeOfRefTree());
+        ZOOM_RATIO = (double) HeapStatsUtils.getFontSizeOfRefTree() / mxConstants.DEFAULT_FONTSIZE;
+        CELL_HEIGHT = (int)(30 * ZOOM_RATIO);
+        CHAR_WIDTH = (int)(7 * ZOOM_RATIO);
+    }
+
 
     /**
      * Return the tag.

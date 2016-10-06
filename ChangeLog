@@ -1,3 +1,7 @@
+2016-10-07  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3191: Enable to change font size of Reference Tree by config
+
 2016-10-06  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 2999: HeapStats agent should notify when ring buffer is overwritten
