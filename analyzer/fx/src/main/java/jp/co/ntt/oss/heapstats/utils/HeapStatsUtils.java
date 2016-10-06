@@ -177,6 +177,12 @@ public class HeapStatsUtils {
         prop.putIfAbsent("datetime_format", "yyyy/MM/dd HH:mm:ss");
         formatter = DateTimeFormatter.ofPattern(prop.getProperty("datetime_format"));
 
+        /* Font size of RefTree */
+        String fontsize = prop.getProperty("reftree_fontsize");
+        if (fontsize == null) {
+            prop.setProperty("reftree_fontsize", "11");
+        }
+
         /* Add shutdown hook for saving current settings. */
         Runnable savePropImpl = () -> {
             try (OutputStream out = Files.newOutputStream(properties, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)) {
@@ -309,6 +315,22 @@ public class HeapStatsUtils {
      */
     public static DateTimeFormatter getDateTimeFormatter(){
         return formatter;
+    }
+
+    /**
+     * Get font size of ReferenceTree tab.
+     * @return fontSize
+     */
+    public static int getFontSizeOfRefTree() {
+        return Integer.parseInt(prop.getProperty("reftree_fontsize"));
+    }
+
+    /**
+     * Get font size of ReferenceTree tab.
+     * @param fontSize font size
+     */
+    public static void setFontSizeOfRefTree( int fontSize ) {
+        prop.setProperty("reftree_fontsize", Integer.toString(fontSize));
     }
 
     /**
