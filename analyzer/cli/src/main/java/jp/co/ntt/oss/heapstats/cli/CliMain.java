@@ -17,6 +17,7 @@
  */
 package jp.co.ntt.oss.heapstats.cli;
 
+import java.util.Optional;
 import jp.co.ntt.oss.heapstats.cli.processor.CliProcessor;
 import jp.co.ntt.oss.heapstats.cli.processor.JMXProcessor;
 import jp.co.ntt.oss.heapstats.cli.processor.LogProcessor;
@@ -76,11 +77,8 @@ public class CliMain implements Thread.UncaughtExceptionHandler{
             rootCause = rootCause.getCause();
         }
         
-        String message = rootCause.getLocalizedMessage();
-        if(message == null){
-            message = rootCause.toString();
-        }
-        
+        String message = Optional.ofNullable(rootCause.getLocalizedMessage())
+                                 .orElse(rootCause.toString());        
         System.err.println("HeapStats CLI error: " + message);
         if(Boolean.getBoolean("debug")){
             thrwbl.printStackTrace();
