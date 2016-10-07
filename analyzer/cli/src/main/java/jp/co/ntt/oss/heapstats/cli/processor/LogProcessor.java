@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -71,15 +71,17 @@ public class LogProcessor implements CliProcessor{
             switch(options.getMode()){
                 case JAVA_CPU:
                     System.out.println("Java CPU:");
-                    System.out.println("date time,  %user,  %sys");
+                    System.out.println("ID, date time,  %user,  %sys");
                     IntStream.range(start, options.getEnd().orElse(diffEntries.size()))
+                             .peek(i -> System.out.print(i + ": "))
                              .mapToObj(i -> diffEntries.get(i))
                              .forEach(d -> System.out.println(String.format("%s: %.2f %.2f", d.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), d.getJavaUserUsage(), d.getJavaSysUsage())));
                     break;
                 case SYSTEM_CPU:
                     System.out.println("System CPU:");
-                    System.out.println("date time,  %user,  %nice,  %sys,  %iowait,  %irq,  %softirq,  %steal,  %guest,  %idle");
+                    System.out.println("ID, date time,  %user,  %nice,  %sys,  %iowait,  %irq,  %softirq,  %steal,  %guest,  %idle");
                     IntStream.range(start, options.getEnd().orElse(diffEntries.size()))
+                             .peek(i -> System.out.print(i + ": "))
                              .mapToObj(i -> diffEntries.get(i))
                              .forEach(d -> System.out.println(String.format("%s: %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f", d.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
                                                                                                                                 d.getCpuUserUsage(), d.getCpuNiceUsage(), d.getCpuSysUsage(),
@@ -88,38 +90,43 @@ public class LogProcessor implements CliProcessor{
                     break;
                 case MEMORIES:
                     System.out.println("Java Memory:");
-                    System.out.println("date time,  VSZ (MB),  RSS (MB)");
+                    System.out.println("ID, date time,  VSZ (MB),  RSS (MB)");
                     IntStream.range(start, options.getEnd().orElse(logEntries.size()))
+                             .peek(i -> System.out.print(i + ": "))
                              .mapToObj(i -> logEntries.get(i))
                              .forEach(d -> System.out.println(String.format("%s: %d %d", d.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), d.getJavaVSSize() / 1024 / 1024, d.getJavaRSSize() / 1024 / 1024)));
                     break;
                 case SAFEPOINTS:
                     System.out.println("Safepoints:");
-                    System.out.println("date time,  count,  time (ms)");
+                    System.out.println("ID, date time,  count,  time (ms)");
                     IntStream.range(start, options.getEnd().orElse(diffEntries.size()))
+                             .peek(i -> System.out.print(i + ": "))
                              .mapToObj(i -> diffEntries.get(i))
                              .forEach(d -> System.out.println(String.format("%s: %d %d", d.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), d.getJvmSafepoints(), d.getJvmSafepointTime())));
                     break;
                 case MONITORS:
                     System.out.println("Monitor Contention:");
-                    System.out.println("date time,  count");
+                    System.out.println("ID, date time,  count");
                     IntStream.range(start, options.getEnd().orElse(diffEntries.size()))
+                             .peek(i -> System.out.print(i + ": "))
                              .mapToObj(i -> diffEntries.get(i))
                              .forEach(d -> System.out.println(String.format("%s: %d", d.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), d.getJvmSyncPark())));
                     break;
                 case THREADS:
                     System.out.println("Live threads:");
-                    System.out.println("date time,  count");
+                    System.out.println("ID, date time,  count");
                     IntStream.range(start, options.getEnd().orElse(logEntries.size()))
+                             .peek(i -> System.out.print(i + ": "))
                              .mapToObj(i -> logEntries.get(i))
                              .forEach(d -> System.out.println(String.format("%s: %d", d.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), d.getJvmLiveThreads())));
                     break;
                 case PARSE_ARCHIVES:
                     System.out.println("Archive list:");
-                    System.out.println("date time,  path");
+                    System.out.println("ID, date time,  path");
                     IntStream.range(start, options.getEnd().orElse(logEntries.size()))
+                             .filter(i -> logEntries.get(i).getArchivePath() != null)
+                             .peek(i -> System.out.print(i + ": "))
                              .mapToObj(i -> logEntries.get(i))
-                             .filter(d -> d.getArchivePath() != null)
                              .map(d -> new ArchiveData(d, new File(d.getArchivePath().replaceAll("\\..*$", ""))))
                              .peek(a -> a.getExtractPath().mkdir())
                              .peek(new ConsumerWrapper<>(a -> a.parseArchive()))
