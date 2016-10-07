@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,7 @@
  */
 package jp.co.ntt.oss.heapstats.cli;
 
+import java.util.Optional;
 import jp.co.ntt.oss.heapstats.cli.processor.CliProcessor;
 import jp.co.ntt.oss.heapstats.cli.processor.JMXProcessor;
 import jp.co.ntt.oss.heapstats.cli.processor.LogProcessor;
@@ -28,13 +29,14 @@ import jp.co.ntt.oss.heapstats.cli.processor.ThreadRecordProcessor;
  * 
  * @author Yasumasa Suenaga
  */
-public class CliMain {
+public class CliMain implements Thread.UncaughtExceptionHandler{
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         Options options = new Options();
+        Thread.setDefaultUncaughtExceptionHandler(new CliMain());
         
         try{
             options.parse(args);
@@ -70,6 +72,25 @@ public class CliMain {
         }
         
         processor.process();        
+    }
+
+    @Override
+    public void uncaughtException(Thread thread, Throwable thrwbl) {
+        Throwable rootCause = thrwbl;
+        
+        // Find root cause of exception.
+        // Exceptions is recuesive. So we need to track exception(s) through Throwable#getCause().
+        while(rootCause.getCause() != null){
+            rootCause = rootCause.getCause();
+        }
+        
+        String message = Optional.ofNullable(rootCause.getLocalizedMessage())
+                                 .orElse(rootCause.toString());        
+        System.err.println("HeapStats CLI error: " + message);
+        if(Boolean.getBoolean("debug")){
+            thrwbl.printStackTrace();
+        }
+
     }
     
 }
