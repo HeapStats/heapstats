@@ -1,3 +1,7 @@
+2016-10-06  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3002: HeapStats CLI should show ID in each subcommand
+
 2016-10-07  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3191: Enable to change font size of Reference Tree by config
