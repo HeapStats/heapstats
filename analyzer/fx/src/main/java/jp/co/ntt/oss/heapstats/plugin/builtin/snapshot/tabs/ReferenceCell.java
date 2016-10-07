@@ -43,23 +43,21 @@ public class ReferenceCell extends mxCell {
     /**
      * Defines the font size
      */
-    private static final String FONT_SIZE =
-        String.valueOf(HeapStatsUtils.getFontSizeOfRefTree());
+    private static String FONT_SIZE;
     /**
      * Defines the zoom ratio by font size ratio.
      */
-    private static final double ZOOM_RATIO =
-      (double) HeapStatsUtils.getFontSizeOfRefTree() / mxConstants.DEFAULT_FONTSIZE;
+    private static double ZOOM_RATIO;
 
     /**
      * Defines the height of the cell.
      */
-    private static final int CELL_HEIGHT = (int)(30 * ZOOM_RATIO);
+    private static int CELL_HEIGHT;
 
     /**
      * Define the width of the character in the cell.
      */
-    private static final int CHAR_WIDTH = (int)(7 * ZOOM_RATIO);
+    private static int CHAR_WIDTH;
 
     /**
      * Information about the objects to display Map.
@@ -101,6 +99,17 @@ public class ReferenceCell extends mxCell {
         setConnectable(false);
         setGeometry(new mxGeometry(0, 0, CHAR_WIDTH * data.getName().length(), CELL_HEIGHT));
     }
+
+    /**
+     * Initialize to define the size.
+     */
+    public static void initialize() {
+        FONT_SIZE = String.valueOf(HeapStatsUtils.getFontSizeOfRefTree());
+        ZOOM_RATIO = (double) HeapStatsUtils.getFontSizeOfRefTree() / mxConstants.DEFAULT_FONTSIZE;
+        CELL_HEIGHT = (int)(30 * ZOOM_RATIO);
+        CHAR_WIDTH = (int)(7 * ZOOM_RATIO);
+    }
+
 
     /**
      * Return the tag.
