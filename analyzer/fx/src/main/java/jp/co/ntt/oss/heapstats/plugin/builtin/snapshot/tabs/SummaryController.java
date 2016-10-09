@@ -18,6 +18,7 @@
 package jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.tabs;
 
 import java.net.URL;
+import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -34,14 +35,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedAreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.StringConverter;
 import jp.co.ntt.oss.heapstats.container.snapshot.SnapShotHeader;
 import jp.co.ntt.oss.heapstats.container.snapshot.SummaryData;
+import jp.co.ntt.oss.heapstats.utils.EpochTimeConverter;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 
 /**
@@ -59,30 +63,30 @@ public class SummaryController implements Initializable {
     private TableColumn<SummaryData.SummaryDataEntry, String> valueColumn;
 
     @FXML
-    private StackedAreaChart<String, Long> heapChart;
+    private StackedAreaChart<Number, Long> heapChart;
 
-    private XYChart.Series<String, Long> youngUsage;
+    private XYChart.Series<Number, Long> youngUsage;
 
-    private XYChart.Series<String, Long> oldUsage;
+    private XYChart.Series<Number, Long> oldUsage;
 
-    private XYChart.Series<String, Long> free;
-
-    @FXML
-    private LineChart<String, Long> instanceChart;
-
-    private XYChart.Series<String, Long> instances;
+    private XYChart.Series<Number, Long> free;
 
     @FXML
-    private LineChart<String, Long> gcTimeChart;
+    private LineChart<Number, Long> instanceChart;
 
-    private XYChart.Series<String, Long> gcTime;
+    private XYChart.Series<Number, Long> instances;
 
     @FXML
-    private AreaChart<String, Long> metaspaceChart;
+    private LineChart<Number, Long> gcTimeChart;
 
-    private XYChart.Series<String, Long> metaspaceUsage;
+    private XYChart.Series<Number, Long> gcTime;
 
-    private XYChart.Series<String, Long> metaspaceCapacity;
+    @FXML
+    private AreaChart<Number, Long> metaspaceChart;
+
+    private XYChart.Series<Number, Long> metaspaceUsage;
+
+    private XYChart.Series<Number, Long> metaspaceCapacity;
 
     private ObjectProperty<SummaryData> summaryData;
 
@@ -108,6 +112,11 @@ public class SummaryController implements Initializable {
         gcTimeChart.lookup(".chart").setStyle("-fx-background-color: " + HeapStatsUtils.getChartBgColor() + ";");
         metaspaceChart.lookup(".chart").setStyle("-fx-background-color: " + HeapStatsUtils.getChartBgColor() + ";");
 
+        StringConverter<Number> converter = new EpochTimeConverter();
+        Stream.of(heapChart, instanceChart, gcTimeChart, metaspaceChart)
+              .map(c -> (NumberAxis)c.getXAxis())
+              .forEach(a -> a.setTickLabelFormatter(converter));
+        
         initializeChartSeries();
     }
 
@@ -181,22 +190,22 @@ public class SummaryController implements Initializable {
 
         private int processedIndex;
 
-        private final Consumer<XYChart<String, ? extends Number>> drawRebootSuspectLine;
+        private final Consumer<XYChart<Number, ? extends Number>> drawRebootSuspectLine;
 
         /* Java Heap Usage Chart */
-        private final ObservableList<XYChart.Data<String, Long>> youngUsageBuf;
-        private final ObservableList<XYChart.Data<String, Long>> oldUsageBuf;
-        private final ObservableList<XYChart.Data<String, Long>> freeBuf;
+        private final ObservableList<XYChart.Data<Number, Long>> youngUsageBuf;
+        private final ObservableList<XYChart.Data<Number, Long>> oldUsageBuf;
+        private final ObservableList<XYChart.Data<Number, Long>> freeBuf;
 
         /* Instances */
-        private final ObservableList<XYChart.Data<String, Long>> instanceBuf;
+        private final ObservableList<XYChart.Data<Number, Long>> instanceBuf;
 
         /* GC time Chart */
-        private final ObservableList<XYChart.Data<String, Long>> gcTimeBuf;
+        private final ObservableList<XYChart.Data<Number, Long>> gcTimeBuf;
 
         /* Metaspace Chart */
-        private final ObservableList<XYChart.Data<String, Long>> metaspaceUsageBuf;
-        private final ObservableList<XYChart.Data<String, Long>> metaspaceCapacityBuf;
+        private final ObservableList<XYChart.Data<Number, Long>> metaspaceUsageBuf;
+        private final ObservableList<XYChart.Data<Number, Long>> metaspaceCapacityBuf;
 
         /**
          * Constructor of CalculateGCSummaryTask.
@@ -204,7 +213,7 @@ public class SummaryController implements Initializable {
          * @param drawRebootSuspectLine Consumer for drawing reboot line. This
          * consumer is called in Platform#runLater() at succeeded().
          */
-        public CalculateGCSummaryTask(Consumer<XYChart<String, ? extends Number>> drawRebootSuspectLine) {
+        public CalculateGCSummaryTask(Consumer<XYChart<Number, ? extends Number>> drawRebootSuspectLine) {
             this.drawRebootSuspectLine = drawRebootSuspectLine;
 
             youngUsageBuf = FXCollections.observableArrayList();
@@ -217,7 +226,7 @@ public class SummaryController implements Initializable {
         }
 
         private void processSnapShotHeader(SnapShotHeader header) {
-            String time = header.getSnapShotDate().format(HeapStatsUtils.getDateTimeFormatter());
+            long time = header.getSnapShotDate().atZone(ZoneId.systemDefault()).toEpochSecond();
 
             youngUsageBuf.add(new XYChart.Data<>(time, header.getNewHeap() / 1024 / 1024));
             oldUsageBuf.add(new XYChart.Data<>(time, header.getOldHeap() / 1024 / 1024));
@@ -250,6 +259,13 @@ public class SummaryController implements Initializable {
 
         @Override
         protected void succeeded() {
+            long startEpoch = currentTarget.get().get(0).getSnapShotDate().atZone(ZoneId.systemDefault()).toEpochSecond();
+            long endEpoch = currentTarget.get().get(currentTarget.get().size() - 1).getSnapShotDate().atZone(ZoneId.systemDefault()).toEpochSecond();
+            Stream.of(heapChart, instanceChart, gcTimeChart, metaspaceChart)
+                  .peek(c -> ((NumberAxis)c.getXAxis()).setLowerBound(startEpoch))
+                  .peek(c -> ((NumberAxis)c.getXAxis()).setUpperBound(endEpoch))
+                  .forEach(c -> Platform.runLater(() -> drawRebootSuspectLine.accept(c)));
+            
             /* Replace new chart data */
             youngUsage.setData(youngUsageBuf);
             oldUsage.setData(oldUsageBuf);
@@ -261,9 +277,6 @@ public class SummaryController implements Initializable {
 
             metaspaceUsage.setData(metaspaceUsageBuf);
             metaspaceCapacity.setData(metaspaceCapacityBuf);
-
-            Stream.of(heapChart, instanceChart, gcTimeChart, metaspaceChart)
-                    .forEach(c -> Platform.runLater(() -> drawRebootSuspectLine.accept(c)));
         }
 
     }
@@ -301,7 +314,7 @@ public class SummaryController implements Initializable {
      * @param drawRebootSuspectLine Consumer for drawing reboot line.
      * @return Task for calculating GC summary.
      */
-    public Task<Void> getCalculateGCSummaryTask(Consumer<XYChart<String, ? extends Number>> drawRebootSuspectLine) {
+    public Task<Void> getCalculateGCSummaryTask(Consumer<XYChart<Number, ? extends Number>> drawRebootSuspectLine) {
         return new CalculateGCSummaryTask(drawRebootSuspectLine);
     }
 
@@ -310,7 +323,7 @@ public class SummaryController implements Initializable {
      *
      * @return Java heap chart.
      */
-    public StackedAreaChart<String, Long> getHeapChart() {
+    public StackedAreaChart<Number, Long> getHeapChart() {
         return heapChart;
     }
 
@@ -319,7 +332,7 @@ public class SummaryController implements Initializable {
      *
      * @return Instance chart.
      */
-    public LineChart<String, Long> getInstanceChart() {
+    public LineChart<Number, Long> getInstanceChart() {
         return instanceChart;
     }
 
@@ -328,7 +341,7 @@ public class SummaryController implements Initializable {
      *
      * @return GC time chart.
      */
-    public LineChart<String, Long> getGcTimeChart() {
+    public LineChart<Number, Long> getGcTimeChart() {
         return gcTimeChart;
     }
 
@@ -337,7 +350,7 @@ public class SummaryController implements Initializable {
      *
      * @return Metaspace chart.
      */
-    public AreaChart<String, Long> getMetaspaceChart() {
+    public AreaChart<Number, Long> getMetaspaceChart() {
         return metaspaceChart;
     }
 
