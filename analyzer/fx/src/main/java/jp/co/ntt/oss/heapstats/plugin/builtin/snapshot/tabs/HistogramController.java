@@ -20,6 +20,7 @@ package jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.tabs;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -103,7 +104,7 @@ public class HistogramController implements Initializable {
     private Button selectFilterApplyBtn;
 
     @FXML
-    private StackedAreaChart<String, Long> topNChart;
+    private StackedAreaChart<Number, Long> topNChart;
 
     @FXML
     private AnchorPane topNChartAnchor;
@@ -145,7 +146,7 @@ public class HistogramController implements Initializable {
 
     private LongProperty currentObjectTag;
 
-    private Consumer<XYChart<String, ? extends Number>> drawRebootSuspectLine;
+    private Consumer<XYChart<Number, ? extends Number>> drawRebootSuspectLine;
 
     private Consumer<Task<Void>> taskExecutor;
 
@@ -224,8 +225,8 @@ public class HistogramController implements Initializable {
      * chart series as value.
      * @param objData ObjectData which is you want to build.
      */
-    private void buildTopNChartData(SnapShotHeader header, Map<String, XYChart.Series<String, Long>> seriesMap, ObjectData objData) {
-        XYChart.Series<String, Long> series = seriesMap.get(objData.getName());
+    private void buildTopNChartData(SnapShotHeader header, Map<String, XYChart.Series<Number, Long>> seriesMap, ObjectData objData) {
+        XYChart.Series<Number, Long> series = seriesMap.get(objData.getName());
 
         if (series == null) {
             series = new XYChart.Series<>();
@@ -234,10 +235,10 @@ public class HistogramController implements Initializable {
             seriesMap.put(objData.getName(), series);
         }
 
-        String time = header.getSnapShotDate().format(HeapStatsUtils.getDateTimeFormatter());
+        long time = header.getSnapShotDate().atZone(ZoneId.systemDefault()).toEpochSecond();
         long yValue = instanceGraph.get() ? objData.getCount()
                 : objData.getTotalSize() / 1024 / 1024;
-        XYChart.Data<String, Long> data = new XYChart.Data<>(time, yValue);
+        XYChart.Data<Number, Long> data = new XYChart.Data<>(time, yValue);
 
         series.getData().add(data);
         String unit = instanceGraph.get() ? "instances" : "MB";
@@ -245,7 +246,7 @@ public class HistogramController implements Initializable {
         Tooltip.install(data.getNode(), new Tooltip(tip));
     }
 
-    private void setTopNChartColor(XYChart.Series<String, Long> series) {
+    private void setTopNChartColor(XYChart.Series<Number, Long> series) {
         String color = ChartColorManager.getNextColor(series.getName());
 
         series.getNode().lookup(".chart-series-area-line").setStyle(String.format("-fx-stroke: %s;", color));
@@ -263,7 +264,15 @@ public class HistogramController implements Initializable {
      * @param seriesMap Chart series map which is contains class name as key,
      * chart series as value.
      */
-    private void onDiffTaskSucceeded(DiffCalculator diff, Map<String, XYChart.Series<String, Long>> seriesMap) {
+    private void onDiffTaskSucceeded(DiffCalculator diff, Map<String, XYChart.Series<Number, Long>> seriesMap) {
+        /* Set chart range */
+        long startEpoch = currentTarget.get().get(0).getSnapShotDate().atZone(ZoneId.systemDefault()).toEpochSecond();
+        long endEpoch = currentTarget.get().get(currentTarget.get().size() - 1).getSnapShotDate().atZone(ZoneId.systemDefault()).toEpochSecond();
+        NumberAxis xAxis = (NumberAxis)topNChart.getXAxis();
+        xAxis.setTickUnit((endEpoch - startEpoch) / HeapStatsUtils.getXTickUnit());
+        xAxis.setLowerBound(startEpoch);
+        xAxis.setUpperBound(endEpoch);
+        
         topNList.set(FXCollections.observableMap(diff.getTopNList()));
 
         currentTarget.get().stream()
@@ -443,7 +452,7 @@ public class HistogramController implements Initializable {
     public Task<Void> getDrawTopNDataTask(List<SnapShotHeader> target, boolean includeOthers, Predicate<? super ObjectData> predicate) {
         topNChart.getData().clear();
         lastDiffTable.getItems().clear();
-        Map<String, XYChart.Series<String, Long>> seriesMap = new HashMap<>();
+        Map<String, XYChart.Series<Number, Long>> seriesMap = new HashMap<>();
 
         TaskAdapter<DiffCalculator> diff = new TaskAdapter<>(new DiffCalculator(target, HeapStatsUtils.getRankLevel(),
                 includeOthers, predicate, HeapStatsUtils.getReplaceClassName(), instanceGraph.get()));
@@ -457,7 +466,7 @@ public class HistogramController implements Initializable {
      *
      * @param drawRebootSuspectLine Consumer for drawing reboot line.
      */
-    public void setDrawRebootSuspectLine(Consumer<XYChart<String, ? extends Number>> drawRebootSuspectLine) {
+    public void setDrawRebootSuspectLine(Consumer<XYChart<Number, ? extends Number>> drawRebootSuspectLine) {
         this.drawRebootSuspectLine = drawRebootSuspectLine;
     }
 
@@ -513,7 +522,7 @@ public class HistogramController implements Initializable {
      *
      * @return TopN chart.
      */
-    public StackedAreaChart<String, Long> getTopNChart() {
+    public StackedAreaChart<Number, Long> getTopNChart() {
         return topNChart;
     }
 

@@ -194,6 +194,18 @@ public class HeapStatsUtils {
             prop.setProperty("tickmarker", "false");
         }
 
+        /* TickUnit of X axis */
+        String xTickUnitStr = prop.getProperty("x_tickunit");
+        if (xTickUnitStr == null) {
+            prop.setProperty("x_tickunit", "20");
+        } else {
+            try {
+                Double.parseDouble(xTickUnitStr);
+            } catch (NumberFormatException e) {
+                throw new HeapStatsConfigException(resource.getString("invalid.option") + " x_tickunit=" + xTickUnitStr, e);
+            }
+        }
+
         /* Add shutdown hook for saving current settings. */
         Runnable savePropImpl = () -> {
             try (OutputStream out = Files.newOutputStream(properties, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)) {
@@ -351,6 +363,15 @@ public class HeapStatsUtils {
      */
     public static boolean getTickMarkerSwitch() {
         return Boolean.parseBoolean(prop.getProperty("tickmarker"));
+    }
+    
+    /**
+     * Get TickUnit on X axis.
+     * 
+     * @return TickUnit of X axis.
+     */
+    public static double getXTickUnit(){
+        return Double.parseDouble(prop.getProperty("x_tickunit"));
     }
     
     /**

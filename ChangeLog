@@ -1,6 +1,7 @@
 2016-11-09  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3225: JVM may hang when deadlock detector and safepoint are conflicted
+	* Bug 3194: Time-Awareness XAxis in FXAnalyzer
 
 2016-11-08  Yasumasa Suenaga <yasuenag@gmail.com>
 

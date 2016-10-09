@@ -46,7 +46,7 @@
                             <children>
                                 <StackedAreaChart id="heapChart" fx:id="heapChart" animated="false" createSymbols="false" layoutX="-129.0" layoutY="-91.0" minHeight="0.0" title="%chart.javaheap" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <xAxis>
-                                        <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
+                                        <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" autoRanging="false" />
                                     </xAxis>
                                     <yAxis>
                                         <NumberAxis label="MB" side="LEFT" minorTickVisible="false" />
@@ -59,7 +59,7 @@
                             <children>
                                 <LineChart id="instanceChart" fx:id="instanceChart" animated="false" createSymbols="false" layoutX="-149.0" layoutY="-120.0" legendVisible="false" minHeight="0.0" title="%chart.instances" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <xAxis>
-                                        <CategoryAxis side="BOTTOM" tickLabelsVisible="false" visible="false" />
+                                        <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" visible="false" autoRanging="false" />
                                     </xAxis>
                                     <yAxis>
                                         <NumberAxis label="instances" side="LEFT" minorTickVisible="false" />
@@ -72,7 +72,7 @@
                             <children>
                                 <LineChart id="gcTimeChart" fx:id="gcTimeChart" animated="false" createSymbols="false" layoutX="-169.0" layoutY="-120.0" legendVisible="false" minHeight="0.0" title="%chart.gctime" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <xAxis>
-                                        <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
+                                        <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" autoRanging="false" />
                                     </xAxis>
                                     <yAxis>
                                         <NumberAxis label="ms" side="LEFT" minorTickVisible="false" />
@@ -85,7 +85,7 @@
                             <children>
                                 <AreaChart id="metaspaceChart" fx:id="metaspaceChart" animated="false" createSymbols="false" layoutX="-174.0" layoutY="-166.0" minHeight="0.0" title="%chart.metaspace" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <xAxis>
-                                        <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
+                                        <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" autoRanging="false" />
                                     </xAxis>
                                     <yAxis>
                                         <NumberAxis label="MB" side="LEFT" minorTickVisible="false" />
