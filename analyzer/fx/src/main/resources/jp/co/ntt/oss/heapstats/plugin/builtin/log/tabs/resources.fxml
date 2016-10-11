@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- Copyright (C) 2015 Nippon Telegraph and Telephone Corporation
+ Copyright (C) 2015-2016 Nippon Telegraph and Telephone Corporation
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -44,7 +44,7 @@
                                 <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
                             </xAxis>
                             <yAxis>
-                                <NumberAxis side="LEFT" />
+                                <NumberAxis side="LEFT" minorTickVisible="false" />
                             </yAxis>
                         </LineChart>
                         <AnchorPane fx:id="threadsAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
@@ -66,7 +66,7 @@
                                 <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
                             </xAxis>
                             <yAxis>
-                                <NumberAxis autoRanging="false" label="\%" lowerBound="0.0" side="LEFT" tickUnit="10.0" upperBound="100.0d" />
+                                <NumberAxis autoRanging="false" label="\%" lowerBound="0.0" side="LEFT" upperBound="100.0d" tickUnit="10.0" minorTickVisible="false" />
                             </yAxis>
                         </StackedAreaChart>
                         <AnchorPane fx:id="javaCPUAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
@@ -79,7 +79,7 @@
                                 <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
                             </xAxis>
                             <yAxis>
-                                <NumberAxis autoRanging="false" label="\%" lowerBound="0.0" side="LEFT" tickUnit="10.0" upperBound="100.0d" />
+                                <NumberAxis autoRanging="false" label="\%" lowerBound="0.0" side="LEFT" upperBound="100.0d" tickUnit="10.0" minorTickVisible="false" />
                             </yAxis>
                         </StackedAreaChart>
                         <AnchorPane fx:id="systemCPUAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
@@ -92,7 +92,7 @@
                                 <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
                             </xAxis>
                             <yAxis>
-                                <NumberAxis label="MB" side="LEFT" />
+                                <NumberAxis label="MB" side="LEFT" minorTickVisible="false" />
                             </yAxis>
                         </LineChart>
                         <AnchorPane fx:id="javaMemoryAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
@@ -102,10 +102,10 @@
                     <children>
                         <LineChart id="safepointChart" fx:id="safepointChart" animated="false" createSymbols="false" legendVisible="false" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.safepoint.count">
                             <xAxis>
-                                <CategoryAxis side="BOTTOM" tickLabelsVisible="false" tickMarkVisible="false" visible="false" />
+                                <CategoryAxis side="BOTTOM" tickLabelsVisible="false" visible="false" />
                             </xAxis>
                             <yAxis>
-                                <NumberAxis side="LEFT" />
+                                <NumberAxis side="LEFT" minorTickVisible="false" />
                             </yAxis>
                         </LineChart>
                         <AnchorPane fx:id="safepointAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
@@ -115,10 +115,10 @@
                     <children>
                         <LineChart id="safepointTimeChart" fx:id="safepointTimeChart" animated="false" createSymbols="false" legendVisible="false" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.safepoint.time">
                             <xAxis>
-                                <CategoryAxis side="BOTTOM" tickLabelsVisible="false" tickMarkVisible="false" visible="false" />
+                                <CategoryAxis side="BOTTOM" tickLabelsVisible="false" visible="false" />
                             </xAxis>
                             <yAxis>
-                                <NumberAxis label="ms" side="LEFT" />
+                                <NumberAxis label="ms" side="LEFT" minorTickVisible="false" />
                             </yAxis>
                         </LineChart>
                         <AnchorPane fx:id="safepointTimeAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
@@ -131,7 +131,7 @@
                                 <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
                             </xAxis>
                             <yAxis>
-                                <NumberAxis side="LEFT" />
+                                <NumberAxis side="LEFT" minorTickVisible="false" />
                             </yAxis>
                         </LineChart>
                         <AnchorPane fx:id="monitorAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />

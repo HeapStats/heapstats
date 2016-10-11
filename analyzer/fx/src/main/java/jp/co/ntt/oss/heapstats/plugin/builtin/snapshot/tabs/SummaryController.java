@@ -103,10 +103,10 @@ public class SummaryController implements Initializable {
         keyColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
 
-        heapChart.lookup(".chart").setStyle("-fx-background-color: " + HeapStatsUtils.getChartBgColor() + ";");
-        instanceChart.lookup(".chart").setStyle("-fx-background-color: " + HeapStatsUtils.getChartBgColor() + ";");
-        gcTimeChart.lookup(".chart").setStyle("-fx-background-color: " + HeapStatsUtils.getChartBgColor() + ";");
-        metaspaceChart.lookup(".chart").setStyle("-fx-background-color: " + HeapStatsUtils.getChartBgColor() + ";");
+        String bgcolor = "-fx-background-color: " + HeapStatsUtils.getChartBgColor() + ";";
+        Stream.of(heapChart, instanceChart, gcTimeChart, metaspaceChart)
+              .peek(c -> c.lookup(".chart").setStyle(bgcolor))
+              .forEach(c -> c.getXAxis().setTickMarkVisible(HeapStatsUtils.getTickMarkerSwitch()));
 
         initializeChartSeries();
     }
