@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- Copyright (C) 2015 Nippon Telegraph and Telephone Corporation
+ Copyright (C) 2015-2016 Nippon Telegraph and Telephone Corporation
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -69,7 +69,7 @@
                                         <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
                                     </xAxis>
                                     <yAxis>
-                                        <NumberAxis fx:id="topNYAxis" autoRanging="false" label="MB" side="LEFT" />
+                                        <NumberAxis fx:id="topNYAxis" autoRanging="false" label="MB" side="LEFT" minorTickVisible="false" />
                                     </yAxis>
                                 </StackedAreaChart>
                                 <AnchorPane fx:id="topNChartAnchor" mouseTransparent="true" />

@@ -1,4 +1,8 @@
-2016-10-06  Yasumasa Suenaga <yasuenag@gmail.com>
+2016-10-12  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3195: Add property for tick marker on X axis
+
+2016-10-11  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3002: HeapStats CLI should show ID in each subcommand
 	* Bug 3001: HeapStats CLI should report error without exception

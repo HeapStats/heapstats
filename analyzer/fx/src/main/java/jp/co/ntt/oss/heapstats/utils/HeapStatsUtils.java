@@ -182,6 +182,11 @@ public class HeapStatsUtils {
         if (fontsize == null) {
             prop.setProperty("reftree_fontsize", "11");
         }
+        
+        /* Tick marker on X axis */
+        if (prop.getProperty("tickmarker") == null) {
+            prop.setProperty("tickmarker", "false");
+        }
 
         /* Add shutdown hook for saving current settings. */
         Runnable savePropImpl = () -> {
@@ -333,6 +338,15 @@ public class HeapStatsUtils {
         prop.setProperty("reftree_fontsize", Integer.toString(fontSize));
     }
 
+    /**
+     * Get the switch to show tick marker on X axis.
+     *
+     * @return true if Analyzer should show tick marker.
+     */
+    public static boolean getTickMarkerSwitch() {
+        return Boolean.parseBoolean(prop.getProperty("tickmarker"));
+    }
+    
     /**
      * Convert stack trace to String.
      *
