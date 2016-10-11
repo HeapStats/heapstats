@@ -38,7 +38,13 @@ public class CliMain implements Thread.UncaughtExceptionHandler{
         Options options = new Options();
         Thread.setDefaultUncaughtExceptionHandler(new CliMain());
         
-        options.parse(args);
+        try{
+            options.parse(args);
+        }
+        catch(Exception e){
+            options.printHelp();
+            System.exit(1);
+        }
         
         CliProcessor processor;
         Options.FileType fileType = options.getType();
@@ -72,7 +78,8 @@ public class CliMain implements Thread.UncaughtExceptionHandler{
     public void uncaughtException(Thread thread, Throwable thrwbl) {
         Throwable rootCause = thrwbl;
         
-        // Find root cause of exception
+        // Find root cause of exception.
+        // Exceptions is recuesive. So we need to track exception(s) through Throwable#getCause().
         while(rootCause.getCause() != null){
             rootCause = rootCause.getCause();
         }
