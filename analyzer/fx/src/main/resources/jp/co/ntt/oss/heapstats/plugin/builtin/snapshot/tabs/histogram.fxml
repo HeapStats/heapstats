@@ -69,7 +69,7 @@
                                         <NumberAxis side="BOTTOM" tickLabelsVisible="false" autoRanging="false" />
                                     </xAxis>
                                     <yAxis>
-                                        <NumberAxis fx:id="topNYAxis" autoRanging="false" label="MB" side="LEFT" />
+                                        <NumberAxis fx:id="topNYAxis" autoRanging="false" label="MB" side="LEFT" minorTickVisible="false" />
                                     </yAxis>
                                 </StackedAreaChart>
                                 <AnchorPane fx:id="topNChartAnchor" mouseTransparent="true" />

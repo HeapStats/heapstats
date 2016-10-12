@@ -152,13 +152,9 @@ public class LogResourcesController implements Initializable {
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
 
         String bgcolor = "-fx-background-color: " + HeapStatsUtils.getChartBgColor() + ";";
-        javaCPUChart.lookup(".chart").setStyle(bgcolor);
-        systemCPUChart.lookup(".chart").setStyle(bgcolor);
-        javaMemoryChart.lookup(".chart").setStyle(bgcolor);
-        safepointChart.lookup(".chart").setStyle(bgcolor);
-        safepointTimeChart.lookup(".chart").setStyle(bgcolor);
-        threadChart.lookup(".chart").setStyle(bgcolor);
-        monitorChart.lookup(".chart").setStyle(bgcolor);
+        Stream.of(javaCPUChart, systemCPUChart, javaMemoryChart, safepointChart, safepointTimeChart, threadChart, monitorChart)
+              .peek(c -> c.lookup(".chart").setStyle(bgcolor))
+              .forEach(c -> c.getXAxis().setTickMarkVisible(HeapStatsUtils.getTickMarkerSwitch()));
 
         initializeChartSeries();
 

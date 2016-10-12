@@ -205,6 +205,7 @@ public class HistogramController implements Initializable {
         searchList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         topNChart.lookup(".chart").setStyle("-fx-background-color: " + HeapStatsUtils.getChartBgColor() + ";");
+        topNChart.getXAxis().setTickMarkVisible(HeapStatsUtils.getTickMarkerSwitch());
 
         searchFilterEnable = false;
         excludeFilterEnable = false;

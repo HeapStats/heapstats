@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,8 +18,11 @@
 package jp.co.ntt.oss.heapstats.cli.processor;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import java.util.AbstractMap;
+import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import jp.co.ntt.oss.heapstats.cli.Options;
@@ -66,34 +69,35 @@ public class ThreadRecordProcessor implements CliProcessor{
             threadRecordParser.getIdMap().forEach((k, v) -> System.out.println(k.toString() + ": " + v));
         }
         else{
-            Stream<ThreadStat> threadStatStream = IntStream.range(start, options.getEnd().orElse(threadStatList.size()))
-                                                                                .mapToObj(threadStatList::get)
-                                                                                .filter(options.getIdPredicate())
-                                                                                .sorted();
-            
+            Stream<AbstractMap.SimpleImmutableEntry<Integer, ThreadStat>> threadStatStream = IntStream.range(start, options.getEnd().orElse(threadStatList.size()))
+                                                                                                      .mapToObj(i -> new AbstractMap.SimpleImmutableEntry<Integer, ThreadStat>(i, threadStatList.get(i)))
+                                                                                                      .filter(e -> options.getIdPredicate().test(e.getValue()))
+                                                                                                      .sorted(Comparator.comparing(e -> e.getValue()));
+            Set<ThreadEvent> includedSet;
             switch(options.getMode()){
                 case DUMP_SUSPEND_EVENTS:
-                    List<ThreadEvent> suspendEventList = Arrays.asList(ThreadEvent.MonitorWait, ThreadEvent.MonitorWaited,
-                                                                       ThreadEvent.MonitorContendedEnter, ThreadEvent.MonitorContendedEntered,
-                                                                       ThreadEvent.ThreadSleepStart, ThreadEvent.ThreadSleepEnd,
-                                                                       ThreadEvent.Park, ThreadEvent.Unpark);
-                    threadStatStream = threadStatStream.filter(s -> suspendEventList.contains(s.getEvent()));
+                    includedSet = EnumSet.of(ThreadEvent.MonitorWait, ThreadEvent.MonitorWaited,
+                                             ThreadEvent.MonitorContendedEnter, ThreadEvent.MonitorContendedEntered,
+                                             ThreadEvent.ThreadSleepStart, ThreadEvent.ThreadSleepEnd,
+                                             ThreadEvent.Park, ThreadEvent.Unpark);
                     break;
                 case DUMP_LOCK_EVENTS:
-                    List<ThreadEvent> lockEventList = Arrays.asList(ThreadEvent.MonitorContendedEnter, ThreadEvent.MonitorContendedEntered,
-                                                                    ThreadEvent.Park, ThreadEvent.Unpark);
-                    threadStatStream = threadStatStream.filter(s -> lockEventList.contains(s.getEvent()));
+                    includedSet = EnumSet.of(ThreadEvent.MonitorContendedEnter, ThreadEvent.MonitorContendedEntered,
+                                             ThreadEvent.Park, ThreadEvent.Unpark);
                     break;
                 case DUMP_IO_EVENTS:
-                    List<ThreadEvent> ioEventList = Arrays.asList(ThreadEvent.FileWriteStart, ThreadEvent.FileWriteEnd,
-                                                                  ThreadEvent.FileReadStart, ThreadEvent.FileReadEnd,
-                                                                  ThreadEvent.SocketWriteStart, ThreadEvent.SocketWriteEnd,
-                                                                  ThreadEvent.SocketReadStart, ThreadEvent.SocketReadEnd);
-                    threadStatStream = threadStatStream.filter(s -> ioEventList.contains(s.getEvent()));
+                    includedSet = EnumSet.of(ThreadEvent.FileWriteStart, ThreadEvent.FileWriteEnd,
+                                             ThreadEvent.FileReadStart, ThreadEvent.FileReadEnd,
+                                             ThreadEvent.SocketWriteStart, ThreadEvent.SocketWriteEnd,
+                                             ThreadEvent.SocketReadStart, ThreadEvent.SocketReadEnd);
+                    break;
+                default:
+                    includedSet = EnumSet.allOf(ThreadEvent.class);
                     break;
             }
             
-            threadStatStream.forEachOrdered(System.out::println);
+            threadStatStream.filter(e -> includedSet.contains(e.getValue().getEvent()))
+                            .forEachOrdered(e -> System.out.println(e.getKey() + ": " + e.getValue()));
         }
         
     }

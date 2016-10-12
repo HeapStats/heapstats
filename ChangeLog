@@ -1,3 +1,12 @@
+2016-10-12  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3195: Add property for tick marker on X axis
+
+2016-10-11  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3002: HeapStats CLI should show ID in each subcommand
+	* Bug 3001: HeapStats CLI should report error without exception
+
 2016-10-07  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3191: Enable to change font size of Reference Tree by config

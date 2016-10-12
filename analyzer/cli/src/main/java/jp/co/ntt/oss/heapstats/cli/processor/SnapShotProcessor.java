@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
 package jp.co.ntt.oss.heapstats.cli.processor;
 
 import java.time.format.DateTimeFormatter;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -57,10 +58,11 @@ public class SnapShotProcessor implements CliProcessor{
     
     /**
      * Show SnapShot summary.
+     * @param id SnapShot ID
      * @param header SnapShot header.
      */
-    private void showSnapShotSummary(SnapShotHeader header){
-        System.out.println(header.getSnapShotDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + ": Cause: " + header.getCauseString());
+    private void showSnapShotSummary(int id, SnapShotHeader header){
+        System.out.println(id + ": " + header.getSnapShotDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + ": Cause: " + header.getCauseString());
         System.out.println("GC Cause: " + header.getGcCause() + ", Full: " + header.getFullCount() + ", Young: " + header.getYngCount() + ", GC Time: " + header.getGcTime() + "ms");
         System.out.printf("Java heap: capacity: %dMB, new: %dMB, old: %dMB\n", header.getTotalCapacity() / 1024 / 1024, header.getNewHeap() / 1024 / 1024, header.getOldHeap() / 1024 / 1024);
         System.out.printf("Metaspace: capacity: %dMB, usage: %dMB\n", header.getMetaspaceCapacity() / 1024 / 1024, header.getMetaspaceUsage() / 1024 / 1024);
@@ -87,10 +89,11 @@ public class SnapShotProcessor implements CliProcessor{
     
     /**
      * Show class histogram.
+     * @param id SnapShot ID
      * @param header SnapShot header.
      */
-    private void showClassHistogram(SnapShotHeader header){
-        System.out.println(header.getSnapShotDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+    private void showClassHistogram(int id, SnapShotHeader header){
+        System.out.println(id + ": " + header.getSnapShotDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         System.out.println("Tag\tClass\tClassLoader\tInstances\tSize(KB)");
         
         Stream<ObjectData> stream = header.getSnapShot(true).values().stream();
@@ -134,13 +137,14 @@ public class SnapShotProcessor implements CliProcessor{
 
     /**
      * Show class reference.
+     * @param id SnapShot ID
      * @param header SnapShot header.
      */
-    private void showClassReference(SnapShotHeader header){
+    private void showClassReference(int id, SnapShotHeader header){
         long refStart = options.getRefStartTag();
         Map<Long, ObjectData> snapShot = header.getSnapShot(true);
         
-        System.out.println(header.getSnapShotDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        System.out.println(id + ": " + header.getSnapShotDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         System.out.println("Start: " + snapShot.get(refStart).getName());
         System.out.println("Direction: " + (options.isRefToParent() ? "Parent" : "Child"));
         System.out.println("\tTag\tClass\tClassLoader\tInstances\tSize(KB)");
@@ -177,30 +181,30 @@ public class SnapShotProcessor implements CliProcessor{
                      .mapToObj(i -> String.format("%d: %s", i, snapShots.get(i).getSnapShotDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
                      .forEachOrdered(System.out::println);
         }
+        else if(options.getMode() == Options.Mode.DIFF_HISTO){
+            System.out.println(options.getEnd().orElse(snapShots.size() - 1));
+            showDiffHistogram(snapShots.get(start), snapShots.get(options.getEnd().orElse(snapShots.size()) - 1));
+        }
         else{
-            Stream<SnapShotHeader> snapshotStream = IntStream.range(start, options.getEnd().orElse(snapShots.size()))
-                                                             .mapToObj(i -> snapShots.get(i));
+            Stream<AbstractMap.SimpleImmutableEntry<Integer, SnapShotHeader>> snapshotStream = IntStream.range(start, options.getEnd().orElse(snapShots.size()))
+                                                                                                        .mapToObj(i -> new AbstractMap.SimpleImmutableEntry<Integer, SnapShotHeader>(i, snapShots.get(i)));
             
             switch(options.getMode()){
                 case SNAPSHOT_SUMMARY:
-                    snapshotStream.forEachOrdered(this::showSnapShotSummary);
+                    snapshotStream.forEachOrdered(e -> showSnapShotSummary(e.getKey(), e.getValue()));
                     break;
                 case CLASS_HISTO:
-                    snapshotStream.forEachOrdered(this::showClassHistogram);
-                    break;
-                case DIFF_HISTO:
-                    System.out.println(options.getEnd().orElse(snapShots.size() - 1));
-                    showDiffHistogram(snapShots.get(start), snapShots.get(options.getEnd().orElse(snapShots.size()) - 1));
+                    snapshotStream.forEachOrdered(e -> showClassHistogram(e.getKey(), e.getValue()));
                     break;
                 case CLASS_REFERENCES:
-                    snapshotStream.forEachOrdered(this::showClassReference);
+                    snapshotStream.forEachOrdered(e -> showClassReference(e.getKey(), e.getValue()));
                     break;
                 case HEAP_CSV:
-                    CSVDumpHeap heapDumper = new CSVDumpHeap(options.getCsvFile(), snapshotStream.collect(Collectors.toList()), options.getFilterPredicate(), true);
+                    CSVDumpHeap heapDumper = new CSVDumpHeap(options.getCsvFile(), snapshotStream.map(e -> e.getValue()).collect(Collectors.toList()), options.getFilterPredicate(), true);
                     heapDumper.run();
                     break;
                 case GC_CSV:
-                    CSVDumpGC csvDumper = new CSVDumpGC(options.getCsvFile(), snapshotStream.collect(Collectors.toList()));
+                    CSVDumpGC csvDumper = new CSVDumpGC(options.getCsvFile(), snapshotStream.map(e -> e.getValue()).collect(Collectors.toList()));
                     csvDumper.run();
                     break;
             }
