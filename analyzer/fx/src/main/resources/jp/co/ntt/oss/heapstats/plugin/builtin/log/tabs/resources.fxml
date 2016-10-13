@@ -41,7 +41,7 @@
                     <children>
                         <LineChart id="threadChart" fx:id="threadChart" animated="false" createSymbols="false" legendVisible="false" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.thread">
                             <xAxis>
-                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" autoRanging="false" />
+                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" autoRanging="false" />
                             </xAxis>
                             <yAxis>
                                 <NumberAxis side="LEFT" minorTickVisible="false" />
@@ -63,7 +63,7 @@
                     <children>
                         <StackedAreaChart id="javaCPUChart" fx:id="javaCPUChart" animated="false" createSymbols="false" legendSide="BOTTOM" legendVisible="true" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.javacpu">
                             <xAxis>
-                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" autoRanging="false" />
+                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" autoRanging="false" />
                             </xAxis>
                             <yAxis>
                                 <NumberAxis autoRanging="false" label="\%" lowerBound="0.0" side="LEFT" upperBound="100.0d" tickUnit="10.0" minorTickVisible="false" />
@@ -76,7 +76,7 @@
                     <children>
                         <StackedAreaChart id="systemCPUChart" fx:id="systemCPUChart" animated="false" createSymbols="false" legendSide="BOTTOM" legendVisible="true" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.systemcpu">
                             <xAxis>
-                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" autoRanging="false" />
+                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" autoRanging="false" />
                             </xAxis>
                             <yAxis>
                                 <NumberAxis autoRanging="false" label="\%" lowerBound="0.0" side="LEFT" upperBound="100.0d" tickUnit="10.0" minorTickVisible="false" />
@@ -89,7 +89,7 @@
                     <children>
                         <LineChart id="javaMemoryChart" fx:id="javaMemoryChart" animated="false" createSymbols="false" legendSide="BOTTOM" legendVisible="true" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.nativememory">
                             <xAxis>
-                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" autoRanging="false" />
+                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" autoRanging="false" />
                             </xAxis>
                             <yAxis>
                                 <NumberAxis label="MB" side="LEFT" minorTickVisible="false" />
@@ -102,7 +102,7 @@
                     <children>
                         <LineChart id="safepointChart" fx:id="safepointChart" animated="false" createSymbols="false" legendVisible="false" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.safepoint.count">
                             <xAxis>
-                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" tickMarkVisible="false" visible="false" autoRanging="false" />
+                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" visible="false" autoRanging="false" />
                             </xAxis>
                             <yAxis>
                                 <NumberAxis side="LEFT" minorTickVisible="false" />
@@ -115,7 +115,7 @@
                     <children>
                         <LineChart id="safepointTimeChart" fx:id="safepointTimeChart" animated="false" createSymbols="false" legendVisible="false" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.safepoint.time">
                             <xAxis>
-                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" tickMarkVisible="false" visible="false" autoRanging="false" />
+                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" visible="false" autoRanging="false" />
                             </xAxis>
                             <yAxis>
                                 <NumberAxis label="ms" side="LEFT" minorTickVisible="false" />
@@ -128,7 +128,7 @@
                     <children>
                         <LineChart id="monitorChart" fx:id="monitorChart" animated="false" createSymbols="false" legendVisible="false" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.monitorcontention">
                             <xAxis>
-                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" autoRanging="false" />
+                                <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" autoRanging="false" />
                             </xAxis>
                             <yAxis>
                                 <NumberAxis side="LEFT" minorTickVisible="false" />
