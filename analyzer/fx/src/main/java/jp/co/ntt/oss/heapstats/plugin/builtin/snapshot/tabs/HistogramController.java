@@ -269,6 +269,7 @@ public class HistogramController implements Initializable {
         long startEpoch = currentTarget.get().get(0).getSnapShotDate().atZone(ZoneId.systemDefault()).toEpochSecond();
         long endEpoch = currentTarget.get().get(currentTarget.get().size() - 1).getSnapShotDate().atZone(ZoneId.systemDefault()).toEpochSecond();
         NumberAxis xAxis = (NumberAxis)topNChart.getXAxis();
+        xAxis.setTickUnit((endEpoch - startEpoch) / 100.0d);
         xAxis.setLowerBound(startEpoch);
         xAxis.setUpperBound(endEpoch);
         

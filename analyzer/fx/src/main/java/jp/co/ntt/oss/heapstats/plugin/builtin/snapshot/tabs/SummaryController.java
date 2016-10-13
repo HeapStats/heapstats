@@ -262,6 +262,7 @@ public class SummaryController implements Initializable {
             long startEpoch = currentTarget.get().get(0).getSnapShotDate().atZone(ZoneId.systemDefault()).toEpochSecond();
             long endEpoch = currentTarget.get().get(currentTarget.get().size() - 1).getSnapShotDate().atZone(ZoneId.systemDefault()).toEpochSecond();
             Stream.of(heapChart, instanceChart, gcTimeChart, metaspaceChart)
+                  .peek(c -> ((NumberAxis)c.getXAxis()).setTickUnit((endEpoch - startEpoch) / 100.0d))
                   .peek(c -> ((NumberAxis)c.getXAxis()).setLowerBound(startEpoch))
                   .peek(c -> ((NumberAxis)c.getXAxis()).setUpperBound(endEpoch))
                   .forEach(c -> Platform.runLater(() -> drawRebootSuspectLine.accept(c)));
