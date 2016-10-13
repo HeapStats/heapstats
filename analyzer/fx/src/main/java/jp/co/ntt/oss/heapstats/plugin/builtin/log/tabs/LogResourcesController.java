@@ -471,10 +471,12 @@ public class LogResourcesController implements Initializable {
             long endDiffEpoch = targetDiffData.get(targetDiffData.size() - 1).getDateTime().atZone(ZoneId.systemDefault()).toEpochSecond();
             Stream.of(javaMemoryChart, threadChart)
                   .map(c -> (NumberAxis)c.getXAxis())
+                  .peek(a -> a.setTickUnit((endLogEpoch - startLogEpoch) / 100.0d))
                   .peek(a -> a.setLowerBound(startLogEpoch))
                   .forEach(a -> a.setUpperBound(endLogEpoch));
             Stream.of(javaCPUChart, systemCPUChart, safepointChart, safepointTimeChart, monitorChart)
                   .map(c -> (NumberAxis)c.getXAxis())
+                  .peek(a -> a.setTickUnit((endDiffEpoch - startDiffEpoch) / 100.0d))
                   .peek(a -> a.setLowerBound(startDiffEpoch))
                   .forEach(a -> a.setUpperBound(endDiffEpoch));
             
