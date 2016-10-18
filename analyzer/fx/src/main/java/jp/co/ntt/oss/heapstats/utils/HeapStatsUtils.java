@@ -181,8 +181,14 @@ public class HeapStatsUtils {
         String fontsize = prop.getProperty("reftree_fontsize");
         if (fontsize == null) {
             prop.setProperty("reftree_fontsize", "11");
+        } else {
+            try {
+                Integer.decode(fontsize);
+            } catch (NumberFormatException e) {
+                throw new HeapStatsConfigException(resource.getString("invalid.option") + " reftree_fontsize=" + fontsize, e);
+            }
         }
-        
+
         /* Tick marker on X axis */
         if (prop.getProperty("tickmarker") == null) {
             prop.setProperty("tickmarker", "false");
