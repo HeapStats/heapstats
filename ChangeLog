@@ -1,3 +1,7 @@
+2016-10-19  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3197: Add a validation of reftree_fontsize
+
 2016-10-12  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3195: Add property for tick marker on X axis
