@@ -172,12 +172,10 @@ public class WindowController implements Initializable {
         
         Callback<Class<?>, Object> origFactory = loader.getControllerFactory();
         loader.setControllerFactory(c -> {
-                                            System.out.println(c);
                                             if(c.equals(LogResourcesControllerBase.class)){
                                                 return HeapStatsUtils.isNumberAxis() ? new LogResourcesNumberController() : null; // TODO: implement CategoryAxis
                                             }
                                             else{
-                                                System.out.println("unmatch");
                                                 try{
                                                     return c.getConstructor().newInstance();
                                                 }
