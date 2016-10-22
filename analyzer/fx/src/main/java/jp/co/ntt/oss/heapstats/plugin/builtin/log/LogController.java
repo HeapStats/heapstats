@@ -51,7 +51,7 @@ import jp.co.ntt.oss.heapstats.lambda.ConsumerWrapper;
 import jp.co.ntt.oss.heapstats.lambda.FunctionWrapper;
 import jp.co.ntt.oss.heapstats.plugin.PluginController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogDetailsController;
-import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesController;
+import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesControllerBase;
 import jp.co.ntt.oss.heapstats.task.ParseLogFile;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 import jp.co.ntt.oss.heapstats.utils.TaskAdapter;
@@ -64,7 +64,7 @@ import jp.co.ntt.oss.heapstats.utils.TaskAdapter;
 public class LogController extends PluginController implements Initializable {
 
     @FXML
-    private LogResourcesController logResourcesController;
+    private LogResourcesControllerBase logResourcesController;
 
     @FXML
     private LogDetailsController logDetailsController;

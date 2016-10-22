@@ -43,7 +43,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import jp.co.ntt.oss.heapstats.plugin.builtin.jvmlive.JVMLiveController;
-import jp.co.ntt.oss.heapstats.plugin.builtin.log.LogController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.SnapShotController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.threadrecorder.ThreadRecorderController;
 
@@ -206,6 +205,11 @@ public class HeapStatsUtils {
             }
         }
 
+        /* X Axis mode */
+        if (prop.getProperty("x_numberaxis") == null) {
+            prop.setProperty("x_numberaxis", "true");
+        }
+        
         /* Add shutdown hook for saving current settings. */
         Runnable savePropImpl = () -> {
             try (OutputStream out = Files.newOutputStream(properties, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)) {
@@ -224,7 +228,6 @@ public class HeapStatsUtils {
      */
     public static List<String> getPlugins() {
         List<String> pluginList = new ArrayList<>();
-        pluginList.add(LogController.class.getPackage().getName());
         pluginList.add(SnapShotController.class.getPackage().getName());
         pluginList.add(ThreadRecorderController.class.getPackage().getName());
         pluginList.add(JVMLiveController.class.getPackage().getName());
@@ -363,6 +366,15 @@ public class HeapStatsUtils {
      */
     public static boolean getTickMarkerSwitch() {
         return Boolean.parseBoolean(prop.getProperty("tickmarker"));
+    }
+    
+    /**
+     * Get X Axis mode
+     * 
+     * @return true if HeapStats should use NumberAxis to draw charts.
+     */
+    public static boolean isNumberAxis(){
+        return Boolean.parseBoolean(prop.getProperty("x_numberaxis"));
     }
     
     /**
