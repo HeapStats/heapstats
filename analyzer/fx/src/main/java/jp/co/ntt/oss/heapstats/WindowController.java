@@ -57,10 +57,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import javafx.util.Callback;
 import jp.co.ntt.oss.heapstats.lambda.FunctionWrapper;
 import jp.co.ntt.oss.heapstats.plugin.PluginController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.log.LogController;
+import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesCategoryController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesControllerBase;
 import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesNumberController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.SnapShotController;
@@ -170,10 +170,9 @@ public class WindowController implements Initializable {
         ResourceBundle pluginResource = ResourceBundle.getBundle("logResources", new Locale(HeapStatsUtils.getLanguage()), pluginClassLoader);
         FXMLLoader loader = new FXMLLoader(pluginClassLoader.getResource(fxmlName), pluginResource);
         
-        Callback<Class<?>, Object> origFactory = loader.getControllerFactory();
         loader.setControllerFactory(c -> {
                                             if(c.equals(LogResourcesControllerBase.class)){
-                                                return HeapStatsUtils.isNumberAxis() ? new LogResourcesNumberController() : null; // TODO: implement CategoryAxis
+                                                return HeapStatsUtils.isNumberAxis() ? new LogResourcesNumberController() : new LogResourcesCategoryController();
                                             }
                                             else{
                                                 try{

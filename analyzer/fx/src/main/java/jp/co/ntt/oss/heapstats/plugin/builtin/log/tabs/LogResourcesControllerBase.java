@@ -481,7 +481,8 @@ public abstract class LogResourcesControllerBase implements Initializable {
         }
 
         private void addDiffData(DiffData data) {
-            long time = data.getDateTime().atZone(ZoneId.systemDefault()).toEpochSecond();
+            Object time = HeapStatsUtils.isNumberAxis() ? data.getDateTime().atZone(ZoneId.systemDefault()).toEpochSecond()
+                                                        : data.getDateTime().format(HeapStatsUtils.getDateTimeFormatter());
 
             javaUserUsageBuf.add(new XYChart.Data<>(time, data.getJavaUserUsage()));
             javaSysUsageBuf.add(new XYChart.Data<>(time, data.getJavaSysUsage()));
