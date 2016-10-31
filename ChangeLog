@@ -1,3 +1,7 @@
+2016-10-31  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3214: heapstats-cli should check JAVA_HOME value
+
 2016-10-19  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3197: Add a validation of reftree_fontsize

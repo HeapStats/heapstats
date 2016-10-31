@@ -6,5 +6,11 @@ libexecdir=@libexecdir@
 
 CLI_JAR="$libexecdir/heapstats-cli.jar"
 
-$JAVA_HOME/bin/java $JAVA_OPTS -jar $CLI_JAR $@
+if test -x $JAVA_HOME/bin/java; then
+  $JAVA_HOME/bin/java $JAVA_OPTS -jar $CLI_JAR $@
+elif test -z "$JAVA_HOME"; then
+  echo "Set \$JAVA_HOME to run heapstats-cli"
+else
+  echo "Set \$JAVA_HOME correctly to run heapstats-cli"
+fi
 
