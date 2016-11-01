@@ -19,6 +19,7 @@ package jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -37,6 +38,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedAreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
@@ -56,67 +58,82 @@ import jp.co.ntt.oss.heapstats.container.log.SummaryData;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 
 /**
- * FXML Controller class for "Resource Data" tab in LogData plugin.
+ * FXML base Controller class for "Resource Data" tab in LogData plugin.
+ * Controller of log resource tab should inherit this class.
  */
-public class LogResourcesController implements Initializable {
+public abstract class LogResourcesControllerBase implements Initializable {
 
     @FXML
     private GridPane chartGrid;
 
     @FXML
-    private StackedAreaChart<String, Double> javaCPUChart;
+    protected StackPane javaCPUChartPane;
+    
+    protected StackedAreaChart javaCPUChart;
 
-    private XYChart.Series<String, Double> javaUserUsage;
+    private XYChart.Series javaUserUsage;
 
-    private XYChart.Series<String, Double> javaSysUsage;
-
-    @FXML
-    private StackedAreaChart<String, Double> systemCPUChart;
-
-    private XYChart.Series<String, Double> systemUserUsage;
-
-    private XYChart.Series<String, Double> systemNiceUsage;
-
-    private XYChart.Series<String, Double> systemSysUsage;
-
-    private XYChart.Series<String, Double> systemIdleUsage;
-
-    private XYChart.Series<String, Double> systemIOWaitUsage;
-
-    private XYChart.Series<String, Double> systemIRQUsage;
-
-    private XYChart.Series<String, Double> systemSoftIRQUsage;
-
-    private XYChart.Series<String, Double> systemStealUsage;
-
-    private XYChart.Series<String, Double> systemGuestUsage;
+    private XYChart.Series javaSysUsage;
 
     @FXML
-    private LineChart<String, Long> javaMemoryChart;
+    protected StackPane systemCPUChartPane;
+    
+    protected StackedAreaChart systemCPUChart;
 
-    private XYChart.Series<String, Long> javaVSZUsage;
+    private XYChart.Series systemUserUsage;
 
-    private XYChart.Series<String, Long> javaRSSUsage;
+    private XYChart.Series systemNiceUsage;
+
+    private XYChart.Series systemSysUsage;
+
+    private XYChart.Series systemIdleUsage;
+
+    private XYChart.Series systemIOWaitUsage;
+
+    private XYChart.Series systemIRQUsage;
+
+    private XYChart.Series systemSoftIRQUsage;
+
+    private XYChart.Series systemStealUsage;
+
+    private XYChart.Series systemGuestUsage;
 
     @FXML
-    private LineChart<String, Long> safepointChart;
+    protected StackPane javaMemoryChartPane;
+    
+    protected LineChart javaMemoryChart;
 
-    private XYChart.Series<String, Long> safepoints;
+    private XYChart.Series javaVSZUsage;
 
-    @FXML
-    private LineChart<String, Long> safepointTimeChart;
-
-    private XYChart.Series<String, Long> safepointTime;
-
-    @FXML
-    private LineChart<String, Long> threadChart;
-
-    private XYChart.Series<String, Long> threads;
+    private XYChart.Series javaRSSUsage;
 
     @FXML
-    private LineChart<String, Long> monitorChart;
+    protected StackPane safepointChartPane;
+    
+    protected LineChart safepointChart;
 
-    private XYChart.Series<String, Long> monitors;
+    private XYChart.Series safepoints;
+
+    @FXML
+    protected StackPane safepointTimeChartPane;
+    
+    protected LineChart safepointTimeChart;
+
+    private XYChart.Series safepointTime;
+
+    @FXML
+    protected StackPane threadChartPane;
+    
+    protected LineChart threadChart;
+
+    private XYChart.Series threads;
+
+    @FXML
+    protected StackPane monitorChartPane;
+    
+    protected LineChart monitorChart;
+
+    private XYChart.Series monitors;
 
     @FXML
     private TableView<SummaryData.SummaryDataEntry> procSummary;
@@ -127,9 +144,9 @@ public class LogResourcesController implements Initializable {
     @FXML
     private TableColumn<SummaryData.SummaryDataEntry, String> valueColumn;
 
-    private Popup chartPopup;
+    protected Popup chartPopup;
 
-    private Label popupText;
+    protected Label popupText;
 
     private ObjectProperty<ObservableList<ArchiveData>> archiveList;
 
@@ -147,9 +164,48 @@ public class LogResourcesController implements Initializable {
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
 
+        javaCPUChartPane.getChildren().add(0, javaCPUChart);
+        javaCPUChart.setId("javaCPUChart");
+        javaCPUChart.setCreateSymbols(false);
+        javaCPUChart.setTitle(resource.getString("chart.javacpu"));
+        systemCPUChartPane.getChildren().add(0, systemCPUChart);
+        systemCPUChart.setId("systemCPUChart");
+        systemCPUChart.setCreateSymbols(false);
+        systemCPUChart.setTitle(resource.getString("chart.systemcpu"));
+        javaMemoryChartPane.getChildren().add(0, javaMemoryChart);
+        javaMemoryChart.setId("javaMemoryChart");
+        javaMemoryChart.setCreateSymbols(false);
+        javaMemoryChart.setTitle(resource.getString("chart.nativememory"));
+        javaMemoryChart.getYAxis().setLabel("MB");
+        safepointChartPane.getChildren().add(0, safepointChart);
+        safepointChart.setId("safepointChart");
+        safepointChart.setCreateSymbols(false);
+        safepointChart.setTitle(resource.getString("chart.safepoint.count"));
+        safepointTimeChartPane.getChildren().add(0, safepointTimeChart);
+        safepointTimeChart.setId("safepointTimeChart");
+        safepointTimeChart.setCreateSymbols(false);
+        safepointTimeChart.setTitle(resource.getString("chart.safepoint.time"));
+        safepointTimeChart.getYAxis().setLabel("ms");
+        monitorChartPane.getChildren().add(0, monitorChart);
+        monitorChart.setId("monitorChart");
+        monitorChart.setCreateSymbols(false);
+        monitorChart.setTitle(resource.getString("chart.monitorcontention"));
+        threadChartPane.getChildren().add(0, threadChart);
+        threadChart.setId("threadChart");
+        threadChart.setCreateSymbols(false);
+        threadChart.setTitle(resource.getString("chart.thread"));
+
         String bgcolor = "-fx-background-color: " + HeapStatsUtils.getChartBgColor() + ";";
         Stream.of(javaCPUChart, systemCPUChart, javaMemoryChart, safepointChart, safepointTimeChart, threadChart, monitorChart)
               .peek(c -> c.lookup(".chart").setStyle(bgcolor))
+              .peek(c -> c.setAnimated(false))
+              .peek(c -> c.setLegendVisible(false))
+              .peek(c -> c.setMinHeight(0.0d))
+              .peek(c -> c.setMinWidth(0.0d))
+              .peek(c -> c.setOnMouseMoved(this::onChartMouseMoved))
+              .peek(c -> c.setOnMouseExited(this::onChartMouseExited))
+              .peek(c -> c.getXAxis().setTickLabelsVisible(false))
+              .peek(c -> ((NumberAxis)c.getYAxis()).setMinorTickVisible(false))
               .forEach(c -> c.getXAxis().setTickMarkVisible(HeapStatsUtils.getTickMarkerSwitch()));
 
         initializeChartSeries();
@@ -227,27 +283,17 @@ public class LogResourcesController implements Initializable {
      * @param event Mouse event.
      * @param labelFunc Function to format label string.
      */
-    private void showChartPopup(XYChart<String, ? extends Number> chart, String xValue, MouseEvent event, Function<? super Number, String> labelFunc) {
-        String label = chart.getData().stream()
-                .map(s -> s.getName() + " = " + s.getData().stream()
-                        .filter(d -> d.getXValue().equals(xValue))
-                        .map(d -> labelFunc.apply(d.getYValue()))
-                        .findAny()
-                        .orElse("<none>"))
-                .collect(Collectors.joining("\n"));
+    protected abstract void showChartPopup(XYChart chart, Object xValue, MouseEvent event, Function<? super Number, String> labelFunc);
 
-        popupText.setText(xValue + "\n" + label);
-        chartPopup.show(chart, event.getScreenX() + 15.0d, event.getScreenY() + 3.0d);
-    }
-
-    @FXML
     @SuppressWarnings("unchecked")
     private void onChartMouseMoved(MouseEvent event) {
-        XYChart<String, ? extends Number> chart = (XYChart<String, ? extends Number>) event.getSource();
-        CategoryAxis xAxis = (CategoryAxis) chart.getXAxis();
-        double startXPoint = xAxis.getLayoutX() + xAxis.getStartMargin();
-        Function<? super Number, String> labelFunc;
+        XYChart chart = (XYChart)event.getSource();
+        double startX = chart.getXAxis().getLayoutX();
+        if(!HeapStatsUtils.isNumberAxis()){
+            startX += ((CategoryAxis)chart.getXAxis()).getStartMargin();
+        }
 
+        Function<? super Number, String> labelFunc;
         if ((chart == javaCPUChart) || (chart == systemCPUChart)) {
             labelFunc = d -> String.format("%.02f %%", d);
         } else if (chart == javaMemoryChart) {
@@ -257,17 +303,17 @@ public class LogResourcesController implements Initializable {
         } else {
             labelFunc = d -> d.toString();
         }
-
-        Optional.ofNullable(chart.getXAxis().getValueForDisplay(event.getX() - startXPoint))
+        
+        Optional.ofNullable(chart.getXAxis().getValueForDisplay(event.getX() - startX))
                 .ifPresent(v -> showChartPopup(chart, v, event, labelFunc));
     }
-
-    @FXML
+    
     private void onChartMouseExited(MouseEvent event) {
         chartPopup.hide();
     }
-
-    private void drawLineInternal(StackPane target, List<String> drawList, String style) {
+    
+    @SuppressWarnings("unchecked")
+    private void drawLineInternal(StackPane target, List drawList, String style) {
         AnchorPane anchor = null;
         XYChart chart = null;
 
@@ -296,19 +342,27 @@ public class LogResourcesController implements Initializable {
                 .filter(r -> r.getStyle().equals(style))
                 .collect(Collectors.toList()));
 
-        CategoryAxis xAxis = (CategoryAxis) chart.getXAxis();
+        Axis xAxis = chart.getXAxis();
         Axis yAxis = chart.getYAxis();
         Label chartTitle = (Label) chart.getChildrenUnmodifiable().stream()
                 .filter(n -> n.getStyleClass().contains("chart-title"))
                 .findFirst()
                 .get();
-
-        double startX = xAxis.getLayoutX() + xAxis.getStartMargin() - 1.0d;
+        
+        double startX = xAxis.getLayoutX();
+        if(xAxis instanceof CategoryAxis){
+            startX += ((CategoryAxis)xAxis).getStartMargin() - 1.0d;
+        }
+        else{
+            startX += 4.0d;
+        }
+        
+        final double xPos = startX;
         double yPos = yAxis.getLayoutY() + chartTitle.getLayoutY() + chartTitle.getHeight();
-        List<Rectangle> rectList = drawList.stream()
-                .map(s -> new Rectangle(xAxis.getDisplayPosition(s) + startX, yPos, 2.0d, yAxis.getHeight()))
-                .peek(r -> ((Rectangle) r).setStyle(style))
-                .collect(Collectors.toList());
+        List<Rectangle> rectList = (List<Rectangle>)drawList.stream()
+                                                            .map(x -> new Rectangle(xAxis.getDisplayPosition(x) + xPos, yPos, 2.0d, yAxis.getHeight()))
+                                                            .peek(r -> ((Rectangle)r).setStyle(style))
+                                                            .collect(Collectors.toList());
         anchorChildren.addAll(rectList);
     }
 
@@ -317,10 +371,14 @@ public class LogResourcesController implements Initializable {
         if (archiveList.get().isEmpty()) {
             return;
         }
-
-        List<String> archiveDateList = archiveList.get().stream()
-                .map(a -> a.getDate().format(HeapStatsUtils.getDateTimeFormatter()))
-                .collect(Collectors.toList());
+        
+        Function<? super ArchiveData, String> categoryMapFunc = a -> a.getDate().format(HeapStatsUtils.getDateTimeFormatter());
+        Function<? super ArchiveData, Number> numberMapFunc = a -> a.getDate().atZone(ZoneId.systemDefault()).toEpochSecond();
+        
+        List archiveDateList = archiveList.get()
+                                          .stream()
+                                          .map(HeapStatsUtils.isNumberAxis() ? numberMapFunc : categoryMapFunc)
+                                          .collect(Collectors.toList());
         chartGrid.getChildren().stream()
                 .filter(n -> n instanceof StackPane)
                 .forEach(p -> drawLineInternal((StackPane) p, archiveDateList, "-fx-fill: black;"));
@@ -337,9 +395,12 @@ public class LogResourcesController implements Initializable {
             return;
         }
 
-        List<String> suspectRebootDateList = suspectList.stream()
-                .map(d -> d.format(HeapStatsUtils.getDateTimeFormatter()))
-                .collect(Collectors.toList());
+        Function<? super LocalDateTime, String> categoryMapFunc = d -> d.format(HeapStatsUtils.getDateTimeFormatter());
+        Function<? super LocalDateTime, Number> numberMapFunc = d -> d.atZone(ZoneId.systemDefault()).toEpochSecond();
+        
+        List suspectRebootDateList = suspectList.stream()
+                                                .map(HeapStatsUtils.isNumberAxis() ? numberMapFunc : categoryMapFunc)
+                                                .collect(Collectors.toList());
         chartGrid.getChildren().stream()
                 .filter(n -> n instanceof StackPane)
                 .forEach(p -> drawLineInternal((StackPane) p, suspectRebootDateList, "-fx-fill: yellow;"));
@@ -356,40 +417,40 @@ public class LogResourcesController implements Initializable {
     /**
      * Task class for drawing log chart data.
      */
-    private class DrawLogChartTask extends Task<Void> {
+    protected abstract class DrawLogChartTask extends Task<Void> {
 
         /* Java CPU */
-        private final ObservableList<XYChart.Data<String, Double>> javaUserUsageBuf;
-        private final ObservableList<XYChart.Data<String, Double>> javaSysUsageBuf;
+        private final ObservableList<XYChart.Data> javaUserUsageBuf;
+        private final ObservableList<XYChart.Data> javaSysUsageBuf;
 
         /* System CPU */
-        private final ObservableList<XYChart.Data<String, Double>> systemUserUsageBuf;
-        private final ObservableList<XYChart.Data<String, Double>> systemNiceUsageBuf;
-        private final ObservableList<XYChart.Data<String, Double>> systemSysUsageBuf;
-        private final ObservableList<XYChart.Data<String, Double>> systemIdleUsageBuf;
-        private final ObservableList<XYChart.Data<String, Double>> systemIOWaitUsageBuf;
-        private final ObservableList<XYChart.Data<String, Double>> systemIRQUsageBuf;
-        private final ObservableList<XYChart.Data<String, Double>> systemSoftIRQUsageBuf;
-        private final ObservableList<XYChart.Data<String, Double>> systemStealUsageBuf;
-        private final ObservableList<XYChart.Data<String, Double>> systemGuestUsageBuf;
+        private final ObservableList<XYChart.Data> systemUserUsageBuf;
+        private final ObservableList<XYChart.Data> systemNiceUsageBuf;
+        private final ObservableList<XYChart.Data> systemSysUsageBuf;
+        private final ObservableList<XYChart.Data> systemIdleUsageBuf;
+        private final ObservableList<XYChart.Data> systemIOWaitUsageBuf;
+        private final ObservableList<XYChart.Data> systemIRQUsageBuf;
+        private final ObservableList<XYChart.Data> systemSoftIRQUsageBuf;
+        private final ObservableList<XYChart.Data> systemStealUsageBuf;
+        private final ObservableList<XYChart.Data> systemGuestUsageBuf;
 
         /* Java Memory */
-        private final ObservableList<XYChart.Data<String, Long>> javaVSZUsageBuf;
-        private final ObservableList<XYChart.Data<String, Long>> javaRSSUsageBuf;
+        private final ObservableList<XYChart.Data> javaVSZUsageBuf;
+        private final ObservableList<XYChart.Data> javaRSSUsageBuf;
 
         /* Safepoints */
-        private final ObservableList<XYChart.Data<String, Long>> safepointsBuf;
-        private final ObservableList<XYChart.Data<String, Long>> safepointTimeBuf;
+        private final ObservableList<XYChart.Data> safepointsBuf;
+        private final ObservableList<XYChart.Data> safepointTimeBuf;
 
         /* Threads */
-        private final ObservableList<XYChart.Data<String, Long>> threadsBuf;
+        private final ObservableList<XYChart.Data> threadsBuf;
 
         /* Monitor contantion */
-        private final ObservableList<XYChart.Data<String, Long>> monitorsBuf;
+        private final ObservableList<XYChart.Data> monitorsBuf;
 
-        private final List<LogData> targetLogData;
+        protected final List<LogData> targetLogData;
 
-        private final List<DiffData> targetDiffData;
+        protected final List<DiffData> targetDiffData;
 
         private long loopCount;
 
@@ -420,7 +481,8 @@ public class LogResourcesController implements Initializable {
         }
 
         private void addDiffData(DiffData data) {
-            String time = data.getDateTime().format(HeapStatsUtils.getDateTimeFormatter());
+            Object time = HeapStatsUtils.isNumberAxis() ? data.getDateTime().atZone(ZoneId.systemDefault()).toEpochSecond()
+                                                        : data.getDateTime().format(HeapStatsUtils.getDateTimeFormatter());
 
             javaUserUsageBuf.add(new XYChart.Data<>(time, data.getJavaUserUsage()));
             javaSysUsageBuf.add(new XYChart.Data<>(time, data.getJavaSysUsage()));
@@ -441,7 +503,8 @@ public class LogResourcesController implements Initializable {
         }
 
         private void addLogData(LogData data) {
-            String time = data.getDateTime().format(HeapStatsUtils.getDateTimeFormatter());
+            Object time = HeapStatsUtils.isNumberAxis() ? data.getDateTime().atZone(ZoneId.systemDefault()).toEpochSecond()
+                                                        : data.getDateTime().format(HeapStatsUtils.getDateTimeFormatter()); 
 
             javaVSZUsageBuf.add(new XYChart.Data<>(time, data.getJavaVSSize() / 1024 / 1024));
             javaRSSUsageBuf.add(new XYChart.Data<>(time, data.getJavaRSSize() / 1024 / 1024));
@@ -449,8 +512,13 @@ public class LogResourcesController implements Initializable {
 
             updateProgress();
         }
+        
+        protected abstract void setChartRange();
 
+        @SuppressWarnings("unchecked")
         private void setChartData() {
+            setChartRange();
+            
             /* Replace new chart data */
             javaUserUsage.setData(javaUserUsageBuf);
             javaSysUsage.setData(javaSysUsageBuf);
@@ -526,9 +594,7 @@ public class LogResourcesController implements Initializable {
      *
      * @return Task instance to draw charts.
      */
-    public Task<Void> createDrawResourceCharts(List<LogData> targetLogData, List<DiffData> targetDiffData) {
-        return new DrawLogChartTask(targetLogData, targetDiffData);
-    }
+    public abstract Task<Void> createDrawResourceCharts(List<LogData> targetLogData, List<DiffData> targetDiffData);
 
     /**
      * Get HeapStats ZIP archive list as Property.

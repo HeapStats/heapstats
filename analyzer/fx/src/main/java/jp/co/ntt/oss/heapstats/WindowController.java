@@ -20,6 +20,7 @@ package jp.co.ntt.oss.heapstats;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.DirectoryStream;
@@ -31,7 +32,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -60,6 +60,9 @@ import javafx.stage.Window;
 import jp.co.ntt.oss.heapstats.lambda.FunctionWrapper;
 import jp.co.ntt.oss.heapstats.plugin.PluginController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.log.LogController;
+import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesCategoryController;
+import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesControllerBase;
+import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesNumberController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.SnapShotController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.threadrecorder.ThreadRecorderController;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
@@ -136,21 +139,8 @@ public class WindowController implements Initializable {
         dialog.setTitle("About HeapStats Analyzer");
         dialog.showAndWait();
     }
-
-    private void addPlugin(String packageName){
-        String lastPackageName = packageName.substring(packageName.lastIndexOf('.') + 1);
-        packageName = packageName.replace('.', '/');
-        String fxmlName = packageName + "/" + lastPackageName + ".fxml";
-        FXMLLoader loader;
-
-        try{
-            ResourceBundle pluginResource = ResourceBundle.getBundle(lastPackageName + "Resources", new Locale(HeapStatsUtils.getLanguage()), pluginClassLoader);
-            loader = new FXMLLoader(pluginClassLoader.getResource(fxmlName), pluginResource);
-        }
-        catch(MissingResourceException e){
-            loader = new FXMLLoader(pluginClassLoader.getResource(fxmlName));
-        }
-
+    
+    private void loadAndRegisterFXML(FXMLLoader loader){
         Parent root;
 
         try {
@@ -173,6 +163,45 @@ public class WindowController implements Initializable {
         tabPane.getTabs().add(tab);
 
         pluginList.put(controller.getPluginName(), controller);
+    }
+    
+    private void loadLogPlugin(){
+        String fxmlName = LogController.class.getPackage().getName().replace('.', '/') + "/log.fxml";
+        ResourceBundle pluginResource = ResourceBundle.getBundle("logResources", new Locale(HeapStatsUtils.getLanguage()), pluginClassLoader);
+        FXMLLoader loader = new FXMLLoader(pluginClassLoader.getResource(fxmlName), pluginResource);
+        
+        loader.setControllerFactory(c -> {
+                                            if(c.equals(LogResourcesControllerBase.class)){
+                                                return HeapStatsUtils.isNumberAxis() ? new LogResourcesNumberController() : new LogResourcesCategoryController();
+                                            }
+                                            else{
+                                                try{
+                                                    return c.getConstructor().newInstance();
+                                                }
+                                                catch(NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e){
+                                                    throw new RuntimeException(e);
+                                                }
+                                            }
+                                         });
+        
+        loadAndRegisterFXML(loader);
+    }
+
+    private void addPlugin(String packageName){
+        String lastPackageName = packageName.substring(packageName.lastIndexOf('.') + 1);
+        packageName = packageName.replace('.', '/');
+        String fxmlName = packageName + "/" + lastPackageName + ".fxml";
+        FXMLLoader loader;
+
+        try{
+            ResourceBundle pluginResource = ResourceBundle.getBundle(lastPackageName + "Resources", new Locale(HeapStatsUtils.getLanguage()), pluginClassLoader);
+            loader = new FXMLLoader(pluginClassLoader.getResource(fxmlName), pluginResource);
+        }
+        catch(MissingResourceException e){
+            loader = new FXMLLoader(pluginClassLoader.getResource(fxmlName));
+        }
+
+        loadAndRegisterFXML(loader);
     }
 
     public static WindowController getInstance(){
@@ -319,6 +348,9 @@ public class WindowController implements Initializable {
 
         pluginClassLoader = (jarURLList == null) ? WindowController.class.getClassLoader() : new URLClassLoader(jarURLList);
         FXMLLoader.setDefaultClassLoader(pluginClassLoader);
+        
+        /* Load base plugins */
+        loadLogPlugin();
 
         List<String> plugins = HeapStatsUtils.getPlugins();
         plugins.stream().forEach(s -> addPlugin(s));

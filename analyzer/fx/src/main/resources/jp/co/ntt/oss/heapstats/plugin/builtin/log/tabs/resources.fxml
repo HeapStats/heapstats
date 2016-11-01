@@ -23,7 +23,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane layoutX="17.0" layoutY="20.0" minHeight="0.0" minWidth="0.0" prefHeight="479.0" prefWidth="772.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesController">
+<AnchorPane layoutX="17.0" layoutY="20.0" minHeight="0.0" minWidth="0.0" prefHeight="479.0" prefWidth="772.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesControllerBase">
     <children>
         <GridPane fx:id="chartGrid" layoutY="26.0" minHeight="0.0" minWidth="0.0" stylesheets="@/jp/co/ntt/oss/heapstats/plugin/builtin/log/log.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="26.0">
             <columnConstraints>
@@ -37,16 +37,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <StackPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <StackPane fx:id="threadChartPane" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <children>
-                        <LineChart id="threadChart" fx:id="threadChart" animated="false" createSymbols="false" legendVisible="false" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.thread">
-                            <xAxis>
-                                <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis side="LEFT" minorTickVisible="false" />
-                            </yAxis>
-                        </LineChart>
                         <AnchorPane fx:id="threadsAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
                     </children>
                 </StackPane>
@@ -59,81 +51,33 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
                 </TableView>
-                <StackPane minHeight="0.0" minWidth="0.0">
+                <StackPane fx:id="javaCPUChartPane" minHeight="0.0" minWidth="0.0">
                     <children>
-                        <StackedAreaChart id="javaCPUChart" fx:id="javaCPUChart" animated="false" createSymbols="false" legendSide="BOTTOM" legendVisible="true" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.javacpu">
-                            <xAxis>
-                                <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis autoRanging="false" label="\%" lowerBound="0.0" side="LEFT" upperBound="100.0d" tickUnit="10.0" minorTickVisible="false" />
-                            </yAxis>
-                        </StackedAreaChart>
                         <AnchorPane fx:id="javaCPUAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
                     </children>
                 </StackPane>
-                <StackPane minHeight="0.0" minWidth="0.0" GridPane.columnIndex="1">
+                <StackPane fx:id="systemCPUChartPane" minHeight="0.0" minWidth="0.0" GridPane.columnIndex="1">
                     <children>
-                        <StackedAreaChart id="systemCPUChart" fx:id="systemCPUChart" animated="false" createSymbols="false" legendSide="BOTTOM" legendVisible="true" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.systemcpu">
-                            <xAxis>
-                                <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis autoRanging="false" label="\%" lowerBound="0.0" side="LEFT" upperBound="100.0d" tickUnit="10.0" minorTickVisible="false" />
-                            </yAxis>
-                        </StackedAreaChart>
                         <AnchorPane fx:id="systemCPUAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
                     </children>
                 </StackPane>
-                <StackPane minHeight="0.0" minWidth="0.0" GridPane.rowIndex="1">
+                <StackPane fx:id="javaMemoryChartPane" minHeight="0.0" minWidth="0.0" GridPane.rowIndex="1">
                     <children>
-                        <LineChart id="javaMemoryChart" fx:id="javaMemoryChart" animated="false" createSymbols="false" legendSide="BOTTOM" legendVisible="true" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.nativememory">
-                            <xAxis>
-                                <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis label="MB" side="LEFT" minorTickVisible="false" />
-                            </yAxis>
-                        </LineChart>
                         <AnchorPane fx:id="javaMemoryAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
                     </children>
                 </StackPane>
-                <StackPane minHeight="0.0" minWidth="0.0" GridPane.rowIndex="2">
+                <StackPane fx:id="safepointChartPane" minHeight="0.0" minWidth="0.0" GridPane.rowIndex="2">
                     <children>
-                        <LineChart id="safepointChart" fx:id="safepointChart" animated="false" createSymbols="false" legendVisible="false" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.safepoint.count">
-                            <xAxis>
-                                <CategoryAxis side="BOTTOM" tickLabelsVisible="false" visible="false" />
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis side="LEFT" minorTickVisible="false" />
-                            </yAxis>
-                        </LineChart>
                         <AnchorPane fx:id="safepointAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
                     </children>
                 </StackPane>
-                <StackPane minHeight="0.0" minWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <StackPane fx:id="safepointTimeChartPane" minHeight="0.0" minWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                     <children>
-                        <LineChart id="safepointTimeChart" fx:id="safepointTimeChart" animated="false" createSymbols="false" legendVisible="false" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.safepoint.time">
-                            <xAxis>
-                                <CategoryAxis side="BOTTOM" tickLabelsVisible="false" visible="false" />
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis label="ms" side="LEFT" minorTickVisible="false" />
-                            </yAxis>
-                        </LineChart>
                         <AnchorPane fx:id="safepointTimeAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
                     </children>
                 </StackPane>
-                <StackPane minHeight="0.0" minWidth="0.0" GridPane.rowIndex="3">
+                <StackPane fx:id="monitorChartPane" minHeight="0.0" minWidth="0.0" GridPane.rowIndex="3">
                     <children>
-                        <LineChart id="monitorChart" fx:id="monitorChart" animated="false" createSymbols="false" legendVisible="false" minHeight="0.0" minWidth="0.0" onMouseExited="#onChartMouseExited" onMouseMoved="#onChartMouseMoved" title="%chart.monitorcontention">
-                            <xAxis>
-                                <CategoryAxis side="BOTTOM" tickLabelsVisible="false" />
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis side="LEFT" minorTickVisible="false" />
-                            </yAxis>
-                        </LineChart>
                         <AnchorPane fx:id="monitorAnchor" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
                     </children>
                 </StackPane>

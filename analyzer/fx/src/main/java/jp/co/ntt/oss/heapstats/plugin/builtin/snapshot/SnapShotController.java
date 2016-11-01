@@ -20,6 +20,7 @@ package jp.co.ntt.oss.heapstats.plugin.builtin.snapshot;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +49,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
-import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -375,7 +376,7 @@ public class SnapShotController extends PluginController implements Initializabl
         parseThread.start();
     }
 
-    private void drawRebootSuspectLine(XYChart<String, ? extends Number> target) {
+    private void drawRebootSuspectLine(XYChart<Number, ? extends Number> target) {
 
         if (target.getData().isEmpty() || target.getData().get(0).getData().isEmpty()) {
             return;
@@ -389,18 +390,18 @@ public class SnapShotController extends PluginController implements Initializabl
         ObservableList<Node> anchorChildren = anchor.getChildren();
         anchorChildren.clear();
 
-        CategoryAxis xAxis = (CategoryAxis) target.getXAxis();
+        NumberAxis xAxis = (NumberAxis)target.getXAxis();
         Axis yAxis = target.getYAxis();
         Label chartTitle = (Label) target.getChildrenUnmodifiable().stream()
                 .filter(n -> n.getStyleClass().contains("chart-title"))
                 .findFirst()
                 .get();
 
-        double startX = xAxis.getLayoutX() + xAxis.getStartMargin() - 1.0d;
+        double startX = xAxis.getLayoutX() + 4.0d;
         double yPos = yAxis.getLayoutY() + chartTitle.getLayoutY() + chartTitle.getHeight();
         List<Rectangle> rectList = summaryData.get().getRebootSuspectList()
                 .stream()
-                .map(d -> d.format(HeapStatsUtils.getDateTimeFormatter()))
+                .map(d -> d.atZone(ZoneId.systemDefault()).toEpochSecond())
                 .map(s -> new Rectangle(xAxis.getDisplayPosition(s) + startX, yPos, 4d, yAxis.getHeight()))
                 .peek(r -> ((Rectangle) r).setStyle("-fx-fill: yellow;"))
                 .collect(Collectors.toList());
