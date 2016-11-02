@@ -32,6 +32,21 @@
     <packaging>jar</packaging>
 
     <name>HeapStats Analyzer</name>
+    <description>HeapStats JavaFX GUI analyzer</description>
+    <url>http://icedtea.classpath.org/wiki/HeapStats</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 2</name>
+            <url>https://www.gnu.org/licenses/gpl-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>http://icedtea.classpath.org/hg/heapstats/</url>
+    </scm>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
