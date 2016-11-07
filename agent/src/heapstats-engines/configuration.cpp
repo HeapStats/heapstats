@@ -271,7 +271,11 @@ void TConfiguration::ReadStringValue(TConfiguration *inst, char *value,
  * \param dest [in] [out] Destination of this configuration.
  */
 void TConfiguration::ReadSignalValue(const char *value, char **dest) {
-  if (value == NULL) {
+  if ((value == NULL) || (value[0] == '\0')) {
+    if (*dest != NULL) {
+      free(*dest);
+    }
+
     *dest = NULL;
   } else if (TSignalManager::findSignal(value) != -1) {
     if (*dest != NULL) {
@@ -359,9 +363,9 @@ void TConfiguration::loadConfiguration(const char *filename) {
   }
 
 #if USE_PCRE
-  TPCRERegex confRegex("^\\s*(\\S+?)\\s*=\\s*(\\S+)\\s*$", 9);
+  TPCRERegex confRegex("^\\s*(\\S+?)\\s*=\\s*(\\S+)?\\s*$", 9);
 #else
-  TCPPRegex confRegex("^\\s*(\\S+?)\\s*=\\s*(\\S+)\\s*$");
+  TCPPRegex confRegex("^\\s*(\\S+?)\\s*=\\s*(\\S+)?\\s*$");
 #endif
 
   /* Get string line from configure file. */
@@ -388,7 +392,13 @@ void TConfiguration::loadConfiguration(const char *filename) {
     if (confRegex.find(lineBuff)) {
       /* Key and value variables. */
       char *key = confRegex.group(1);
-      char *value = confRegex.group(2);
+      char *value;
+      try {
+        value = confRegex.group(2);
+      } catch (const char *errStr) {
+        logger->printDebugMsg(errStr);
+        value = (char *)calloc(1, sizeof(char));
+      }
 
       /* Check key name. */
       try {
