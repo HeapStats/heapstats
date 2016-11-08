@@ -1,3 +1,7 @@
+2016-11-09  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3225: JVM may hang when deadlock detector and safepoint are conflicted
+
 2016-11-08  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3223: Cannot set empty value to signal setting
