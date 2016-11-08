@@ -358,6 +358,17 @@ int TDeadlockFinder::checkDeadlock(jobject monitor, TDeadlockList **list) {
   }
 
   if (*status == THREAD_IN_VM) {
+    /*
+     * Reset "_thread_state".
+     *
+     * CAUTION!!
+     *   According to the comment of Monitor::lock_without_safepoint_check() in
+     *   hotspot/src/share/vm/runtime/mutex.cpp:
+     *     If this is called with thread state set to be in VM, the safepoint
+     *     synchronization code will deadlock!
+     */
+    *status = original_status;
+
     bool needLock = !vmFunc->MonitorOwnedBySelf(thread_lock);
 
     /*
@@ -373,8 +384,6 @@ int TDeadlockFinder::checkDeadlock(jobject monitor, TDeadlockList **list) {
       }
     }
 
-    /* Reset "_thread_state". */
-    *status = original_status;
     /* Reset "_safepoint_state". */
     vmFunc->ThreadSafepointStateDestroy(thisThreadPtr);
     vmFunc->ThreadSafepointStateCreate(thisThreadPtr);
