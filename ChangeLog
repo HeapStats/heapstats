@@ -1,3 +1,7 @@
+2016-11-21  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3234: HeapStats agent cannot be upgraded with `rpm -U`
+
 2016-11-09  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3225: JVM may hang when deadlock detector and safepoint are conflicted
