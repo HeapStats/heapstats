@@ -75,6 +75,7 @@ import jp.co.ntt.oss.heapstats.container.snapshot.SnapShotHeader;
 import jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.BindingFilter;
 import jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.ChartColorManager;
 import jp.co.ntt.oss.heapstats.task.DiffCalculator;
+import jp.co.ntt.oss.heapstats.utils.EpochTimeConverter;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 import jp.co.ntt.oss.heapstats.utils.TaskAdapter;
 import jp.co.ntt.oss.heapstats.xml.binding.Filter;
@@ -151,6 +152,8 @@ public class HistogramController implements Initializable {
     private Consumer<Task<Void>> taskExecutor;
 
     private List<String> hideRegexList;
+    
+    private EpochTimeConverter epochTimeConverter;
 
     /**
      * Initializes the controller class.
@@ -215,6 +218,8 @@ public class HistogramController implements Initializable {
                 .map(d -> d.getTag())
                 .orElse(0xffffffffffffffffl),
                 lastDiffTable.getSelectionModel().selectedItemProperty()));
+        
+        epochTimeConverter = new EpochTimeConverter();
     }
 
     /**
@@ -242,7 +247,7 @@ public class HistogramController implements Initializable {
 
         series.getData().add(data);
         String unit = instanceGraph.get() ? "instances" : "MB";
-        String tip = String.format("%s: %s, %d " + unit, series.getName(), time, yValue);
+        String tip = String.format("%s: %s, %d " + unit, series.getName(), epochTimeConverter.toString(time), yValue);
         Tooltip.install(data.getNode(), new Tooltip(tip));
     }
 
