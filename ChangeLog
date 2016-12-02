@@ -1,3 +1,7 @@
+2016-12-03  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3254: Incorrect time value in tooltip on SnapShot Histogram
+
 2016-11-21  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3234: HeapStats agent cannot be upgraded with `rpm -U`
