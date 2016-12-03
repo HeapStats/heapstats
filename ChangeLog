@@ -1,3 +1,7 @@
+2016-12-05  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3246: HeapStats Analyzer should show popup window in SnapShot summary
+
 2016-12-03  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3254: Incorrect time value in tooltip on SnapShot Histogram

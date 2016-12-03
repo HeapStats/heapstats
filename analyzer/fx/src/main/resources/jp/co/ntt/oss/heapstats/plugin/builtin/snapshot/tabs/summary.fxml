@@ -44,7 +44,7 @@
                     <items>
                         <StackPane prefHeight="150.0" prefWidth="200.0">
                             <children>
-                                <StackedAreaChart id="heapChart" fx:id="heapChart" animated="false" createSymbols="false" layoutX="-129.0" layoutY="-91.0" minHeight="0.0" title="%chart.javaheap" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <StackedAreaChart id="heapChart" fx:id="heapChart" animated="false" layoutX="-129.0" layoutY="-91.0" minHeight="0.0" title="%chart.javaheap" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <xAxis>
                                         <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" autoRanging="false" />
                                     </xAxis>
@@ -57,7 +57,7 @@
                         </StackPane>
                         <StackPane prefHeight="150.0" prefWidth="200.0">
                             <children>
-                                <LineChart id="instanceChart" fx:id="instanceChart" animated="false" createSymbols="false" layoutX="-149.0" layoutY="-120.0" legendVisible="false" minHeight="0.0" title="%chart.instances" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <LineChart id="instanceChart" fx:id="instanceChart" animated="false" layoutX="-149.0" layoutY="-120.0" legendVisible="false" minHeight="0.0" title="%chart.instances" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <xAxis>
                                         <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" visible="false" autoRanging="false" />
                                     </xAxis>
@@ -70,7 +70,7 @@
                         </StackPane>
                         <StackPane prefHeight="150.0" prefWidth="200.0">
                             <children>
-                                <LineChart id="gcTimeChart" fx:id="gcTimeChart" animated="false" createSymbols="false" layoutX="-169.0" layoutY="-120.0" legendVisible="false" minHeight="0.0" title="%chart.gctime" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <LineChart id="gcTimeChart" fx:id="gcTimeChart" animated="false" layoutX="-169.0" layoutY="-120.0" legendVisible="false" minHeight="0.0" title="%chart.gctime" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <xAxis>
                                         <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" autoRanging="false" />
                                     </xAxis>
@@ -83,7 +83,7 @@
                         </StackPane>
                         <StackPane prefHeight="150.0" prefWidth="200.0">
                             <children>
-                                <AreaChart id="metaspaceChart" fx:id="metaspaceChart" animated="false" createSymbols="false" layoutX="-174.0" layoutY="-166.0" minHeight="0.0" title="%chart.metaspace" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <AreaChart id="metaspaceChart" fx:id="metaspaceChart" animated="false" layoutX="-174.0" layoutY="-166.0" minHeight="0.0" title="%chart.metaspace" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <xAxis>
                                         <NumberAxis side="BOTTOM" tickLabelsVisible="false" minorTickVisible="false" autoRanging="false" />
                                     </xAxis>

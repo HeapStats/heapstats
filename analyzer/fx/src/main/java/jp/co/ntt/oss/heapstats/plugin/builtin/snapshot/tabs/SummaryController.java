@@ -40,9 +40,10 @@ import javafx.scene.chart.StackedAreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.StringConverter;
 import jp.co.ntt.oss.heapstats.container.snapshot.SnapShotHeader;
 import jp.co.ntt.oss.heapstats.container.snapshot.SummaryData;
 import jp.co.ntt.oss.heapstats.utils.EpochTimeConverter;
@@ -94,6 +95,10 @@ public class SummaryController implements Initializable {
 
     private ObjectProperty<ObservableSet<String>> currentClassNameSet;
 
+    private EpochTimeConverter epochTimeConverter;
+
+    private Tooltip tooltip;
+
     /**
      * Initializes the controller class.
      */
@@ -112,11 +117,11 @@ public class SummaryController implements Initializable {
               .peek(c -> c.lookup(".chart").setStyle(bgcolor))
               .forEach(c -> c.getXAxis().setTickMarkVisible(HeapStatsUtils.getTickMarkerSwitch()));
 
-        StringConverter<Number> converter = new EpochTimeConverter();
+        epochTimeConverter = new EpochTimeConverter();
         Stream.of(heapChart, instanceChart, gcTimeChart, metaspaceChart)
               .map(c -> (NumberAxis)c.getXAxis())
-              .forEach(a -> a.setTickLabelFormatter(converter));
-        
+              .forEach(a -> a.setTickLabelFormatter(epochTimeConverter));
+
         initializeChartSeries();
     }
 
@@ -143,6 +148,8 @@ public class SummaryController implements Initializable {
      */
     @SuppressWarnings("unchecked")
     private void initializeChartSeries() {
+        tooltip = new Tooltip();
+
         youngUsage = new XYChart.Series<>();
         youngUsage.setName("Young");
         oldUsage = new XYChart.Series<>();
@@ -278,6 +285,25 @@ public class SummaryController implements Initializable {
 
             metaspaceUsage.setData(metaspaceUsageBuf);
             metaspaceCapacity.setData(metaspaceCapacityBuf);
+
+            /* Set tooltip */
+            /* Java Heap & Metaspace */
+            Stream.of(youngUsage, oldUsage, free, metaspaceUsage, metaspaceCapacity)
+                  .flatMap(s -> s.getData().stream())
+                  .peek(d -> Tooltip.install(d.getNode(), tooltip))
+                  .forEach(d -> d.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> tooltip.setText(String.format("%s: %d MB", epochTimeConverter.toString(d.getXValue()), d.getYValue()))));
+
+            /* Insatances */
+            instances.getData()
+                     .stream()
+                     .peek(d -> Tooltip.install(d.getNode(), tooltip))
+                     .forEach(d -> d.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> tooltip.setText((epochTimeConverter.toString(d.getXValue()) + ": " + d.getYValue()))));
+
+            /* GC time */
+            gcTime.getData()
+                  .stream()
+                  .peek(d -> Tooltip.install(d.getNode(), tooltip))
+                  .forEach(d -> d.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> tooltip.setText(String.format("%s: %d ms", epochTimeConverter.toString(d.getXValue()), d.getYValue()))));
         }
 
     }
