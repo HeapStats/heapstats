@@ -1,6 +1,7 @@
 2016-12-05  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3246: HeapStats Analyzer should show popup window in SnapShot summary
+	* Bug 3249: Accumulated GC time should be show in SnapShot summary tab
 
 2016-12-03  Yasumasa Suenaga <yasuenag@gmail.com>
 

@@ -135,6 +135,7 @@ public class SummaryController implements Initializable {
                     new SummaryData.SummaryDataEntry(resource.getString("summary.heap.usage"), String.format("%.1f MB", data.getLatestHeapUsage() / 1024.0d / 1024.0d)),
                     new SummaryData.SummaryDataEntry(resource.getString("summary.metaspace.usage"), String.format("%.1f MB", data.getLatestMetaspaceUsage() / 1024.0d / 1024.0d)),
                     new SummaryData.SummaryDataEntry(resource.getString("summary.gc.time"), String.format("%d ms", data.getMaxGCTime())),
+                    new SummaryData.SummaryDataEntry(resource.getString("summary.gc.totaltime"), String.format("%d ms", data.getTotalGCTime())),
                     new SummaryData.SummaryDataEntry(resource.getString("summary.snapshot.size"), String.format("%.1f KB", data.getMaxSnapshotSize() / 1024.0d)),
                     new SummaryData.SummaryDataEntry(resource.getString("summary.snapshot.entrycount"), Long.toString(data.getMaxEntryCount()))
             ));

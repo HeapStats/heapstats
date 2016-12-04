@@ -70,6 +70,8 @@ public class SummaryData {
 
     private final long latestMetaspaceUsage;
 
+    private final long totalGCTime;
+
     private final long maxGCTime;
 
     private final long maxSnapshotSize;
@@ -118,6 +120,7 @@ public class SummaryData {
                 .collect(MaxSummaryStatistics::new,
                         MaxSummaryStatistics::accept,
                         MaxSummaryStatistics::combine);
+        totalGCTime = statistics.getTotalGCTime();
         maxGCTime = statistics.getMaxGCTime();
         maxSnapshotSize = statistics.getMaxSnapshotSize();
         maxEntryCount = statistics.getMaxEntryCount();
@@ -169,6 +172,15 @@ public class SummaryData {
     }
 
     /**
+     * Get total Full GC time.
+     * 
+     * @return Total GC time
+     */
+    public long getTotalGCTime() {
+        return totalGCTime;
+    }
+
+    /**
      * Get maximum value of GC time.
      *
      * @return Maximum value of GC time
@@ -206,6 +218,8 @@ public class SummaryData {
 
     private class MaxSummaryStatistics {
 
+        private long totalGCTime;
+
         private long maxGCTime;
 
         private long maxSnapshotSize;
@@ -213,21 +227,28 @@ public class SummaryData {
         private long maxEntryCount;
 
         public MaxSummaryStatistics() {
+            totalGCTime = 0;
             maxGCTime = 0;
             maxSnapshotSize = 0;
             maxEntryCount = 0;
         }
 
         public void accept(SnapShotHeader header) {
+            totalGCTime +=  header.getGcTime();
             maxGCTime = Math.max(maxGCTime, header.getGcTime());
             maxSnapshotSize = Math.max(maxSnapshotSize, header.getSnapShotSize());
             maxEntryCount = Math.max(maxEntryCount, header.getNumEntries());
         }
 
         public void combine(MaxSummaryStatistics other) {
+            totalGCTime += other.totalGCTime;
             maxGCTime = Math.max(maxGCTime, other.maxGCTime);
             maxSnapshotSize = Math.max(maxSnapshotSize, other.maxSnapshotSize);
             maxEntryCount = Math.max(maxEntryCount, other.maxEntryCount);
+        }
+
+        public long getTotalGCTime() {
+            return totalGCTime;
         }
 
         public long getMaxGCTime() {
