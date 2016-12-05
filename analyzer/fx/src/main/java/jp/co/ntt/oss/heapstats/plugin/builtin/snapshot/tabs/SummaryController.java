@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -31,6 +32,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.AreaChart;
@@ -38,12 +40,18 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedAreaChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
 import jp.co.ntt.oss.heapstats.container.snapshot.SnapShotHeader;
 import jp.co.ntt.oss.heapstats.container.snapshot.SummaryData;
 import jp.co.ntt.oss.heapstats.utils.EpochTimeConverter;
@@ -97,7 +105,23 @@ public class SummaryController implements Initializable {
 
     private EpochTimeConverter epochTimeConverter;
 
-    private Tooltip tooltip;
+    private Tooltip heapTooltip;
+
+    private GridPane heapTooltipGrid;
+
+    private Label youngLabel;
+
+    private Label oldLabel;
+
+    private Label freeLabel;
+
+    private Tooltip metaspaceTooltip;
+
+    private GridPane metaspaceTooltipGrid;
+
+    private Label metaspaceUsageLabel;
+
+    private Label metaspaceCapacityLabel;
 
     /**
      * Initializes the controller class.
@@ -149,30 +173,27 @@ public class SummaryController implements Initializable {
      */
     @SuppressWarnings("unchecked")
     private void initializeChartSeries() {
-        tooltip = new Tooltip();
-
         youngUsage = new XYChart.Series<>();
         youngUsage.setName("Young");
         oldUsage = new XYChart.Series<>();
         oldUsage.setName("Old");
         free = new XYChart.Series<>();
         free.setName("Free");
-        String[] colors = {"blue", "limegreen", "red"};
+        String[] heapChartColors;
         if (HeapStatsUtils.getHeapOrder()) {
+            heapChartColors = new String[]{"blue", "limegreen", "red"};
             heapChart.getData().addAll(youngUsage, oldUsage, free);
         } else {
+            heapChartColors = new String[]{"limegreen", "blue", "red"};
             heapChart.getData().addAll(oldUsage, youngUsage, free);
-            /* swap color order */
-            colors[0] = "limegreen";
-            colors[1] = "blue";
         }
         /* Set heapChart colors */
         Platform.runLater(() -> {
-            for (int i = 0; i < colors.length; i++) {
-                heapChart.lookup(".default-color" + i + ".chart-series-area-fill").setStyle(String.format("-fx-fill: %s;", colors[i]));
-                heapChart.lookup(".default-color" + i + ".chart-series-area-line").setStyle(String.format("-fx-stroke: %s;", colors[i]));
-                heapChart.lookup(".default-color" + i + ".area-legend-symbol").setStyle(String.format("-fx-background-color: %s, white;", colors[i]));
-                heapChart.lookup(".default-color" + i + ".chart-area-symbol").setStyle(String.format("-fx-background-color: %s, white;", colors[i]));
+            for (int i = 0; i < heapChartColors.length; i++) {
+                heapChart.lookup(".default-color" + i + ".chart-series-area-fill").setStyle(String.format("-fx-fill: %s;", heapChartColors[i]));
+                heapChart.lookup(".default-color" + i + ".chart-series-area-line").setStyle(String.format("-fx-stroke: %s;", heapChartColors[i]));
+                heapChart.lookup(".default-color" + i + ".area-legend-symbol").setStyle(String.format("-fx-background-color: %s, white;", heapChartColors[i]));
+                heapChart.lookup(".default-color" + i + ".chart-area-symbol").setStyle(String.format("-fx-background-color: %s, white;", heapChartColors[i]));
             }
         });
 
@@ -189,6 +210,52 @@ public class SummaryController implements Initializable {
         metaspaceUsage = new XYChart.Series<>();
         metaspaceUsage.setName("Usage");
         metaspaceChart.getData().addAll(metaspaceCapacity, metaspaceUsage);
+
+        /* Tooltip setup */
+        /* Java heap */
+        heapTooltipGrid = new GridPane();
+        heapTooltipGrid.setHgap(HeapStatsUtils.TOOLTIP_GRIDPANE_GAP);
+        youngLabel = new Label();
+        oldLabel = new Label();
+        freeLabel = new Label();
+        Rectangle youngRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, Color.web(heapChartColors[0]));
+        Rectangle oldRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, Color.web(heapChartColors[1]));
+        Rectangle freeRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, Color.web(heapChartColors[2]));
+        heapTooltipGrid.add(youngRect, 0, 0);
+        heapTooltipGrid.add(new Label("Young"), 1, 0);
+        heapTooltipGrid.add(youngLabel, 2, 0);
+        heapTooltipGrid.add(oldRect, 0, 1);
+        heapTooltipGrid.add(new Label("Old"), 1, 1);
+        heapTooltipGrid.add(oldLabel, 2, 1);
+        heapTooltipGrid.add(freeRect, 0, 2);
+        heapTooltipGrid.add(new Label("Free"), 1, 2);
+        heapTooltipGrid.add(freeLabel, 2, 2);
+        heapTooltip = new Tooltip();
+        heapTooltip.setGraphic(heapTooltipGrid);
+        heapTooltip.setContentDisplay(ContentDisplay.BOTTOM);
+
+        /* Metaspace */
+        metaspaceTooltipGrid = new GridPane();
+        metaspaceTooltipGrid.setHgap(HeapStatsUtils.TOOLTIP_GRIDPANE_GAP);
+        metaspaceUsageLabel = new Label();
+        metaspaceCapacityLabel = new Label();
+        Rectangle metaUsageRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle metaCapacityRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+
+        Platform.runLater(() -> {
+            metaUsageRect.setStyle("-fx-fill: " + ((Path)metaspaceChart.lookup(".default-color0.chart-series-area-fill")).getFill().toString().replace("0x", "#"));
+            metaCapacityRect.setStyle("-fx-fill: " + ((Path)metaspaceChart.lookup(".default-color1.chart-series-area-fill")).getFill().toString().replace("0x", "#"));
+        });
+
+        metaspaceTooltipGrid.add(metaUsageRect, 0, 0);
+        metaspaceTooltipGrid.add(new Label("Usage"), 1, 0);
+        metaspaceTooltipGrid.add(metaspaceUsageLabel, 2, 0);
+        metaspaceTooltipGrid.add(metaCapacityRect, 0, 1);
+        metaspaceTooltipGrid.add(new Label("Capacity"), 1, 1);
+        metaspaceTooltipGrid.add(metaspaceCapacityLabel, 2, 1);
+        metaspaceTooltip = new Tooltip();
+        metaspaceTooltip.setGraphic(metaspaceTooltipGrid);
+        metaspaceTooltip.setContentDisplay(ContentDisplay.BOTTOM);
     }
 
     /**
@@ -265,6 +332,47 @@ public class SummaryController implements Initializable {
             return null;
         }
 
+        private void setupJavaHeapChartTooltip(int idx){
+            XYChart.Data<Number, Long> youngNode = youngUsage.getData().get(idx);
+            XYChart.Data<Number, Long> oldNode = oldUsage.getData().get(idx);
+            XYChart.Data<Number, Long> freeNode = free.getData().get(idx);
+            long youngInMB = youngNode.getYValue();
+            long oldInMB = oldNode.getYValue();
+            long freeInMB = freeNode.getYValue();
+
+            EventHandler<MouseEvent> handler = e -> {
+                heapTooltip.setText(epochTimeConverter.toString(youngNode.getXValue()));
+                youngLabel.setText(youngInMB + " MB");
+                oldLabel.setText(oldInMB + " MB");
+                freeLabel.setText(freeInMB + " MB");
+            };
+
+            Tooltip.install(youngNode.getNode(), heapTooltip);
+            youngNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(oldNode.getNode(), heapTooltip);
+            oldNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(freeNode.getNode(), heapTooltip);
+            freeNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+        }
+
+        private void setupMetaspaceChartTooltip(int idx){
+            XYChart.Data<Number, Long> usageNode = metaspaceUsage.getData().get(idx);
+            XYChart.Data<Number, Long> capacityNode = metaspaceCapacity.getData().get(idx);
+            long usage = usageNode.getYValue();
+            long capacity = capacityNode.getYValue();
+
+            EventHandler<MouseEvent> handler = e -> {
+                metaspaceTooltip.setText(epochTimeConverter.toString(usageNode.getXValue()));
+                metaspaceUsageLabel.setText(usage + " MB");
+                metaspaceCapacityLabel.setText(capacity + " MB");
+            };
+
+            Tooltip.install(usageNode.getNode(), metaspaceTooltip);
+            usageNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(capacityNode.getNode(), metaspaceTooltip);
+            capacityNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+        }
+
         @Override
         protected void succeeded() {
             long startEpoch = currentTarget.get().get(0).getSnapShotDate().atZone(ZoneId.systemDefault()).toEpochSecond();
@@ -289,10 +397,11 @@ public class SummaryController implements Initializable {
 
             /* Set tooltip */
             /* Java Heap & Metaspace */
-            Stream.of(youngUsage, oldUsage, free, metaspaceUsage, metaspaceCapacity)
-                  .flatMap(s -> s.getData().stream())
-                  .peek(d -> Tooltip.install(d.getNode(), tooltip))
-                  .forEach(d -> d.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> tooltip.setText(String.format("%s: %d MB", epochTimeConverter.toString(d.getXValue()), d.getYValue()))));
+            IntStream.range(0, currentTarget.get().size())
+                     .peek(this::setupJavaHeapChartTooltip)
+                     .forEach(this::setupMetaspaceChartTooltip);
+
+            Tooltip tooltip = new Tooltip();
 
             /* Insatances */
             instances.getData()
