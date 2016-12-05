@@ -1,3 +1,7 @@
+2016-12-12  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3247: Refactoring chart legends and tooltip
+
 2016-12-07  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3259: [REFACTORING] color selection for chart classes

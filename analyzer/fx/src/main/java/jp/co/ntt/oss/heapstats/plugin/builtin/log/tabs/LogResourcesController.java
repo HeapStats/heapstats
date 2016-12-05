@@ -21,10 +21,9 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -32,6 +31,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -40,16 +40,18 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedAreaChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Popup;
 import jp.co.ntt.oss.heapstats.container.log.ArchiveData;
 import jp.co.ntt.oss.heapstats.container.log.DiffData;
 import jp.co.ntt.oss.heapstats.container.log.LogData;
@@ -129,10 +131,6 @@ public class LogResourcesController implements Initializable {
     @FXML
     private TableColumn<SummaryData.SummaryDataEntry, String> valueColumn;
 
-    private Popup chartPopup;
-
-    private Label popupText;
-
     private ObjectProperty<ObservableList<ArchiveData>> archiveList;
 
     private List<LocalDateTime> suspectList;
@@ -140,6 +138,170 @@ public class LogResourcesController implements Initializable {
     private ResourceBundle resource;
     
     private EpochTimeConverter epochTimeConverter;
+
+    /* Tooltip for Java CPU chart */
+    private Tooltip javaCPUTooltip;
+
+    private GridPane javaCPUTooltipGrid;
+
+    private Label javaUserLabel;
+
+    private Label javaSysLabel;
+
+    /* Tooltip for System CPU chart */
+    private Tooltip systemCPUTooltip;
+
+    private GridPane systemCPUTooltipGrid;
+
+    private Label systemUserLabel;
+
+    private Label systemNiceLabel;
+
+    private Label systemSysLabel;
+
+    private Label systemIdleLabel;
+
+    private Label systemIOWaitLabel;
+
+    private Label systemIRQLabel;
+
+    private Label systemSoftIRQLabel;
+
+    private Label systemStealLabel;
+
+    private Label systemGuestLabel;
+
+    /* Tooltip for Java Memory chart */
+    private Tooltip javaMemoryTooltip;
+
+    private GridPane javaMemoryTooltipGrid;
+
+    private Label javaMemoryVSZLabel;
+
+    private Label javaMemoryRSSLabel;
+
+    /* Generic Tooltip */
+    private Tooltip tooltip;
+
+    private void initializeJavaCPUTooltip(){
+        javaUserLabel = new Label();
+        javaSysLabel = new Label();
+
+        Rectangle javaUserRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle javaSysRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+
+        Platform.runLater(() -> {
+            javaUserRect.setStyle("-fx-fill: " + ((Path)javaCPUChart.lookup(".series0")).getFill().toString().replace("0x", "#"));
+            javaSysRect.setStyle("-fx-fill: " + ((Path)javaCPUChart.lookup(".series1")).getFill().toString().replace("0x", "#"));
+        });
+
+        javaCPUTooltipGrid = new GridPane();
+        javaCPUTooltipGrid.setHgap(HeapStatsUtils.TOOLTIP_GRIDPANE_GAP);
+        javaCPUTooltipGrid.add(javaUserRect, 0, 0);
+        javaCPUTooltipGrid.add(new Label("user"), 1, 0);
+        javaCPUTooltipGrid.add(javaUserLabel, 2, 0);
+        javaCPUTooltipGrid.add(javaSysRect, 0, 1);
+        javaCPUTooltipGrid.add(new Label("sys"), 1, 1);
+        javaCPUTooltipGrid.add(javaSysLabel, 2, 1);
+
+        javaCPUTooltip = new Tooltip();
+        javaCPUTooltip.setGraphic(javaCPUTooltipGrid);
+        javaCPUTooltip.setContentDisplay(ContentDisplay.BOTTOM);
+    }
+
+    private void initializeJavaMemoryTooltip(){
+        javaMemoryVSZLabel = new Label();
+        javaMemoryRSSLabel = new Label();
+
+        Rectangle javaMemoryVSZRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle javaMemoryRSSRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+
+        Platform.runLater(() -> {
+            javaMemoryRSSRect.setStyle("-fx-fill: " + ((Path)javaCPUChart.lookup(".series0")).getFill().toString().replace("0x", "#"));
+            javaMemoryVSZRect.setStyle("-fx-fill: " + ((Path)javaCPUChart.lookup(".series1")).getFill().toString().replace("0x", "#"));
+        });
+
+        javaMemoryTooltipGrid = new GridPane();
+        javaMemoryTooltipGrid.setHgap(HeapStatsUtils.TOOLTIP_GRIDPANE_GAP);
+        javaMemoryTooltipGrid.add(javaMemoryVSZRect, 0, 0);
+        javaMemoryTooltipGrid.add(new Label("VSZ"), 1, 0);
+        javaMemoryTooltipGrid.add(javaMemoryVSZLabel, 2, 0);
+        javaMemoryTooltipGrid.add(javaMemoryRSSRect, 0, 1);
+        javaMemoryTooltipGrid.add(new Label("RSS"), 1, 1);
+        javaMemoryTooltipGrid.add(javaMemoryRSSLabel, 2, 1);
+
+        javaMemoryTooltip = new Tooltip();
+        javaMemoryTooltip.setGraphic(javaMemoryTooltipGrid);
+        javaMemoryTooltip.setContentDisplay(ContentDisplay.BOTTOM);
+    }
+
+    private void initializeSystemCPUTooltip(){
+        systemUserLabel = new Label();
+        systemNiceLabel = new Label();
+        systemSysLabel = new Label();
+        systemIdleLabel = new Label();
+        systemIOWaitLabel = new Label();
+        systemIRQLabel = new Label();
+        systemSoftIRQLabel = new Label();
+        systemStealLabel = new Label();
+        systemGuestLabel = new Label();
+
+        Rectangle systemUserRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle systemNiceRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle systemSysRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle systemIdleRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle systemIOWaitRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle systemIRQRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle systemSoftIRQRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle systemStealRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle systemGuestRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+
+        Platform.runLater(() -> {
+            systemUserRect.setStyle("-fx-fill: " + ((Path)systemCPUChart.lookup(".series0")).getFill().toString().replace("0x", "#"));
+            systemNiceRect.setStyle("-fx-fill: " + ((Path)systemCPUChart.lookup(".series1")).getFill().toString().replace("0x", "#"));
+            systemSysRect.setStyle("-fx-fill: " + ((Path)systemCPUChart.lookup(".series2")).getFill().toString().replace("0x", "#"));
+            systemIdleRect.setStyle("-fx-fill: " + ((Path)systemCPUChart.lookup(".series3")).getFill().toString().replace("0x", "#"));
+            systemIOWaitRect.setStyle("-fx-fill: " + ((Path)systemCPUChart.lookup(".series4")).getFill().toString().replace("0x", "#"));
+            systemIRQRect.setStyle("-fx-fill: " + ((Path)systemCPUChart.lookup(".series5")).getFill().toString().replace("0x", "#"));
+            systemSoftIRQRect.setStyle("-fx-fill: " + ((Path)systemCPUChart.lookup(".series6")).getFill().toString().replace("0x", "#"));
+            systemStealRect.setStyle("-fx-fill: " + ((Path)systemCPUChart.lookup(".series7")).getFill().toString().replace("0x", "#"));
+            systemGuestRect.setStyle("-fx-fill: " + ((Path)systemCPUChart.lookup(".series8")).getFill().toString().replace("0x", "#"));
+        });
+
+        systemCPUTooltipGrid = new GridPane();
+        systemCPUTooltipGrid.setHgap(HeapStatsUtils.TOOLTIP_GRIDPANE_GAP);
+        systemCPUTooltipGrid.add(systemUserRect, 0, 0);
+        systemCPUTooltipGrid.add(new Label("user"), 1, 0);
+        systemCPUTooltipGrid.add(systemUserLabel, 2, 0);
+        systemCPUTooltipGrid.add(systemNiceRect, 0, 1);
+        systemCPUTooltipGrid.add(new Label("nice"), 1, 1);
+        systemCPUTooltipGrid.add(systemNiceLabel, 2, 1);
+        systemCPUTooltipGrid.add(systemSysRect, 0, 2);
+        systemCPUTooltipGrid.add(new Label("sys"), 1, 2);
+        systemCPUTooltipGrid.add(systemSysLabel, 2, 2);
+        systemCPUTooltipGrid.add(systemIdleRect, 0, 3);
+        systemCPUTooltipGrid.add(new Label("idle"), 1, 3);
+        systemCPUTooltipGrid.add(systemIdleLabel, 2, 3);
+        systemCPUTooltipGrid.add(systemIOWaitRect, 0, 4);
+        systemCPUTooltipGrid.add(new Label("iowait"), 1, 4);
+        systemCPUTooltipGrid.add(systemIOWaitLabel, 2, 4);
+        systemCPUTooltipGrid.add(systemIRQRect, 0, 5);
+        systemCPUTooltipGrid.add(new Label("IRQ"), 1, 5);
+        systemCPUTooltipGrid.add(systemIRQLabel, 2, 5);
+        systemCPUTooltipGrid.add(systemSoftIRQRect, 0, 6);
+        systemCPUTooltipGrid.add(new Label("Soft IRQ"), 1, 6);
+        systemCPUTooltipGrid.add(systemSoftIRQLabel, 2, 6);
+        systemCPUTooltipGrid.add(systemStealRect, 0, 7);
+        systemCPUTooltipGrid.add(new Label("steal"), 1, 7);
+        systemCPUTooltipGrid.add(systemStealLabel, 2, 7);
+        systemCPUTooltipGrid.add(systemGuestRect, 0, 8);
+        systemCPUTooltipGrid.add(new Label("guest"), 1, 8);
+        systemCPUTooltipGrid.add(systemGuestLabel, 2, 8);
+
+        systemCPUTooltip = new Tooltip();
+        systemCPUTooltip.setGraphic(systemCPUTooltipGrid);
+        systemCPUTooltip.setContentDisplay(ContentDisplay.BOTTOM);
+    }
 
     /**
      * Initializes the controller class.
@@ -158,13 +320,12 @@ public class LogResourcesController implements Initializable {
 
         initializeChartSeries();
 
-        chartPopup = new Popup();
-        popupText = new Label();
-        popupText.setStyle("-fx-font-family: monospace; -fx-text-fill: white; -fx-background-color: black;");
-        chartPopup.getContent().add(popupText);
         archiveList = new SimpleObjectProperty<>();
-        
         epochTimeConverter = new EpochTimeConverter();
+
+        initializeJavaCPUTooltip();
+        initializeSystemCPUTooltip();
+        initializeJavaMemoryTooltip();
     }
 
     /**
@@ -223,60 +384,6 @@ public class LogResourcesController implements Initializable {
         monitors = new XYChart.Series<>();
         monitors.setName("Monitors");
         monitorChart.getData().add(monitors);
-    }
-
-    /**
-     * Show popup window with pointing data in chart.
-     *
-     * @param chart Target chart.
-     * @param xValue value in X Axis.
-     * @param event Mouse event.
-     * @param labelFunc Function to format label string.
-     */
-    private void showChartPopup(XYChart<Number, ? extends Number> chart, Number xValue, MouseEvent event, Function<? super Number, String> labelFunc) {
-        boolean isContained = chart.getData()
-                                   .stream()
-                                   .flatMap(s -> s.getData().stream())
-                                   .anyMatch(d -> d.getXValue().longValue() == xValue.longValue());
-        if(isContained){
-            String label = chart.getData()
-                                .stream()
-                                .map(s -> s.getName() + " = " + s.getData()
-                                                                 .stream()
-                                                                 .filter(d -> d.getXValue().longValue() == xValue.longValue())
-                                                                 .map(d -> labelFunc.apply(d.getYValue()))
-                                                                 .findAny()
-                                                                 .get())
-                                .collect(Collectors.joining("\n"));
-            popupText.setText(epochTimeConverter.toString(xValue) + "\n" + label);
-            chartPopup.show(chart, event.getScreenX() + 15.0d, event.getScreenY() + 3.0d);
-        }
-    }
-
-    @FXML
-    @SuppressWarnings("unchecked")
-    private void onChartMouseMoved(MouseEvent event) {
-        XYChart<Number, ? extends Number> chart = (XYChart<Number, ? extends Number>) event.getSource();
-        NumberAxis xAxis = (NumberAxis)chart.getXAxis();
-        Function<? super Number, String> labelFunc;
-
-        if ((chart == javaCPUChart) || (chart == systemCPUChart)) {
-            labelFunc = d -> String.format("%.02f %%", d);
-        } else if (chart == javaMemoryChart) {
-            labelFunc = d -> String.format("%d MB", d);
-        } else if (chart == safepointTimeChart) {
-            labelFunc = d -> String.format("%d ms", d);
-        } else {
-            labelFunc = d -> d.toString();
-        }
-
-        Optional.ofNullable(chart.getXAxis().getValueForDisplay(event.getX() - xAxis.getLayoutX()))
-                .ifPresent(v -> showChartPopup(chart, v, event, labelFunc));
-    }
-
-    @FXML
-    private void onChartMouseExited(MouseEvent event) {
-        chartPopup.hide();
     }
 
     private void drawLineInternal(StackPane target, List<Number> drawList, String style) {
@@ -463,6 +570,82 @@ public class LogResourcesController implements Initializable {
             updateProgress();
         }
 
+        private void setJavaCPUChartTooltip(int idx){
+            XYChart.Data<Number, Double> userNode = javaUserUsage.getData().get(idx);
+            XYChart.Data<Number, Double> sysNode = javaSysUsage.getData().get(idx);
+
+            EventHandler<MouseEvent> handler = e -> {
+                javaCPUTooltip.setText(epochTimeConverter.toString(userNode.getXValue()));
+                javaUserLabel.setText(String.format("%.02f", userNode.getYValue()) + " %");
+                javaSysLabel.setText(String.format("%.02f", sysNode.getYValue()) + " %");
+            };
+
+            Tooltip.install(userNode.getNode(), javaCPUTooltip);
+            userNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(sysNode.getNode(), javaCPUTooltip);
+            sysNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+        }
+
+        private void setJavaMemoryChartTooltip(int idx){
+            XYChart.Data<Number, Long> vszNode = javaVSZUsage.getData().get(idx);
+            XYChart.Data<Number, Long> rssNode = javaRSSUsage.getData().get(idx);
+
+            EventHandler<MouseEvent> handler = e -> {
+                javaMemoryTooltip.setText(epochTimeConverter.toString(vszNode.getXValue()));
+                javaMemoryVSZLabel.setText(vszNode.getYValue() + " MB");
+                javaMemoryRSSLabel.setText(rssNode.getYValue() + " MB");
+            };
+
+            Tooltip.install(vszNode.getNode(), javaMemoryTooltip);
+            vszNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(rssNode.getNode(), javaMemoryTooltip);
+            rssNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+        }
+
+        private void setSystemCPUChartTooltip(int idx){
+            XYChart.Data<Number, Double> userNode = systemUserUsage.getData().get(idx);
+            XYChart.Data<Number, Double> niceNode = systemNiceUsage.getData().get(idx);
+            XYChart.Data<Number, Double> sysNode = systemSysUsage.getData().get(idx);
+            XYChart.Data<Number, Double> idleNode = systemIdleUsage.getData().get(idx);
+            XYChart.Data<Number, Double> iowaitNode = systemIOWaitUsage.getData().get(idx);
+            XYChart.Data<Number, Double> irqNode = systemIRQUsage.getData().get(idx);
+            XYChart.Data<Number, Double> softIrqNode = systemSoftIRQUsage.getData().get(idx);
+            XYChart.Data<Number, Double> stealNode = systemStealUsage.getData().get(idx);
+            XYChart.Data<Number, Double> guestNode = systemGuestUsage.getData().get(idx);
+
+            EventHandler<MouseEvent> handler = e -> {
+                systemCPUTooltip.setText(epochTimeConverter.toString(userNode.getXValue()));
+                systemUserLabel.setText(String.format("%.02f", userNode.getYValue()) + " %");
+                systemNiceLabel.setText(String.format("%.02f", niceNode.getYValue()) + " %");
+                systemSysLabel.setText(String.format("%.02f", sysNode.getYValue()) + " %");
+                systemIdleLabel.setText(String.format("%.02f", idleNode.getYValue()) + " %");
+                systemIOWaitLabel.setText(String.format("%.02f", iowaitNode.getYValue()) + " %");
+                systemIRQLabel.setText(String.format("%.02f", irqNode.getYValue()) + " %");
+                systemSoftIRQLabel.setText(String.format("%.02f", softIrqNode.getYValue()) + " %");
+                systemStealLabel.setText(String.format("%.02f", stealNode.getYValue()) + " %");
+                systemGuestLabel.setText(String.format("%.02f", guestNode.getYValue()) + " %");
+            };
+
+            Tooltip.install(userNode.getNode(), systemCPUTooltip);
+            userNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(niceNode.getNode(), systemCPUTooltip);
+            niceNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(sysNode.getNode(), systemCPUTooltip);
+            sysNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(idleNode.getNode(), systemCPUTooltip);
+            idleNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(iowaitNode.getNode(), systemCPUTooltip);
+            iowaitNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(irqNode.getNode(), systemCPUTooltip);
+            irqNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(softIrqNode.getNode(), systemCPUTooltip);
+            softIrqNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(stealNode.getNode(), systemCPUTooltip);
+            stealNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+            Tooltip.install(guestNode.getNode(), systemCPUTooltip);
+            guestNode.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, handler);
+        }
+
         private void setChartData() {
             /* Set chart range */
             long startLogEpoch = targetLogData.get(0).getDateTime().atZone(ZoneId.systemDefault()).toEpochSecond();
@@ -503,6 +686,22 @@ public class LogResourcesController implements Initializable {
             javaRSSUsage.setData(javaRSSUsageBuf);
 
             threads.setData(threadsBuf);
+
+            /* Tooltip setting */
+            IntStream.range(0, targetDiffData.size())
+                     .peek(this::setJavaCPUChartTooltip)
+                     .forEach(this::setSystemCPUChartTooltip);
+            IntStream.range(0, targetLogData.size())
+                     .forEach(this::setJavaMemoryChartTooltip);
+            Tooltip tooltip = new Tooltip();
+            Stream.of(threads, safepoints, monitors)
+                  .flatMap(c -> c.getData().stream())
+                  .peek(d -> Tooltip.install(d.getNode(), tooltip))
+                  .forEach(d -> d.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> tooltip.setText((epochTimeConverter.toString(d.getXValue()) + ": " + d.getYValue()))));
+            safepointTime.getData()
+                         .stream()
+                         .peek(d -> Tooltip.install(d.getNode(), tooltip))
+                         .forEach(d -> d.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> tooltip.setText(String.format("%s: %d ms", epochTimeConverter.toString(d.getXValue()), d.getYValue()))));
 
             /* Put summary data to table */
             SummaryData summary = new SummaryData(targetLogData, targetDiffData);
