@@ -157,24 +157,16 @@ public class SummaryController implements Initializable {
         oldUsage.setName("Old");
         free = new XYChart.Series<>();
         free.setName("Free");
-        String[] colors = {"blue", "limegreen", "red"};
+
+        String cssName = "/jp/co/ntt/oss/heapstats/plugin/builtin/snapshot/tabs/";
         if (HeapStatsUtils.getHeapOrder()) {
             heapChart.getData().addAll(youngUsage, oldUsage, free);
+            cssName += "heapsummary-bottom-young.css";
         } else {
             heapChart.getData().addAll(oldUsage, youngUsage, free);
-            /* swap color order */
-            colors[0] = "limegreen";
-            colors[1] = "blue";
+            cssName += "heapsummary-bottom-old.css";
         }
-        /* Set heapChart colors */
-        Platform.runLater(() -> {
-            for (int i = 0; i < colors.length; i++) {
-                heapChart.lookup(".default-color" + i + ".chart-series-area-fill").setStyle(String.format("-fx-fill: %s;", colors[i]));
-                heapChart.lookup(".default-color" + i + ".chart-series-area-line").setStyle(String.format("-fx-stroke: %s;", colors[i]));
-                heapChart.lookup(".default-color" + i + ".area-legend-symbol").setStyle(String.format("-fx-background-color: %s, white;", colors[i]));
-                heapChart.lookup(".default-color" + i + ".chart-area-symbol").setStyle(String.format("-fx-background-color: %s, white;", colors[i]));
-            }
-        });
+        heapChart.getStylesheets().add(cssName);
 
         instances = new XYChart.Series<>();
         instances.setName("Instances");
