@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,30 +17,22 @@
  */
 
 /* 
-    Created on : 2014/05/14, 22:49:20
-    Author     : Yasumasa Suenaga
+    Created on : 2016/12/06, 22:47:29
+    Author     : Yasumasa
 */
 
-/* instance */
-#instanceChart .series0 {
-    -fx-stroke: blue;
-    -fx-background-color: blue, white;
+#heapChart .series0 {
+    -fx-fill: limegreen;
+    -fx-stroke: limegreen;
+    -fx-background-color: limegreen, white;
 }
-
-/* GC time */
-#gcTimeChart .series0 {
-    -fx-stroke: orange;
-    -fx-background-color: orange, white;
-}
-
-/* Metaspace */
-#metaspaceChart .series0 {
-    -fx-fill: red;
-    -fx-stroke: red;
-    -fx-background-color: red, white;
-}
-#metaspaceChart .series1 {
+#heapChart .series1 {
     -fx-fill: blue;
     -fx-stroke: blue;
     -fx-background-color: blue, white;
+}
+#heapChart .series2 {
+    -fx-fill: red;
+    -fx-stroke: red;
+    -fx-background-color: red, white;
 }
