@@ -54,6 +54,12 @@ import jp.co.ntt.oss.heapstats.plugin.builtin.threadrecorder.ThreadRecorderContr
  */
 public class HeapStatsUtils {
 
+    /* Rect size in Tooltip for chart legend. */
+    public static final double TOOLTIP_LEGEND_RECT_SIZE = 10.0d;
+
+    /* Gap between each controls in Tooltip. */
+    public static final double TOOLTIP_GRIDPANE_GAP = 5.0d;
+
     /* Path of HeapStats home directory. */
     private static Path currentPath = null;
 
