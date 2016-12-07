@@ -279,14 +279,7 @@ public class WindowController implements Initializable {
         this.hostServices = hostServices;
     }
 
-    /**
-     * Load plugins which is defined in heapstats.properties.
-     */
-    public void loadPlugin(){
-        String resourceName = "/" + this.getClass().getName().replace('.', '/') + ".class";
-        String appJarString = this.getClass().getResource(resourceName).getPath();
-        appJarString = appJarString.substring(0, appJarString.indexOf('!')).replaceFirst("file:", "");
-
+    private ClassLoader createPluginClassLoader(String appJarString){
         Path appJarPath;
 
         try{
@@ -317,7 +310,19 @@ public class WindowController implements Initializable {
             Logger.getLogger(WindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        pluginClassLoader = (jarURLList == null) ? WindowController.class.getClassLoader() : new URLClassLoader(jarURLList);
+        return (jarURLList == null) ? WindowController.class.getClassLoader() : new URLClassLoader(jarURLList);
+    }
+
+    /**
+     * Load plugins which is defined in heapstats.properties.
+     */
+    public void loadPlugin(){
+        String resourceName = "/" + this.getClass().getName().replace('.', '/') + ".class";
+        String appJarString = this.getClass().getResource(resourceName).getPath();
+
+        pluginClassLoader = appJarString.contains("!") ? createPluginClassLoader(appJarString.substring(0, appJarString.indexOf('!')).replaceFirst("file:", ""))
+                                                       : WindowController.class.getClassLoader();
+
         FXMLLoader.setDefaultClassLoader(pluginClassLoader);
 
         List<String> plugins = HeapStatsUtils.getPlugins();

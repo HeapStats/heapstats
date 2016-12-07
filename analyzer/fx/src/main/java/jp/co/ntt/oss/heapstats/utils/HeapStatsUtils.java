@@ -78,7 +78,7 @@ public class HeapStatsUtils {
             String appJar = Stream.of(System.getProperty("java.class.path").split(System.getProperty("path.separator")))
                     .filter(s -> s.endsWith("heapstats-analyzer.jar"))
                     .findFirst()
-                    .get();
+                    .orElse(".");
             currentPath = Paths.get(appJar).toAbsolutePath().getParent();
         }
 
@@ -102,7 +102,7 @@ public class HeapStatsUtils {
         }
 
         /* Load resource bundle */
-        resource = ResourceBundle.getBundle("HeapStatsResources", new Locale(prop.getProperty("language")));
+        resource = ResourceBundle.getBundle("HeapStatsResources");
 
         /* Validate values in properties. */
 
@@ -113,6 +113,9 @@ public class HeapStatsUtils {
         } else if (!language.equals("en") && !language.equals("ja")) {
             throw new HeapStatsConfigException(resource.getString("invalid.option") + " language=" + language);
         }
+
+        /* Load resource bundle again */
+        resource = ResourceBundle.getBundle("HeapStatsResources", new Locale(prop.getProperty("language")));
 
         /* RankLevel */
         String rankLevelStr = prop.getProperty("ranklevel");
