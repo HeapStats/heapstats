@@ -68,7 +68,7 @@
                         </goals>
                         <configuration>
                             <executable>${java.home}/bin/java</executable>
-                            <commandlineArgs>${runfx.args}</commandlineArgs>
+                            <commandlineArgs>-jar ${project.build.directory}/heapstats-analyzer-${project.version}-bin/heapstats-analyzer-${project.version}/heapstats-analyzer.jar</commandlineArgs>
                         </configuration>
                     </execution>
                 </executions>

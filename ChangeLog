@@ -1,6 +1,7 @@
 2016-12-12  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3247: Refactoring chart legends and tooltip
+	* Bug 3260: Cannot run FXAnalyzer via Maven task without NetBeans
 
 2016-12-07  Yasumasa Suenaga <yasuenag@gmail.com>
 
