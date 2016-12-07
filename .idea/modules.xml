@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/heapstats.iml" filepath="$PROJECT_DIR$/.idea/heapstats.iml" />
+      <module fileurl="file://$PROJECT_DIR$/analyzer/fx/heapstats-analyzer.iml" filepath="$PROJECT_DIR$/analyzer/fx/heapstats-analyzer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/analyzer/cli/heapstats-cli.iml" filepath="$PROJECT_DIR$/analyzer/cli/heapstats-cli.iml" />
+      <module fileurl="file://$PROJECT_DIR$/analyzer/core/heapstats-core.iml" filepath="$PROJECT_DIR$/analyzer/core/heapstats-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mbean/java/heapstats-mbean.iml" filepath="$PROJECT_DIR$/mbean/java/heapstats-mbean.iml" />
+    </modules>
+  </component>
+</project>

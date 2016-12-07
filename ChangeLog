@@ -1,6 +1,7 @@
 2016-12-13  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3264: [REGRESSION] Build failed after Bug 3247
+	* Bug 3262: Add IntelliJ IDEA support
 
 2016-12-12  Yasumasa Suenaga <yasuenag@gmail.com>
 
