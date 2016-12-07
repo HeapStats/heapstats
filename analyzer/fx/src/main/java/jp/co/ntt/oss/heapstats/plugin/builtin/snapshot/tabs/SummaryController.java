@@ -49,7 +49,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import jp.co.ntt.oss.heapstats.container.snapshot.SnapShotHeader;
@@ -179,23 +178,16 @@ public class SummaryController implements Initializable {
         oldUsage.setName("Old");
         free = new XYChart.Series<>();
         free.setName("Free");
-        String[] heapChartColors;
+
+        String cssName = "/jp/co/ntt/oss/heapstats/plugin/builtin/snapshot/tabs/";
         if (HeapStatsUtils.getHeapOrder()) {
-            heapChartColors = new String[]{"blue", "limegreen", "red"};
             heapChart.getData().addAll(youngUsage, oldUsage, free);
+            cssName += "heapsummary-bottom-young.css";
         } else {
-            heapChartColors = new String[]{"limegreen", "blue", "red"};
             heapChart.getData().addAll(oldUsage, youngUsage, free);
+            cssName += "heapsummary-bottom-old.css";
         }
-        /* Set heapChart colors */
-        Platform.runLater(() -> {
-            for (int i = 0; i < heapChartColors.length; i++) {
-                heapChart.lookup(".default-color" + i + ".chart-series-area-fill").setStyle(String.format("-fx-fill: %s;", heapChartColors[i]));
-                heapChart.lookup(".default-color" + i + ".chart-series-area-line").setStyle(String.format("-fx-stroke: %s;", heapChartColors[i]));
-                heapChart.lookup(".default-color" + i + ".area-legend-symbol").setStyle(String.format("-fx-background-color: %s, white;", heapChartColors[i]));
-                heapChart.lookup(".default-color" + i + ".chart-area-symbol").setStyle(String.format("-fx-background-color: %s, white;", heapChartColors[i]));
-            }
-        });
+        heapChart.getStylesheets().add(cssName);
 
         instances = new XYChart.Series<>();
         instances.setName("Instances");
@@ -218,9 +210,16 @@ public class SummaryController implements Initializable {
         youngLabel = new Label();
         oldLabel = new Label();
         freeLabel = new Label();
-        Rectangle youngRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, Color.web(heapChartColors[0]));
-        Rectangle oldRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, Color.web(heapChartColors[1]));
-        Rectangle freeRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, Color.web(heapChartColors[2]));
+        Rectangle youngRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle oldRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle freeRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+
+        Platform.runLater(() -> {
+            youngRect.setStyle("-fx-fill: " + ((Path)heapChart.lookup(".series0")).getFill().toString().replace("0x", "#"));
+            oldRect.setStyle("-fx-fill: " + ((Path)heapChart.lookup(".series1")).getFill().toString().replace("0x", "#"));
+            freeRect.setStyle("-fx-fill: " + ((Path)heapChart.lookup(".series2")).getFill().toString().replace("0x", "#"));
+        });
+
         heapTooltipGrid.add(youngRect, 0, 0);
         heapTooltipGrid.add(new Label("Young"), 1, 0);
         heapTooltipGrid.add(youngLabel, 2, 0);
@@ -243,8 +242,8 @@ public class SummaryController implements Initializable {
         Rectangle metaCapacityRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
 
         Platform.runLater(() -> {
-            metaUsageRect.setStyle("-fx-fill: " + ((Path)metaspaceChart.lookup(".default-color0.chart-series-area-fill")).getFill().toString().replace("0x", "#"));
-            metaCapacityRect.setStyle("-fx-fill: " + ((Path)metaspaceChart.lookup(".default-color1.chart-series-area-fill")).getFill().toString().replace("0x", "#"));
+            metaUsageRect.setStyle("-fx-fill: " + ((Path)metaspaceChart.lookup(".series1")).getFill().toString().replace("0x", "#"));
+            metaCapacityRect.setStyle("-fx-fill: " + ((Path)metaspaceChart.lookup(".series0")).getFill().toString().replace("0x", "#"));
         });
 
         metaspaceTooltipGrid.add(metaUsageRect, 0, 0);
