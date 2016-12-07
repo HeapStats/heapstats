@@ -32,7 +32,13 @@ analyzer/cli/heapstats-cli
 *.lai
 *.class
 Makefile
+/heapstats.properties
 
 # SCM
 .hg
 .git
+
+# IntelliJ (2016.3)
+.idea/misc.xml
+.idea/vcs.xml
+.idea/workspace.xml
