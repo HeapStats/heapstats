@@ -3,6 +3,7 @@
 	* Bug 3247: Refactoring chart legends and tooltip
 	* Bug 3260: Cannot run FXAnalyzer via Maven task without NetBeans
 	* Bug 3261: Cannot start FXAnalyzer when HeapStatsFXAnalyzer.main() is called directly 
+	* Bug 3250: Collect safepoint time when SnapShot is collected
 
 2016-12-07  Yasumasa Suenaga <yasuenag@gmail.com>
 

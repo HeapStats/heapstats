@@ -154,12 +154,16 @@ public class SummaryController implements Initializable {
             summaryTable.getItems().clear();
         } else {
             ResourceBundle resource = ResourceBundle.getBundle("snapshotResources", new Locale(HeapStatsUtils.getLanguage()));
+            String safepointTimeStr = data.hasSafepointTime() ? String.format("%d ms (%.02f %%)", data.getSafepointTime(), data.getSafepointPercentage())
+                                                              : "N/A";
+
             summaryTable.setItems(FXCollections.observableArrayList(new SummaryData.SummaryDataEntry(resource.getString("summary.snapshot.count"), Integer.toString(data.getCount())),
                     new SummaryData.SummaryDataEntry(resource.getString("summary.gc.count"), String.format("%d (Full: %d, Young: %d)", data.getFullCount() + data.getYngCount(), data.getFullCount(), data.getYngCount())),
                     new SummaryData.SummaryDataEntry(resource.getString("summary.heap.usage"), String.format("%.1f MB", data.getLatestHeapUsage() / 1024.0d / 1024.0d)),
                     new SummaryData.SummaryDataEntry(resource.getString("summary.metaspace.usage"), String.format("%.1f MB", data.getLatestMetaspaceUsage() / 1024.0d / 1024.0d)),
                     new SummaryData.SummaryDataEntry(resource.getString("summary.gc.time"), String.format("%d ms", data.getMaxGCTime())),
                     new SummaryData.SummaryDataEntry(resource.getString("summary.gc.totaltime"), String.format("%d ms", data.getTotalGCTime())),
+                    new SummaryData.SummaryDataEntry(resource.getString("summary.safepoint.time"), safepointTimeStr),
                     new SummaryData.SummaryDataEntry(resource.getString("summary.snapshot.size"), String.format("%.1f KB", data.getMaxSnapshotSize() / 1024.0d)),
                     new SummaryData.SummaryDataEntry(resource.getString("summary.snapshot.entrycount"), Long.toString(data.getMaxEntryCount()))
             ));

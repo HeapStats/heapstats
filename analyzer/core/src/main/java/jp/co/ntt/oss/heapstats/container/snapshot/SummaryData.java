@@ -18,9 +18,11 @@
 package jp.co.ntt.oss.heapstats.container.snapshot;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 /**
  * Summary data class.<br/>
@@ -78,6 +80,10 @@ public class SummaryData {
 
     private final long maxEntryCount;
 
+    private final long safepointTime;
+
+    private final float safepointPercentage;
+
     private final List<LocalDateTime> rebootSuspectList;
 
     /**
@@ -124,6 +130,20 @@ public class SummaryData {
         maxGCTime = statistics.getMaxGCTime();
         maxSnapshotSize = statistics.getMaxSnapshotSize();
         maxEntryCount = statistics.getMaxEntryCount();
+
+        boolean hasSafepointData = IntStream.range(lastRebootIndex.orElse(0), count)
+                                            .mapToObj(i -> headers.get(i))
+                                            .allMatch(h -> h.hasSafepointTime());
+        if(hasSafepointData){
+            safepointTime = end.getSafepointTime() - lastRebootStart.getSafepointTime();
+            long realTime = end.getSnapShotDate().toInstant(ZoneOffset.UTC).toEpochMilli() - lastRebootStart.getSnapShotDate().toInstant(ZoneOffset.UTC).toEpochMilli();
+            safepointPercentage = (float)safepointTime / (float)realTime * 100.0f;
+        }
+        else{
+            safepointTime = -1;
+            safepointPercentage = Float.NaN;
+        }
+
     }
 
     /**
@@ -187,6 +207,35 @@ public class SummaryData {
      */
     public long getMaxGCTime() {
         return maxGCTime;
+    }
+
+    /**
+     * Get accumulated safepoint time of this time range.
+     * If SnapShot headers has no safepoint time, this method returns -1.
+     *
+     * @return safepoint time
+     */
+    public long getSafepointTime() {
+        return safepointTime;
+    }
+
+    /**
+     * Get safepoint percentage of this time range.
+     * If SnapShot headers has no safepoint time, this method returns Float#NaN.
+     *
+     * @return safepoint percentage
+     */
+    public float getSafepointPercentage() {
+        return safepointPercentage;
+    }
+
+    /**
+     * This summary data has safepoint time.
+     * 
+     * @return true if this summary data has safepoint time.
+     */
+    public boolean hasSafepointTime(){
+        return safepointTime != -1;
     }
 
     /**

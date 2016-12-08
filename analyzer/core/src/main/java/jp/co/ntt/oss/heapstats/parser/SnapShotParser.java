@@ -276,7 +276,12 @@ public class SnapShotParser {
           // Metaspace capacity
           header.setMetaspaceCapacity(longBuffer.getLong());
         }
-        
+
+        if(header.hasSafepointTime()){
+            readLong(ch, 8);
+            header.setSafepointTime(longBuffer.getLong());
+        }
+
         header.setSnapShotHeaderSize(ch.position() - startPos);
 
         return header;
