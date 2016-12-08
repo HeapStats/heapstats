@@ -631,8 +631,8 @@ JNIEXPORT jboolean JNICALL
  * \return Result of this call.
  */
 JNIEXPORT jboolean JNICALL InvokeLogCollection(JNIEnv *env, jobject obj) {
-  int ret =
-      logManager->collectLog(NULL, env, Signal, (TMSecTime)getNowTimeSec());
+  int ret = logManager->collectLog(NULL, env, Signal,
+                                   (TMSecTime)getNowTimeSec(), "JMX event");
   return ret == 0 ? JNI_TRUE : JNI_FALSE;
 }
 
@@ -645,6 +645,6 @@ JNIEXPORT jboolean JNICALL InvokeLogCollection(JNIEnv *env, jobject obj) {
  */
 JNIEXPORT jboolean JNICALL InvokeAllLogCollection(JNIEnv *env, jobject obj) {
   int ret = logManager->collectLog(NULL, env, AnotherSignal,
-                                   (TMSecTime)getNowTimeSec());
+                                   (TMSecTime)getNowTimeSec(), "JMX event");
   return ret == 0 ? JNI_TRUE : JNI_FALSE;
 }

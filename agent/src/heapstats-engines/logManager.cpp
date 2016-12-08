@@ -1,7 +1,7 @@
 /*!
  * \file logManager.cpp
  * \brief This file is used collect log information.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -161,11 +161,12 @@ TLogManager::~TLogManager(void) {
  * \param cause   [in] Invoke function cause.<br>
  *                     E.g. ResourceExhausted, Signal, Interval.
  * \param nowTime [in] Log collect time.
+ * \param description [in] Description of the event.
  * \return Value is zero, if process is succeed.<br />
  *         Value is error number a.k.a. "errno", if process is failure.
  */
 int TLogManager::collectLog(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
-                            TMSecTime nowTime) {
+                            TMSecTime nowTime, const char *description) {
   int result = 0;
   /* Variable store archive file path. */
   char arcPath[PATH_MAX] = {0};
@@ -178,7 +179,8 @@ int TLogManager::collectLog(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
     case OccurredDeadlock: {
       /* Collect log about java running environment and etc.. */
       int returnCode =
-          collectAllLog(jvmti, env, cause, nowTime, (char *)arcPath, PATH_MAX);
+          collectAllLog(jvmti, env, cause, nowTime,
+                        (char *)arcPath, PATH_MAX, description);
       if (unlikely(returnCode != 0)) {
         /* Check and show disk full error. */
         result = returnCode;
@@ -294,12 +296,13 @@ int TLogManager::collectNormalLog(TInvokeCause cause, TMSecTime nowTime,
  * \param nowTime     [in]  Log collect time.
  * \param archivePath [out] Archive file path.
  * \param pathLen     [in]  Max size of paramter"archivePath".
+ * \param description [in] Description of the event.
  * \return Value is zero, if process is succeed.<br />
  *         Value is error number a.k.a. "errno", if process is failure.
  */
 int TLogManager::collectAllLog(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
                                TMSecTime nowTime, char *archivePath,
-                               size_t pathLen) {
+                               size_t pathLen, const char *description) {
   /* Variable for process result. */
   int result = 0;
   /* Working directory path. */
@@ -316,7 +319,7 @@ int TLogManager::collectAllLog(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
 
   try {
     /* Create enviroment report file. */
-    result = makeEnvironFile(basePath, cause, nowTime);
+    result = makeEnvironFile(basePath, cause, nowTime, description);
     if (unlikely(result != 0)) {
       logger->printWarnMsg("Failure create enviroment file.");
 
@@ -456,11 +459,12 @@ int TLogManager::collectAllLog(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
  * \param cause    [in] Invoke function cause.<br>
  *                      E.g. Signal, ResourceExhausted, Interval.
  * \param nowTime  [in] Log collect time.
+ * \param description [in] Description of the event.
  * \return Value is zero, if process is succeed.<br />
  *         Value is error number a.k.a. "errno", if process is failure.
  */
 int TLogManager::makeEnvironFile(char *basePath, TInvokeCause cause,
-                                 TMSecTime nowTime) {
+                                 TMSecTime nowTime, const char *description) {
   int raisedErrNum = 0;
 
   /* Invoke OS version function. */
@@ -512,6 +516,7 @@ int TLogManager::makeEnvironFile(char *basePath, TInvokeCause cause,
     } envColumnList[] = {
           {"CollectionDate", "%lld", nowTime, NULL, false},
           {"LogTrigger", "%d", (TMSecTime)logCauseToInt(cause), NULL, false},
+          {"Description", "%s", 0, description, true},
           {"VmVersion", "%s", 0, jvmInfo->getVmVersion(), true},
           {"OsRelease", "%s", 0, uInfo.release, true},
           {"LibCVersion", "%s", 0, glibcVersion, true},

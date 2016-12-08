@@ -2,6 +2,7 @@
 
 	* Bug 3264: [REGRESSION] Build failed after Bug 3247
 	* Bug 3262: Add IntelliJ IDEA support
+	* Bug 3253: Cause string of ResourceExhausted should be collected
 
 2016-12-12  Yasumasa Suenaga <yasuenag@gmail.com>
 
