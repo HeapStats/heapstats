@@ -1,7 +1,7 @@
 /*!
  * \file logManager.hpp
  * \brief This file is used collect log information.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -69,11 +69,12 @@ class TLogManager {
    * \param cause   [in] Invoke function cause.<br>
    *                     E.g. ResourceExhausted, Signal, Interval.
    * \param nowTime [in] Log collect time.
+   * \param description [in] Description of the event.
    * \return Value is zero, if process is succeed.<br />
    *         Value is error number a.k.a. "errno", if process is failure.
    */
   int collectLog(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
-                 TMSecTime nowTime);
+                 TMSecTime nowTime, const char *description);
 
  protected:
   /*!
@@ -97,12 +98,13 @@ class TLogManager {
    * \param nowTime     [in]  Log collect time.
    * \param archivePath [out] Archive file path.
    * \param pathLen     [in]  Max size of paramter"archivePath".
+   * \param description [in] Description of the event.
    * \return Value is zero, if process is succeed.<br />
    *         Value is error number a.k.a. "errno", if process is failure.
    */
   virtual int collectAllLog(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
                             TMSecTime nowTime, char *archivePath,
-                            size_t pathLen);
+                            size_t pathLen, const char *description);
 
   RELEASE_ONLY(private :)
 
@@ -112,11 +114,12 @@ class TLogManager {
    * \param cause    [in] Invoke function cause.<br>
    *                      E.g. Signal, ResourceExhausted, Interval.
    * \param nowTime  [in] Log collect time.
+   * \param description [in] Description of the event.
    * \return Value is zero, if process is succeed.<br />
    *         Value is error number a.k.a. "errno", if process is failure.
    */
   virtual int makeEnvironFile(char *basePath, TInvokeCause cause,
-                              TMSecTime nowTime);
+                              TMSecTime nowTime, const char *description);
 
   /*!
    * \brief Dump thread and stack information to stream.

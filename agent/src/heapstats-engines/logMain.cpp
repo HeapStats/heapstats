@@ -76,16 +76,17 @@ bool abortionByDeadlock = false;
  *                     e.g. ResourceExhausted, Signal or Interval.
  * \param nowTime [in] Mili-second elapsed from 1970/1/1 0:00:00.<br>
  *                     This value express time of call log function.
+ * \param description [in] Description of the event.
  * \return Value is true, if process is succeed.
  */
 inline bool TakeLogInfo(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
-                        TMSecTime nowTime) {
+                        TMSecTime nowTime, const char *description) {
   /* Count working time. */
   static const char *label = "Take LogInfo";
   TElapsedTimer elapsedTime(label);
 
   /* Collect log. */
-  return (logManager->collectLog(jvmti, env, cause, nowTime) == 0);
+  return (logManager->collectLog(jvmti, env, cause, nowTime, description) == 0);
 }
 
 /*!
@@ -97,7 +98,8 @@ inline bool TakeLogInfo(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
  */
 void intervalLogProc(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause) {
   /* Call collect log by interval. */
-  if (unlikely(!TakeLogInfo(jvmti, env, cause, (TMSecTime)getNowTimeSec()))) {
+  if (unlikely(!TakeLogInfo(jvmti, env, cause,
+                            (TMSecTime)getNowTimeSec(), ""))) {
     logger->printWarnMsg("Failure interval collect log.");
   }
 }
@@ -137,7 +139,7 @@ void intervalSigProcForLog(jvmtiEnv *jvmti, JNIEnv *env) {
     TMSecTime nowTime = (TMSecTime)getNowTimeSec();
     flagLogSignal = 0;
 
-    if (unlikely(!TakeLogInfo(jvmti, env, Signal, nowTime))) {
+    if (unlikely(!TakeLogInfo(jvmti, env, Signal, nowTime, ""))) {
       logger->printWarnMsg("Failure collect log by normal log signal.");
     }
   }
@@ -147,7 +149,7 @@ void intervalSigProcForLog(jvmtiEnv *jvmti, JNIEnv *env) {
     TMSecTime nowTime = (TMSecTime)getNowTimeSec();
     flagAllLogSignal = 0;
 
-    if (unlikely(!TakeLogInfo(jvmti, env, AnotherSignal, nowTime))) {
+    if (unlikely(!TakeLogInfo(jvmti, env, AnotherSignal, nowTime, ""))) {
       logger->printWarnMsg("Failure collect log by all log signal.");
     }
   }
@@ -165,7 +167,7 @@ void onOccurredDeadLock(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause) {
   TMSecTime occurTime = TDeadlockFinder::getInstance()->getDeadlockTime();
 
   /* Collect log. */
-  if (unlikely(!TakeLogInfo(jvmti, env, cause, occurTime))) {
+  if (unlikely(!TakeLogInfo(jvmti, env, cause, occurTime, ""))) {
     logger->printWarnMsg("Failure collect log on occurred deadlock.");
   }
 
@@ -258,7 +260,7 @@ void JNICALL OnResourceExhausted(jvmtiEnv *jvmti, JNIEnv *env, jint flags,
     }
 
     /* Collect log. */
-    if (unlikely(!TakeLogInfo(jvmti, env, cause, nowTime))) {
+    if (unlikely(!TakeLogInfo(jvmti, env, cause, nowTime, description))) {
       logger->printWarnMsg("Failure collect log on resource exhausted.");
     }
   }
