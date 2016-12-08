@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2016 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -326,6 +326,11 @@ public class ArchiveData {
         try(ZipFile archive = new ZipFile(archivePath)){
             archive.stream().forEach(new ConsumerWrapper<ZipEntry>(d -> processZipEntry(archive, d)));
             buildSockData();
+            List<String> envInfoStrings = envInfo.entrySet()
+                                                 .stream()
+                                                 .map(e -> e.getKey() + " = " + e.getValue())
+                                                 .collect(Collectors.toList());
+            Files.write(Paths.get(extractPath.getAbsolutePath(), "envInfo.txt"), envInfoStrings, StandardOpenOption.CREATE);
         }
         
         parsed = true;
