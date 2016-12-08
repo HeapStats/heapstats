@@ -47,11 +47,13 @@
  *     0b10000000: This SnapShot is 2.0 format.
  *                 It contains snapshot and metaspace data.
  *     0b00000001: This SnapShot contains reference data.
- *       Other fields (bit 1 - 6) are reserved.
+ *     0b00000010: This SnapShot contains safepoint time.
+ *       Other fields (bit 2 - 6) are reserved.
  * \warning Don't change output snapshot format, if you change this value.
  */
 #define EXTENDED_SNAPSHOT         0x80  // 0b10000000
 #define EXTENDED_REFTREE_SNAPSHOT 0x81  // 0b10000001
+#define EXTENDED_SAFEPOINT_TIME   0x82  // 0b10000010
 
 /*!
  * \brief This structure stored class size and number of class-instance.
@@ -118,6 +120,7 @@ typedef struct {
   jlong totalHeapSize;     /*!< Total heap size.                      */
   jlong metaspaceUsage;    /*!< Usage of PermGen or Metaspace.        */
   jlong metaspaceCapacity; /*!< Max capacity of PermGen or Metaspace. */
+  jlong safepointTime;     /*!< Safepoint time in milliseconds.       */
 } TSnapShotFileHeader;
 #pragma pack(pop)
 

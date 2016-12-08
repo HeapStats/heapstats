@@ -707,6 +707,10 @@ int TClassContainer::afterTakeSnapShot(TSnapShotContainer *snapshot,
   memcpy(&hdr, (const void *)snapshot->getHeader(),
          sizeof(TSnapShotFileHeader));
 
+  /* Set safepoint time. */
+  hdr.safepointTime = jvmInfo->getSafepointTime();
+  hdr.magicNumber |= EXTENDED_SAFEPOINT_TIME;
+
   /* If java heap usage alert is enable. */
   if (conf->getHeapAlertThreshold() > 0) {
     jlong usage = hdr.newAreaSize + hdr.oldAreaSize;

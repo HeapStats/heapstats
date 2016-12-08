@@ -65,6 +65,11 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
     public static final byte EXTENDED_FORMAT_FLAG_REFTREE = 0b00000001;
     
     /**
+     * Flag for safepoint time of extended SnapShot format.
+     */
+    public static final byte EXTENDED_FORMAT_FLAG_SAFEPOINT_TIME = 0b00000010;
+
+    /**
      * serialVersionUID.
      */
     static final long serialVersionUID = -539015033687122109L;
@@ -154,6 +159,11 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
      */
     private long metaspaceCapacity;
 
+    /**
+     * Safepoint time.
+     */
+    private long safepointTime;
+
     private Path snapshotFile;
 
     private byte snapShotType;
@@ -183,6 +193,7 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
         totalCapacity = 0;
         metaspaceUsage = 0;
         metaspaceCapacity = 0;
+        safepointTime = 0;
         snapShotCache = new SoftReference<>(null);
     }
 
@@ -465,6 +476,24 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
     }
 
     /**
+     * Safepoint time.
+     *
+     * @return Return accumulated safepoint time
+     */
+    public final long getSafepointTime() {
+        return safepointTime;
+    }
+
+    /**
+     * Set safepoint time.
+     *
+     * @param value safepoint time
+     */
+    public final void setSafepointTime(final long value) {
+        safepointTime = value;
+    }
+
+    /**
      * Getter of SnapShot File.
      *
      * @return Path of this SnapShot.
@@ -609,6 +638,10 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
                ((snapShotType & extended_reftree) == extended_reftree);
     }
 
+    public boolean hasSafepointTime(){
+        return (snapShotType & EXTENDED_FORMAT_FLAG_SAFEPOINT_TIME) == EXTENDED_FORMAT_FLAG_SAFEPOINT_TIME;
+    }
+
     public boolean hasMetaspaceData(){
         return (snapShotType != FILE_FORMAT_1_0);
     }
@@ -648,6 +681,9 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
         buf.append(", Metaspace Capacity ");
         buf.append(metaspaceCapacity);
         buf.append(" byte ");
+        buf.append(", Accumulated safepoint time ");
+        buf.append(safepointTime);
+        buf.append(" ms");
 
         return buf.toString();
     }
