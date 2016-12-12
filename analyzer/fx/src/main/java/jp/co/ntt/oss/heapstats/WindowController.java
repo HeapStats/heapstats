@@ -299,12 +299,12 @@ public class WindowController implements Initializable {
 
         try(DirectoryStream<Path> jarPaths = Files.newDirectoryStream(libPath, "*.jar")){
             jarURLList = StreamSupport.stream(jarPaths.spliterator(), false)
-                    .map(new FunctionWrapper<>(p -> p.toUri().toURL()))
-                    .filter(u -> !u.getFile().endsWith("heapstats-core.jar"))
-                    .filter(u -> !u.getFile().endsWith("heapstats-mbean.jar"))
-                    .filter(u -> !u.getFile().endsWith("jgraphx.jar"))
-                    .collect(Collectors.toList())
-                    .toArray(new URL[0]);
+                                      .map(new FunctionWrapper<>(p -> p.toUri().toURL()))
+                                      .filter(u -> !u.getFile().endsWith("heapstats-core.jar"))
+                                      .filter(u -> !u.getFile().endsWith("heapstats-mbean.jar"))
+                                      .filter(u -> !u.getFile().endsWith("jgraphx.jar"))
+                                      .collect(Collectors.toList())
+                                      .toArray(new URL[0]);
         }
         catch(IOException ex) {
             Logger.getLogger(WindowController.class.getName()).log(Level.SEVERE, null, ex);
