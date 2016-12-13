@@ -215,9 +215,16 @@ public class SummaryController implements Initializable {
         youngLabel = new Label();
         oldLabel = new Label();
         freeLabel = new Label();
-        Rectangle youngRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, Color.web(heapChartColors[0]));
-        Rectangle oldRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, Color.web(heapChartColors[1]));
-        Rectangle freeRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, Color.web(heapChartColors[2]));
+        Rectangle youngRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle oldRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+        Rectangle freeRect = new Rectangle(HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE, HeapStatsUtils.TOOLTIP_LEGEND_RECT_SIZE);
+
+        Platform.runLater(() -> {
+            youngRect.setStyle("-fx-fill: " + ((Path)heapChart.lookup(".series0")).getFill().toString().replace("0x", "#"));
+            oldRect.setStyle("-fx-fill: " + ((Path)heapChart.lookup(".series1")).getFill().toString().replace("0x", "#"));
+            freeRect.setStyle("-fx-fill: " + ((Path)heapChart.lookup(".series2")).getFill().toString().replace("0x", "#"));
+        });
+
         heapTooltipGrid.add(youngRect, 0, 0);
         heapTooltipGrid.add(new Label("Young"), 1, 0);
         heapTooltipGrid.add(youngLabel, 2, 0);
