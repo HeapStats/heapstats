@@ -1,3 +1,7 @@
+2017-01-05  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3265: Many WARN and CRIT messages are shown when DumpRequest is sent
+
 2016-12-16  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3266: 'make install' failed because the version in a directory path mismatch.

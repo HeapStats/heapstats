@@ -212,7 +212,7 @@ OVERRIDE_ADJ_DEFINE(adj, 7, 3)
 /* for JVMTI IterateOverHeap. */
 
 /* IterateOverHeapObjectClosure::do_object(oop o) */
-OVERRIDE_DEFINE_WITHOUT_PERMCHECK(jvmti, 0, 2)
+OVERRIDE_DEFINE(jvmti, 0, 2)
 
 /* For inner GC start. */
 
