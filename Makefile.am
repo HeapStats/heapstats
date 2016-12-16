@@ -3,8 +3,8 @@ SUBDIRS = agent mbean
 MVN = @MVN@
 JAVA_HOME = @JDK_DIR@
 
-ANALYZER_DIR = $(srcdir)/analyzer/fx/target/heapstats-analyzer-2.0-bin/heapstats-analyzer-2.0
-CLI_DIR = $(srcdir)/analyzer/cli/target/heapstats-cli-2.0-bin/heapstats-cli-2.0
+ANALYZER_DIR = $(srcdir)/analyzer/fx/target/heapstats-analyzer-$(PACKAGE_VERSION)-bin/heapstats-analyzer-$(PACKAGE_VERSION)
+CLI_DIR = $(srcdir)/analyzer/cli/target/heapstats-cli-$(PACKAGE_VERSION)-bin/heapstats-cli-$(PACKAGE_VERSION)
 
 .PHONY: $(SUBDIRS) analyzer
 
