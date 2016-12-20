@@ -111,12 +111,14 @@
  * \brief Symbol of UserHandler()
  */
 #define USERHANDLER_SYMBOL "_ZL11UserHandleriPvS_"
+#define USERHANDLER_SYMBOL_JDK6 "_Z11UserHandleriPvS_"
 
 /*!
  * \brief Symbol of SR_handler()
  */
 #define SR_HANDLER_SYMBOL          "_ZL10SR_handleriP7siginfoP8ucontext"
 #define SR_HANDLER_SYMBOL_FALLBACK "_ZL10SR_handleriP9siginfo_tP8ucontext"
+#define SR_HANDLER_SYMBOL_JDK6     "_Z10SR_handleriP7siginfoP8ucontext"
 
 /*!
  * \brief Symbol of ObjectSynchronizer::get_lock_owner().

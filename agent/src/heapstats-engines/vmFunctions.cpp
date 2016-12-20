@@ -171,8 +171,12 @@ bool TVMFunctions::getFunctionsFromSymbol(void) {
   /* Search "UserHandler" function symbol. */
   userHandler = (TUserHandler) this->symFinder->findSymbol(USERHANDLER_SYMBOL);
   if (unlikely(userHandler == NULL)) {
-    logger->printWarnMsg("UserHandler() not found.");
-    return false;
+    userHandler = (TUserHandler) this->symFinder->findSymbol(
+                                                       USERHANDLER_SYMBOL_JDK6);
+    if (unlikely(userHandler == NULL)) {
+      logger->printWarnMsg("UserHandler() not found.");
+      return false;
+    }
   }
 
   /* Search "SR_handler" function symbol. */
@@ -181,8 +185,12 @@ bool TVMFunctions::getFunctionsFromSymbol(void) {
     sr_handler = (TSR_Handler) this->symFinder->findSymbol(
                                                     SR_HANDLER_SYMBOL_FALLBACK);
     if (sr_handler == NULL) {
-      logger->printWarnMsg("SR_handler() not found.");
-      return false;
+      sr_handler = (TSR_Handler) this->symFinder->findSymbol(
+                                                        SR_HANDLER_SYMBOL_JDK6);
+      if (sr_handler == NULL) {
+        logger->printWarnMsg("SR_handler() not found.");
+        return false;
+      }
     }
   }
 
