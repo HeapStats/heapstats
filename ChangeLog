@@ -1,6 +1,7 @@
 2017-01-05  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3265: Many WARN and CRIT messages are shown when DumpRequest is sent
+	* Bug 3269: Could not attach HeapStats Agent to JDK 6
 
 2016-12-16  Yasumasa Suenaga <yasuenag@gmail.com>
 
