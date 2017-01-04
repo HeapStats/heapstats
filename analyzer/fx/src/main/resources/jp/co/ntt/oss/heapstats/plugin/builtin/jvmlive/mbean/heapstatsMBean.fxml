@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- Copyright (C) 2015 Yasumasa Suenaga
+ Copyright (C) 2015-2017 Yasumasa Suenaga
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -18,15 +18,37 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="423.0" prefWidth="473.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.jvmlive.mbean.HeapStatsMBeanController">
+<VBox prefHeight="423.0" prefWidth="500.0" spacing="5.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.jvmlive.mbean.HeapStatsMBeanController">
     <children>
-        <Label fx:id="headerLabel" layoutX="14.25" layoutY="14.0" text="Label" />
-        <Label layoutX="14.0" layoutY="134.0" text="%dialog.config.current" />
-        <TableView fx:id="configTable" layoutY="64.0" prefHeight="259.0" prefWidth="473.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="164.0">
+        <Label fx:id="headerLabel" text="Label" />
+        <ButtonBar>
+            <buttons>
+                <Button mnemonicParsing="false" onAction="#onInvokeResourceBtnClick" text="%dialog.config.invokeResource" />
+                <Button mnemonicParsing="false" onAction="#onInvokeAllBtnClick" text="%dialog.config.invokeArciveLog" />
+                <Button mnemonicParsing="false" onAction="#onInvokeSnapShotBtnClick" text="%dialog.config.invokeSnapshot" />
+            </buttons>
+        </ButtonBar>
+        <ButtonBar>
+            <buttons>
+                <Button mnemonicParsing="false" onAction="#onGetResourceBtnClick" text="%dialog.config.getResourceLog" />
+                <Button mnemonicParsing="false" onAction="#onGetSnapShotBtnClick" text="%dialog.config.getSnapShot" />
+            </buttons>
+        </ButtonBar>
+      <HBox spacing="5.0">
+         <children>
+              <Label text="%dialog.config.current" />
+              <Button mnemonicParsing="false" onAction="#onCommitBtnClick" text="%dialog.config.commit" />
+         </children>
+      </HBox>
+        <TableView fx:id="configTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="259.0" prefWidth="473.0" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="keyColumn" editable="false" prefWidth="147.0" text="config" />
                 <TableColumn fx:id="valueColumn" editable="true" prefWidth="290.0" text="value" />
@@ -35,11 +57,5 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
             </columnResizePolicy>
         </TableView>
-        <Button layoutX="165.0" layoutY="129.0" mnemonicParsing="false" onAction="#onCommitBtnClick" text="%dialog.config.commit" />
-        <Button layoutX="14.0" layoutY="40.0" maxWidth="142.0" minWidth="142.0" mnemonicParsing="false" onAction="#onInvokeResourceBtnClick" prefWidth="142.0" text="%dialog.config.invokeResource" />
-        <Button layoutX="164.5" layoutY="40.0" maxWidth="142.0" minWidth="142.0" mnemonicParsing="false" onAction="#onInvokeAllBtnClick" prefWidth="142.0" text="%dialog.config.invokeArciveLog" />
-        <Button layoutX="314.0" layoutY="40.0" maxWidth="142.0" minWidth="142.0" mnemonicParsing="false" onAction="#onInvokeSnapShotBtnClick" prefWidth="142.0" text="%dialog.config.invokeSnapshot" />
-        <Button layoutX="14.0" layoutY="78.0" maxWidth="142.0" minWidth="142.0" mnemonicParsing="false" onAction="#onGetResourceBtnClick" prefWidth="142.0" text="%dialog.config.getResourceLog" />
-        <Button layoutX="165.0" layoutY="78.0" mnemonicParsing="false" onAction="#onGetSnapShotBtnClick" prefHeight="28.0" prefWidth="142.0" text="%dialog.config.getSnapShot" />
     </children>
-</AnchorPane>
+</VBox>
