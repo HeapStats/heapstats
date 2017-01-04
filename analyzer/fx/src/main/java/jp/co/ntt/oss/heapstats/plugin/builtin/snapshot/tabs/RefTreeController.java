@@ -17,6 +17,7 @@
  */
 package jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.tabs;
 
+import javafx.scene.layout.VBox;
 import jp.co.ntt.oss.heapstats.snapshot.ReferenceTracker;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
@@ -76,7 +77,7 @@ public class RefTreeController implements Initializable, MouseListener {
     private mxGraphComponent graphComponent;
 
     @FXML
-    private AnchorPane topAnchorPane;
+    private VBox topVBox;
 
     @FXML
     private Label snapshotLabel;
@@ -150,7 +151,7 @@ public class RefTreeController implements Initializable, MouseListener {
          * So I call repaint() method at last and request layout() call.
          */
         graphComponent.repaint();
-        Platform.runLater(() -> topAnchorPane.layout());
+        Platform.runLater(() -> topVBox.layout());
     }
 
     /**
@@ -267,7 +268,7 @@ public class RefTreeController implements Initializable, MouseListener {
         }
 
         graphComponent.repaint();
-        Platform.runLater(() -> topAnchorPane.layout());
+        Platform.runLater(() -> topVBox.layout());
     }
 
     @Override
