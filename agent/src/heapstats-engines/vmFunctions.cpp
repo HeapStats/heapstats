@@ -256,19 +256,17 @@ bool TVMFunctions::getFunctionsFromSymbol(void) {
  */
 bool TVMFunctions::getG1VTableFromSymbol(void) {
   /* Add vtable offset */
-  if (jvmInfo->isAfterJDK9()) {
 #ifdef __LP64__
-    VTableForTypeArrayOopClosure[0] =
-      incAddress(symFinder->findSymbol("_ZTV14G1CMOopClosure"), 16);
-    VTableForTypeArrayOopClosure[1] =
-      incAddress(symFinder->findSymbol("_ZTV23G1RootRegionScanClosure"), 16);
+  VTableForTypeArrayOopClosure[0] =
+    incAddress(symFinder->findSymbol("_ZTV14G1CMOopClosure"), 16);
+  VTableForTypeArrayOopClosure[1] =
+    incAddress(symFinder->findSymbol("_ZTV23G1RootRegionScanClosure"), 16);
 #else
-    VTableForTypeArrayOopClosure[0] =
-      incAddress(symFinder->findSymbol("_ZTV14G1CMOopClosure"), 8);
-    VTableForTypeArrayOopClosure[1] =
-      incAddress(symFinder->findSymbol("_ZTV23G1RootRegionScanClosure"), 8);
+  VTableForTypeArrayOopClosure[0] =
+    incAddress(symFinder->findSymbol("_ZTV14G1CMOopClosure"), 8);
+  VTableForTypeArrayOopClosure[1] =
+    incAddress(symFinder->findSymbol("_ZTV23G1RootRegionScanClosure"), 8);
 #endif
-  }
 
   if (unlikely(VTableForTypeArrayOopClosure[0] == NULL ||
                VTableForTypeArrayOopClosure[1] == NULL)) {
