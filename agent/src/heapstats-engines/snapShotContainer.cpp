@@ -1,7 +1,7 @@
 /*!
  * \file snapshotContainer.cpp
  * \brief This file is used to add up using size every class.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -477,15 +477,19 @@ void TSnapShotContainer::mergeChildren(void) {
            * reference to it from child object data.
            */
           if (objData->isRemoved) {
+            TChildClassCounter *nextCounter = counter->next;
+
             if (prevCounter == NULL) {
-              srcClsCounter->child = counter->next;
+              srcClsCounter->child = nextCounter;
             } else {
-              prevCounter->next = counter->next;
+              prevCounter->next = nextCounter;
             }
 
             /* Deallocate TChildClassCounter. */
             free(counter->counter);
             free(counter);
+
+            counter = nextCounter;
           } else {
             /* Search child class. */
             TChildClassCounter *childClsData =
@@ -502,9 +506,8 @@ void TSnapShotContainer::mergeChildren(void) {
             }
 
             prevCounter = counter;
+            counter = counter->next;
           }
-
-          counter = counter->next;
         }
       }
     }
