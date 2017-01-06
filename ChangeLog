@@ -1,3 +1,7 @@
+2017-01-07  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3279: Fix not to reference freed TChildCounter when SnapShot merges
+
 2017-01-05  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3265: Many WARN and CRIT messages are shown when DumpRequest is sent
