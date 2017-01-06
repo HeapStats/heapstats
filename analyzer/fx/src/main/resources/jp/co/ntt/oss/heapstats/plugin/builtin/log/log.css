@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,13 @@
     Author     : Yasumasa Suenaga
 */
 
+.rect-range-selected {
+    -fx-background-color: lime;
+}
+
+.rect-range-unselected {
+    -fx-background-color: grey;
+}
 
 /* Java CPU */
 #javaCPUChart .series0 {
