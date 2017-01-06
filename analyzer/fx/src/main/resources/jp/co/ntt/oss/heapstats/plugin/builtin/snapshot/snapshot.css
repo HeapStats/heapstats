@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +20,14 @@
     Created on : 2014/05/14, 22:49:20
     Author     : Yasumasa Suenaga
 */
+
+.rect-range-selected {
+    -fx-background-color: lime;
+}
+
+.rect-range-unselected {
+    -fx-background-color: grey;
+}
 
 /* instance */
 #instanceChart .series0 {

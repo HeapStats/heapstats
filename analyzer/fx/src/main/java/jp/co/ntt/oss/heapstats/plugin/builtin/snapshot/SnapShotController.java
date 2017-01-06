@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,13 +21,8 @@ import java.io.File;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -51,14 +46,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.SelectionModel;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -98,10 +86,13 @@ public class SnapShotController extends PluginController implements Initializabl
     private RefTreeController reftreeController;
 
     @FXML
-    private ComboBox<SnapShotHeader> startCombo;
+    private SplitPane rangePane;
 
     @FXML
-    private ComboBox<SnapShotHeader> endCombo;
+    private Label startTimeLabel;
+
+    @FXML
+    private Label endTimeLabel;
 
     @FXML
     private TextField snapshotList;
@@ -134,9 +125,39 @@ public class SnapShotController extends PluginController implements Initializabl
 
     private ObjectProperty<ObservableMap<LocalDateTime, List<ObjectData>>> topNList;
 
+    private List<SnapShotHeader> snapShotHeaders;
+
     private ObjectProperty<SnapShotHeader> currentSnapShotHeader;
 
     private LongProperty currentObjectTag;
+
+    private ObjectProperty<LocalDateTime> rangeStart;
+
+    private ObjectProperty<LocalDateTime> rangeEnd;
+
+    /**
+     * Update caption of label which represents time of selection.
+     *
+     * @param target Label compornent to draw.
+     * @param newValue Percentage of timeline. This value is between 0.0 and 1.0 .
+     */
+    private void updateRangeLabel(Label target, double newValue){
+        if(!Optional.ofNullable(snapShotHeaders).map(List::isEmpty).orElse(true)){
+            LocalDateTime start = snapShotHeaders.get(0).getSnapShotDate();
+            LocalDateTime end = snapShotHeaders.get(snapShotHeaders.size() - 1).getSnapShotDate();
+            long diff = start.until(end, ChronoUnit.MILLIS);
+            LocalDateTime newTime = start.plus((long)((double)diff * newValue), ChronoUnit.MILLIS);
+
+            if(target == startTimeLabel){
+                rangeStart.set(newTime);
+            }
+            else{
+                rangeEnd.set(newTime);
+            }
+
+            target.setText(newTime.format(HeapStatsUtils.getDateTimeFormatter()));
+        }
+    }
 
     /**
      * Initializes the controller class.
@@ -180,10 +201,12 @@ public class SnapShotController extends PluginController implements Initializabl
 
         snapshotMain.getSelectionModel().selectedItemProperty().addListener(this::onTabChanged);
 
-        startCombo.setConverter(new SnapShotHeaderConverter());
-        endCombo.setConverter(new SnapShotHeaderConverter());
+        snapShotHeaders = null;
+        rangeStart = new SimpleObjectProperty<>();
+        rangeEnd = new SimpleObjectProperty<>();
 
-        okBtn.disableProperty().bind(startCombo.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(endCombo.getSelectionModel().selectedIndexProperty()));
+        rangePane.getDividers().get(0).positionProperty().addListener((v, o, n) -> updateRangeLabel(startTimeLabel, n.doubleValue()));
+        rangePane.getDividers().get(1).positionProperty().addListener((v, o, n) -> updateRangeLabel(endTimeLabel, n.doubleValue()));
 
         setOnWindowResize((v, o, n) -> Platform.runLater(() -> Stream.of(summaryController.getHeapChart(),
                 summaryController.getInstanceChart(),
@@ -206,6 +229,21 @@ public class SnapShotController extends PluginController implements Initializabl
                 currentObjectTag.set(snapshotController.currentObjectTagProperty().get());
             }
         }
+    }
+
+    /**
+     * onSucceeded event handler for ParseHeader.
+     *
+     * @param headers New SnapShotHeader list.
+     */
+    private void onSnapShotParserSucceeded(List<SnapShotHeader> headers) {
+        snapShotHeaders = headers;
+
+        rangePane.getDividers().get(0).setPosition(0.0d);
+        rangePane.getDividers().get(1).setPosition(1.0d);
+
+        rangePane.setDisable(false);
+        okBtn.setDisable(false);
     }
 
     /**
@@ -235,13 +273,7 @@ public class SnapShotController extends PluginController implements Initializabl
             snapshotList.setText(files.stream().collect(Collectors.joining("; ")));
 
             TaskAdapter<ParseHeader> task = new TaskAdapter<>(new ParseHeader(files, HeapStatsUtils.getReplaceClassName(), true));
-            task.setOnSucceeded(evt -> {
-                ObservableList<SnapShotHeader> list = FXCollections.observableArrayList(task.getTask().getSnapShotList());
-                startCombo.setItems(list);
-                endCombo.setItems(list);
-                startCombo.getSelectionModel().selectFirst();
-                endCombo.getSelectionModel().selectLast();
-            });
+            task.setOnSucceeded(evt -> onSnapShotParserSucceeded(task.getTask().getSnapShotList()));
             super.bindTask(task);
 
             Thread parseThread = new Thread(task);
@@ -257,9 +289,12 @@ public class SnapShotController extends PluginController implements Initializabl
      */
     @FXML
     private void onOkClick(ActionEvent event) {
-        int startIdx = startCombo.getSelectionModel().getSelectedIndex();
-        int endIdx = endCombo.getSelectionModel().getSelectedIndex();
-        currentTarget.set(FXCollections.observableArrayList(startCombo.getItems().subList(startIdx, endIdx + 1)));
+        /* Get range */
+        LocalDateTime start = rangeStart.getValue();
+        LocalDateTime end = rangeEnd.getValue();
+        currentTarget.set(FXCollections.observableArrayList(snapShotHeaders.stream()
+                                                                           .filter(d -> ((d.getSnapShotDate().compareTo(start) >= 0) && (d.getSnapShotDate().compareTo(end) <= 0)))
+                                                                           .collect(Collectors.toList())));
         currentClassNameSet.set(FXCollections.observableSet());
         summaryData.set(new SummaryData(currentTarget.get()));
 
@@ -317,7 +352,7 @@ public class SnapShotController extends PluginController implements Initializabl
         File csvFile = dialog.showSaveDialog(WindowController.getInstance().getOwner());
 
         if (csvFile != null) {
-            TaskAdapter<CSVDumpGC> task = new TaskAdapter<>(new CSVDumpGC(csvFile, isSelected ? currentTarget.get() : startCombo.getItems()));
+            TaskAdapter<CSVDumpGC> task = new TaskAdapter<>(new CSVDumpGC(csvFile, isSelected ? currentTarget.get() : snapShotHeaders));
             super.bindTask(task);
 
             Thread parseThread = new Thread(task);
@@ -344,7 +379,7 @@ public class SnapShotController extends PluginController implements Initializabl
 
         if (csvFile != null) {
             Predicate<? super ObjectData> filter = histogramController.getFilter();
-            TaskAdapter<CSVDumpHeap> task = new TaskAdapter<>(new CSVDumpHeap(csvFile, isSelected ? currentTarget.get() : startCombo.getItems(), isSelected ? filter : null, HeapStatsUtils.getReplaceClassName()));
+            TaskAdapter<CSVDumpHeap> task = new TaskAdapter<>(new CSVDumpHeap(csvFile, isSelected ? currentTarget.get() : snapShotHeaders, isSelected ? filter : null, HeapStatsUtils.getReplaceClassName()));
             super.bindTask(task);
 
             Thread parseThread = new Thread(task);
@@ -364,12 +399,7 @@ public class SnapShotController extends PluginController implements Initializabl
         snapshotList.setText((String) data);
 
         TaskAdapter<ParseHeader> task = new TaskAdapter<>(new ParseHeader(Arrays.asList((String) data), HeapStatsUtils.getReplaceClassName(), true));
-        task.setOnSucceeded(evt -> {
-            startCombo.setItems(FXCollections.observableArrayList(task.getTask().getSnapShotList()));
-            endCombo.setItems(FXCollections.observableArrayList(task.getTask().getSnapShotList()));
-            startCombo.getSelectionModel().selectFirst();
-            endCombo.getSelectionModel().selectLast();
-        });
+        task.setOnSucceeded(evt -> onSnapShotParserSucceeded(task.getTask().getSnapShotList()));
         super.bindTask(task);
 
         Thread parseThread = new Thread(task);
