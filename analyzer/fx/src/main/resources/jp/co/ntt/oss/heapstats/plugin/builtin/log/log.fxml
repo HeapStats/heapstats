@@ -20,30 +20,42 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="600.0" prefWidth="800.0" spacing="5.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.log.LogController">
+<VBox prefHeight="600.0" prefWidth="800.0" spacing="5.0" stylesheets="@/jp/co/ntt/oss/heapstats/plugin/builtin/log/log.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.log.LogController">
     <children>
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
          <children>
               <Button mnemonicParsing="false" onAction="#onLogFileClick" text="%button.log" />
-              <TextField fx:id="logFileList" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="23.0" prefWidth="600.0" HBox.hgrow="ALWAYS" />
-              <Button fx:id="okBtn" mnemonicParsing="false" onAction="#onOkClick" text="OK" />
+              <TextField fx:id="logFileList" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" HBox.hgrow="ALWAYS" />
+              <Button fx:id="okBtn" disable="true" mnemonicParsing="false" onAction="#onOkClick" text="OK" />
          </children>
       </HBox>
       <HBox spacing="5.0">
          <children>
-              <Label text="%label.range" />
-              <ComboBox fx:id="startCombo" prefHeight="23.0" prefWidth="176.0" />
-              <Label text="-" />
-              <ComboBox fx:id="endCombo" prefHeight="23.0" prefWidth="176.0" />
+             <Label text="%label.range" />
+             <SplitPane fx:id="rangePane" disable="true" dividerPositions="0.0, 1.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" HBox.hgrow="ALWAYS">
+                 <items>
+                     <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" prefWidth="0.0" styleClass="rect-range-unselected" SplitPane.resizableWithParent="false" />
+                     <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" styleClass="rect-range-selected" SplitPane.resizableWithParent="false" />
+                     <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" prefWidth="0.0" styleClass="rect-range-unselected" SplitPane.resizableWithParent="false" />
+                 </items>
+             </SplitPane>
          </children>
+      </HBox>
+      <HBox alignment="CENTER" spacing="5.0">
+          <children>
+              <Label fx:id="startTimeLabel" />
+              <Label text="-" />
+              <Label fx:id="endTimeLabel" />
+          </children>
       </HBox>
         <TabPane layoutX="14.0" layoutY="80.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="508.0" prefWidth="773.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
             <tabs>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,15 +17,6 @@
  */
 package jp.co.ntt.oss.heapstats.plugin.builtin.log;
 
-import java.io.File;
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -38,11 +29,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.util.converter.LocalDateTimeStringConverter;
 import jp.co.ntt.oss.heapstats.WindowController;
 import jp.co.ntt.oss.heapstats.container.log.ArchiveData;
 import jp.co.ntt.oss.heapstats.container.log.DiffData;
@@ -55,6 +46,13 @@ import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesController;
 import jp.co.ntt.oss.heapstats.task.ParseLogFile;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 import jp.co.ntt.oss.heapstats.utils.TaskAdapter;
+
+import java.io.File;
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * FXML Controller of LOG builtin plugin.
@@ -70,16 +68,23 @@ public class LogController extends PluginController implements Initializable {
     private LogDetailsController logDetailsController;
 
     @FXML
-    private ComboBox<LocalDateTime> startCombo;
+    private Label startTimeLabel;
 
     @FXML
-    private ComboBox<LocalDateTime> endCombo;
+    private Label endTimeLabel;
 
     @FXML
     private TextField logFileList;
 
     @FXML
     private Button okBtn;
+
+    @FXML
+    private SplitPane rangePane;
+
+    private ObjectProperty<LocalDateTime> rangeStart;
+
+    private ObjectProperty<LocalDateTime> rangeEnd;
 
     private List<LogData> logEntries;
 
@@ -88,17 +93,44 @@ public class LogController extends PluginController implements Initializable {
     private ObjectProperty<ObservableList<ArchiveData>> archiveList;
 
     /**
+     * Update caption of label which represents time of selection.
+     *
+     * @param target Label compornent to draw.
+     * @param newValue Percentage of timeline. This value is between 0.0 and 1.0 .
+     */
+    private void updateRangeLabel(Label target, double newValue){
+        if(!Optional.ofNullable(logEntries).map(List::isEmpty).orElse(true)){
+            LocalDateTime start = logEntries.get(0).getDateTime();
+            LocalDateTime end = logEntries.get(logEntries.size() - 1).getDateTime();
+            long diff = start.until(end, ChronoUnit.MILLIS);
+            LocalDateTime newTime = start.plus((long)(diff * (Math.round(newValue * 100.0d) / 100.0d)), ChronoUnit.MILLIS);
+
+            if(target == startTimeLabel){
+                rangeStart.set(newTime.truncatedTo(ChronoUnit.SECONDS));
+            }
+            else{
+                rangeEnd.set(newTime.plusSeconds(1).truncatedTo(ChronoUnit.SECONDS));
+            }
+
+            target.setText(newTime.format(HeapStatsUtils.getDateTimeFormatter()));
+        }
+    }
+
+    /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb);
 
-        LocalDateTimeStringConverter converter = new LocalDateTimeStringConverter(HeapStatsUtils.getDateTimeFormatter(), null);
-        startCombo.setConverter(converter);
-        endCombo.setConverter(converter);
+        logEntries = null;
+        diffEntries = null;
+        rangeStart = new SimpleObjectProperty<>();
+        rangeEnd = new SimpleObjectProperty<>();
 
-        okBtn.disableProperty().bind(startCombo.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(endCombo.getSelectionModel().selectedIndexProperty()));
+        rangePane.getDividers().get(0).positionProperty().addListener((v, o, n) -> updateRangeLabel(startTimeLabel, n.doubleValue()));
+        rangePane.getDividers().get(1).positionProperty().addListener((v, o, n) -> updateRangeLabel(endTimeLabel, n.doubleValue()));
+
         archiveList = new SimpleObjectProperty<>(FXCollections.emptyObservableList());
         logResourcesController.archiveListProperty().bind(archiveList);
         logDetailsController.archiveListProperty().bind(archiveList);
@@ -111,18 +143,14 @@ public class LogController extends PluginController implements Initializable {
      * @param parser Targeted LogFileParser.
      */
     private void onLogFileParserSucceeded(ParseLogFile parser) {
-        startCombo.getItems().clear();
-        endCombo.getItems().clear();
-
         logEntries = parser.getLogEntries();
         diffEntries = parser.getDiffEntries();
-        List<LocalDateTime> timeline = logEntries.stream()
-                .map(d -> d.getDateTime())
-                .collect(Collectors.toList());
-        startCombo.getItems().addAll(timeline);
-        startCombo.getSelectionModel().selectFirst();
-        endCombo.getItems().addAll(timeline);
-        endCombo.getSelectionModel().selectLast();
+
+        rangePane.getDividers().get(0).setPosition(0.0d);
+        rangePane.getDividers().get(1).setPosition(1.0d);
+
+        rangePane.setDisable(false);
+        okBtn.setDisable(false);
     }
 
     /**
@@ -170,8 +198,8 @@ public class LogController extends PluginController implements Initializable {
     @FXML
     private void onOkClick(ActionEvent event) {
         /* Get range */
-        LocalDateTime start = startCombo.getValue();
-        LocalDateTime end = endCombo.getValue();
+        LocalDateTime start = rangeStart.getValue();
+        LocalDateTime end = rangeEnd.getValue();
 
         List<LogData> targetLogData = logEntries.parallelStream()
                 .filter(d -> ((d.getDateTime().compareTo(start) >= 0) && (d.getDateTime().compareTo(end) <= 0)))
