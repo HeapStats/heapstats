@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2016 Yasumasa Suenaga
+ * Copyright (C) 2015-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -103,13 +103,13 @@ public class ThreadRecorderController extends PluginController implements Initia
             LocalDateTime start = threadStatList.get(0).getTime();
             LocalDateTime end = threadStatList.get(threadStatList.size() - 1).getTime();
             long diff = start.until(end, ChronoUnit.MILLIS);
-            LocalDateTime newTime = start.plus((long)((double)diff * newValue), ChronoUnit.MILLIS);
+            LocalDateTime newTime = start.plus((long)(diff * (Math.round(newValue * 100.0d) / 100.0d)), ChronoUnit.MILLIS);
             
             if(target == startTimeLabel){
-                rangeStart.set(newTime);
+                rangeStart.set(newTime.truncatedTo(ChronoUnit.SECONDS));
             }
             else{
-                rangeEnd.set(newTime);
+                rangeEnd.set(newTime.plusSeconds(1).truncatedTo(ChronoUnit.SECONDS));
             }
             
             target.setText(newTime.format(HeapStatsUtils.getDateTimeFormatter()));

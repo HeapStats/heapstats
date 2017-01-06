@@ -146,13 +146,13 @@ public class SnapShotController extends PluginController implements Initializabl
             LocalDateTime start = snapShotHeaders.get(0).getSnapShotDate();
             LocalDateTime end = snapShotHeaders.get(snapShotHeaders.size() - 1).getSnapShotDate();
             long diff = start.until(end, ChronoUnit.MILLIS);
-            LocalDateTime newTime = start.plus((long)((double)diff * newValue), ChronoUnit.MILLIS);
+            LocalDateTime newTime = start.plus((long)(diff * (Math.round(newValue * 100.0d) / 100.0d)), ChronoUnit.MILLIS);
 
             if(target == startTimeLabel){
-                rangeStart.set(newTime);
+                rangeStart.set(newTime.truncatedTo(ChronoUnit.SECONDS));
             }
             else{
-                rangeEnd.set(newTime);
+                rangeEnd.set(newTime.plusSeconds(1).truncatedTo(ChronoUnit.SECONDS));
             }
 
             target.setText(newTime.format(HeapStatsUtils.getDateTimeFormatter()));

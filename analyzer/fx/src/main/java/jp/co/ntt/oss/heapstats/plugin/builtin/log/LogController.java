@@ -17,12 +17,6 @@
  */
 package jp.co.ntt.oss.heapstats.plugin.builtin.log;
 
-import java.io.File;
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -34,10 +28,12 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.util.converter.LocalDateTimeStringConverter;
 import jp.co.ntt.oss.heapstats.WindowController;
 import jp.co.ntt.oss.heapstats.container.log.ArchiveData;
 import jp.co.ntt.oss.heapstats.container.log.DiffData;
@@ -50,6 +46,13 @@ import jp.co.ntt.oss.heapstats.plugin.builtin.log.tabs.LogResourcesController;
 import jp.co.ntt.oss.heapstats.task.ParseLogFile;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 import jp.co.ntt.oss.heapstats.utils.TaskAdapter;
+
+import java.io.File;
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * FXML Controller of LOG builtin plugin.
@@ -100,13 +103,13 @@ public class LogController extends PluginController implements Initializable {
             LocalDateTime start = logEntries.get(0).getDateTime();
             LocalDateTime end = logEntries.get(logEntries.size() - 1).getDateTime();
             long diff = start.until(end, ChronoUnit.MILLIS);
-            LocalDateTime newTime = start.plus((long)((double)diff * newValue), ChronoUnit.MILLIS);
+            LocalDateTime newTime = start.plus((long)(diff * (Math.round(newValue * 100.0d) / 100.0d)), ChronoUnit.MILLIS);
 
             if(target == startTimeLabel){
-                rangeStart.set(newTime);
+                rangeStart.set(newTime.truncatedTo(ChronoUnit.SECONDS));
             }
             else{
-                rangeEnd.set(newTime);
+                rangeEnd.set(newTime.plusSeconds(1).truncatedTo(ChronoUnit.SECONDS));
             }
 
             target.setText(newTime.format(HeapStatsUtils.getDateTimeFormatter()));
