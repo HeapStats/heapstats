@@ -1,3 +1,7 @@
+2017-01-07  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3278: Fix to add G1 vtable offset correctly
+
 2017-01-07  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3279: Fix not to reference freed TChildCounter when SnapShot merges

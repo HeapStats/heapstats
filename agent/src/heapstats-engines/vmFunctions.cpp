@@ -1,7 +1,7 @@
 /*!
  * \file vmFunctions.cpp
  * \brief This file includes functions in HotSpot VM.<br>
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -264,19 +264,17 @@ bool TVMFunctions::getFunctionsFromSymbol(void) {
  */
 bool TVMFunctions::getG1VTableFromSymbol(void) {
   /* Add vtable offset */
-  if (jvmInfo->isAfterJDK9()) {
 #ifdef __LP64__
-    VTableForTypeArrayOopClosure[0] =
-      incAddress(symFinder->findSymbol("_ZTV14G1CMOopClosure"), 16);
-    VTableForTypeArrayOopClosure[1] =
-      incAddress(symFinder->findSymbol("_ZTV23G1RootRegionScanClosure"), 16);
+  VTableForTypeArrayOopClosure[0] =
+    incAddress(symFinder->findSymbol("_ZTV14G1CMOopClosure"), 16);
+  VTableForTypeArrayOopClosure[1] =
+    incAddress(symFinder->findSymbol("_ZTV23G1RootRegionScanClosure"), 16);
 #else
-    VTableForTypeArrayOopClosure[0] =
-      incAddress(symFinder->findSymbol("_ZTV14G1CMOopClosure"), 8);
-    VTableForTypeArrayOopClosure[1] =
-      incAddress(symFinder->findSymbol("_ZTV23G1RootRegionScanClosure"), 8);
+  VTableForTypeArrayOopClosure[0] =
+    incAddress(symFinder->findSymbol("_ZTV14G1CMOopClosure"), 8);
+  VTableForTypeArrayOopClosure[1] =
+    incAddress(symFinder->findSymbol("_ZTV23G1RootRegionScanClosure"), 8);
 #endif
-  }
 
   if (unlikely(VTableForTypeArrayOopClosure[0] == NULL ||
                VTableForTypeArrayOopClosure[1] == NULL)) {
