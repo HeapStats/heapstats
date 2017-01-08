@@ -37,7 +37,7 @@
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
          <children>
               <Button mnemonicParsing="false" onAction="#onOpenBtnClick" text="%button.file" />
-              <TextField fx:id="fileNameBox" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+              <TextField fx:id="fileNameBox" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" HBox.hgrow="ALWAYS" />
               <Button fx:id="okBtn" disable="true" mnemonicParsing="false" onAction="#onOkBtnClick" text="OK" />
          </children>
       </HBox>
@@ -46,9 +46,9 @@
               <Label text="%label.timerange" />
               <SplitPane fx:id="rangePane" disable="true" dividerPositions="0.0, 1.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" HBox.hgrow="ALWAYS">
                   <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="rect-range-unselected" />
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="15.0" prefWidth="637.0" styleClass="rect-range-selected" />
-                      <AnchorPane prefHeight="158.0" prefWidth="65.0" styleClass="rect-range-unselected" />
+                      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" prefWidth="0.0" styleClass="rect-range-unselected" />
+                      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" styleClass="rect-range-selected" />
+                      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" prefWidth="0.0" styleClass="rect-range-unselected" />
                   </items>
               </SplitPane>
          </children>

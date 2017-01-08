@@ -36,14 +36,14 @@
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
          <children>
               <Button mnemonicParsing="false" onAction="#onSnapshotFileClick" text="%button.snapshot" />
-              <TextField fx:id="snapshotList" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="23.0" prefWidth="600.0" HBox.hgrow="ALWAYS" />
+              <TextField fx:id="snapshotList" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
               <Button fx:id="okBtn" disable="true" mnemonicParsing="false" onAction="#onOkClick" text="OK" />
          </children>
       </HBox>
         <HBox spacing="5.0">
             <children>
                 <Label text="%label.range" />
-                <SplitPane fx:id="rangePane" disable="true" dividerPositions="0.0, 1.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" HBox.hgrow="ALWAYS">
+                <SplitPane fx:id="rangePane" disable="true" dividerPositions="0.0, 1.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" prefHeight="25.0" HBox.hgrow="ALWAYS">
                     <items>
                         <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" prefWidth="0.0" styleClass="rect-range-unselected" SplitPane.resizableWithParent="false" />
                         <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" styleClass="rect-range-selected" SplitPane.resizableWithParent="false" />
@@ -70,7 +70,7 @@
               <RadioButton fx:id="radioInstance" mnemonicParsing="false" text="%fxml.instance" toggleGroup="$baseline" />
          </children>
       </HBox>
-        <TabPane fx:id="snapshotMain" prefHeight="508.0" prefWidth="773.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="snapshotMain" prefHeight="508.0" prefWidth="773.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
             <tabs>
                 <Tab text="%tab.summary">
                     <content>
