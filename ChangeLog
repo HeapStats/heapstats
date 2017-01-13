@@ -1,3 +1,7 @@
+2017-01-13  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3248: Log and SnapShot tab should have slide bar for selecting time range
+
 2017-01-07  KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3278: Fix to add G1 vtable offset correctly
