@@ -1,3 +1,7 @@
+2017-01-16  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3285: JVM aborted on assert code at MonitorContended JVMTI event
+
 2017-01-13  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3248: Log and SnapShot tab should have slide bar for selecting time range
