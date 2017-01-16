@@ -1,3 +1,7 @@
+2017-01-17  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3284: HeapStats Agent might crash when object children are scanned
+
 2017-01-16  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3285: JVM aborted on assert code at MonitorContended JVMTI event

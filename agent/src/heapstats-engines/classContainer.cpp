@@ -1,7 +1,7 @@
 /*!
  * \file classContainer.cpp
  * \brief This file is used to add up using size every class.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -980,7 +980,8 @@ void TClassContainer::commitClassChange(void) {
         TObjectData *objData = (*cur).second;
 
         /* If class is prepared remove from class container. */
-        if (unlikely(objData->oldTotalSize == 0 && objData->isRemoved)) {
+        if (unlikely(objData->isRemoved &&
+                     (atomic_get(&objData->numRefsFromChildren) == 0))) {
           /*
            * If we do removing map item here,
            * iterator's relationship will be broken.
