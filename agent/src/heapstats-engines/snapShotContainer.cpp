@@ -205,6 +205,7 @@ TSnapShotContainer::~TSnapShotContainer(void) {
       counter = counter->next;
 
       /* Deallocate TChildClassCounter. */
+      atomic_inc(&aCounter->objData->numRefsFromChildren, -1);
       free(aCounter->counter);
       free(aCounter);
     }
@@ -299,6 +300,7 @@ TChildClassCounter *TSnapShotContainer::pushNewChildClass(
     return NULL;
   }
 
+  atomic_inc(&objData->numRefsFromChildren, 1);
   this->clearObjectCounter(newCounter->counter);
   newCounter->objData = objData;
 
@@ -473,10 +475,13 @@ void TSnapShotContainer::mergeChildren(void) {
           TObjectData *objData = counter->objData;
 
           /*
-           * If the class of objData is already unloaded, we should remove
-           * reference to it from child object data.
+           * If the class of objData is already unloaded, we should free and
+           * shold decrement reference count.
+           * TChildClassCounter reference count will be checked at
+           * TClassContainer::commitClassChange().
            */
           if (objData->isRemoved) {
+            atomic_inc(&objData->numRefsFromChildren, -1);
             TChildClassCounter *nextCounter = counter->next;
 
             if (prevCounter == NULL) {
@@ -488,6 +493,25 @@ void TSnapShotContainer::mergeChildren(void) {
             /* Deallocate TChildClassCounter. */
             free(counter->counter);
             free(counter);
+
+            /* Deallocate TChildClassCounter in parent container. */
+            TChildClassCounter *childClsData, *parentPrevData,
+                               *parentMorePrevData;
+            this->findChildCounters(clsCounter, objData->klassOop,
+                                    &childClsData, &parentPrevData,
+                                    &parentMorePrevData);
+            if (likely(childClsData != NULL)) {
+              atomic_inc(&objData->numRefsFromChildren, -1);
+
+              if (parentPrevData == NULL) {
+                clsCounter->child = childClsData->next;
+              } else {
+                parentPrevData->next = childClsData->next;
+              }
+
+              free(childClsData->counter);
+              free(childClsData);
+            }
 
             counter = nextCounter;
           } else {

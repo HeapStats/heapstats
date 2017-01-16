@@ -1,7 +1,7 @@
 /*!
  * \file snapShotMain.cpp
  * \brief This file is used to take snapshot.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -378,7 +378,12 @@ void iterateFieldObjectCallBack(void *oop, void *data) {
     TObjectData *clsData =
         getObjectDataFromKlassOop(localClsContainer, klassOop);
     /* Push new child loaded class. */
-    clsCounter = localSnapshot->pushNewChildClass(parentCounter, clsData);
+    if (!clsData->isRemoved) {
+      clsCounter = localSnapshot->pushNewChildClass(parentCounter, clsData);
+    } else {
+      /* We should return if clsData has already been removed (unloaded). */
+      return;
+    }
   }
 
   if (unlikely(clsCounter == NULL)) {

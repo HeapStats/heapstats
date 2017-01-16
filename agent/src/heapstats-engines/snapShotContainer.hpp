@@ -1,7 +1,7 @@
 /*!
  * \file snapshotContainer.hpp
  * \brief This file is used to add up using size every class.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -67,18 +67,21 @@ typedef struct {
 /*!
  * \brief This structure stored class information.
  */
+#pragma pack(push, 4)
 typedef struct {
-  jlong tag;          /*!< Class tag.                                 */
-  jlong classNameLen; /*!< Class name.                                */
-  char *className;    /*!< Class name length.                         */
-  void *klassOop;     /*!< Java inner class object.                   */
-  jlong oldTotalSize; /*!< Class old total use size.                  */
-  TOopType oopType;   /*!< Type of class.                             */
-  jlong clsLoaderId;  /*!< Class loader instance id.                  */
-  jlong clsLoaderTag; /*!< Class loader class tag.                    */
-  bool isRemoved;     /*!< Class is already unloaded.                 */
-  jlong instanceSize; /*!< Class size if this class is instanceKlass. */
+  jlong tag;               /*!< Class tag.                                    */
+  jlong classNameLen;      /*!< Class name.                                   */
+  char *className;         /*!< Class name length.                            */
+  void *klassOop;          /*!< Java inner class object.                      */
+  jlong oldTotalSize;      /*!< Class old total use size.                     */
+  TOopType oopType;        /*!< Type of class.                                */
+  jlong clsLoaderId;       /*!< Class loader instance id.                     */
+  jlong clsLoaderTag;      /*!< Class loader class tag.                       */
+  bool isRemoved;          /*!< Class is already unloaded.                    */
+  jlong instanceSize;      /*!< Class size if this class is instanceKlass.    */
+  int numRefsFromChildren; /*!< Number of references from TChildClassCounter. */
 } TObjectData;
+#pragma pack(pop)
 
 /*!
  * \brief This structure stored child class size information.
@@ -260,6 +263,38 @@ class TSnapShotContainer {
   }
 
   /*!
+   * \brief Find child class and its prevous data.
+   * \param clsCounter [in] Parent class counter object.
+   * \param klassOop   [in] Child class key object.
+   * \param counter [out] Child data
+   * \param prevCounter [out] previous counter of `counter`
+   * \param morePrevCounter [out] previous counter of `prevCounter`
+   */
+  inline void findChildCounters(TClassCounter *clsCounter, void *klassOop,
+                                TChildClassCounter **counter,
+                                TChildClassCounter** prevCounter,
+                                TChildClassCounter **morePrevCounter) {
+    *prevCounter = NULL;
+    *morePrevCounter = NULL;
+    *counter = clsCounter->child;
+
+    if (*counter == NULL) {
+      return;
+    }
+
+    /* Search children class list. */
+    while ((*counter)->objData->klassOop != klassOop) {
+      *morePrevCounter = *prevCounter;
+      *prevCounter = *counter;
+      *counter = (*counter)->next;
+
+      if (*counter == NULL) {
+        return;
+      }
+    }
+  };
+
+  /*!
    * \brief Find child class data.
    * \param clsCounter [in] Parent class counter object.
    * \param klassOop   [in] Child class key object.
@@ -272,19 +307,11 @@ class TSnapShotContainer {
     TChildClassCounter *morePrevCounter = NULL;
     TChildClassCounter *counter = clsCounter->child;
 
+    this->findChildCounters(clsCounter, klassOop,
+                            &counter, &prevCounter, &morePrevCounter);
+
     if (counter == NULL) {
       return NULL;
-    }
-
-    /* Search children class list. */
-    while (counter->objData->klassOop != klassOop) {
-      morePrevCounter = prevCounter;
-      prevCounter = counter;
-      counter = counter->next;
-
-      if (counter == NULL) {
-        return NULL;
-      }
     }
 
     /* LFU (Least Frequently Used). */

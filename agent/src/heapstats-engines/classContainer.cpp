@@ -980,7 +980,8 @@ void TClassContainer::commitClassChange(void) {
         TObjectData *objData = (*cur).second;
 
         /* If class is prepared remove from class container. */
-        if (unlikely(objData->oldTotalSize == 0 && objData->isRemoved)) {
+        if (unlikely(objData->isRemoved &&
+                     (atomic_get(&objData->numRefsFromChildren) == 0))) {
           /*
            * If we do removing map item here,
            * iterator's relationship will be broken.
