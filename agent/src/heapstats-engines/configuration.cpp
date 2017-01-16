@@ -1,7 +1,7 @@
 /*!
  * \file configuration.cpp
  * \brief This file treats HeapStats configuration.
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -94,7 +94,7 @@ void TConfiguration::initializeConfig(const TConfiguration *src) {
                                          &setOnewayBooleanValue);
     triggerOnDump = new TBooleanConfig(this, "trigger_on_dump", true,
                                        &setOnewayBooleanValue);
-    checkDeadlock = new TBooleanConfig(this, "check_deadlock", true,
+    checkDeadlock = new TBooleanConfig(this, "check_deadlock", false,
                                        &setOnewayBooleanValue);
     triggerOnLogError = new TBooleanConfig(this, "trigger_on_logerror", true,
                                            &setOnewayBooleanValue);
@@ -462,7 +462,7 @@ void TConfiguration::printSetting(void) {
                        triggerOnDump->get() ? "true" : "false");
 
   /* Output status of deadlock check. */
-  logger->printInfoMsg("Deadlock check = %s",
+  logger->printInfoMsg("Deadlock check (experimental feature) = %s",
                        checkDeadlock->get() ? "true" : "false");
 
   /* Output status of logging triggers. */

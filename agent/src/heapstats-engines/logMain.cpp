@@ -1,7 +1,7 @@
 /*!
  * \file logmain.cpp
  * \brief This file is used common logging process.
- * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -317,7 +317,7 @@ void setThreadEnableForLog(jvmtiEnv *jvmti, JNIEnv *env, bool enable) {
     flagLogSignal = 0;
     flagAllLogSignal = 0;
 
-    if (conf->TriggerOnLogLock()->get() && !abortionByDeadlock) {
+    if (conf->CheckDeadlock()->get() && !abortionByDeadlock) {
       /* Switch deadlock finder state. */
       if (enable) {
         TDeadlockFinder::getInstance()->start(jvmti, env);
