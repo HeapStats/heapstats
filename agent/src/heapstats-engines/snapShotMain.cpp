@@ -473,7 +473,7 @@ inline void calculateObjectUsage(TSnapShotContainer *snapshot, void *oop) {
   localSnapshot->FastInc(clsCounter->counter, size);
 
   /* If we should not collect reftree or oop has no field. */
-  if (!conf->ReduceSnapShot()->get() || !hasOopField(oopType)) {
+  if (!conf->CollectRefTree()->get() || !hasOopField(oopType)) {
     return;
   }
 
