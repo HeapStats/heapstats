@@ -122,6 +122,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Mar 10 2016 Yasumasa Suenaga <yasuenag@gmail.com>
+- Remove dependency on net-snmp-libs.
 * Tue Feb 09 2016 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 - Set version to 2.0.trunk
 * Thu Oct 22 2015 Yasumasa Suenaga <yasuenag@gmail.com>
