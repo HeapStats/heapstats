@@ -1,6 +1,7 @@
 2017-01-17  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3284: HeapStats Agent might crash when object children are scanned
+	* Bug 3288: collect_reftree option does not affect oop scan 
 
 2017-01-16  Yasumasa Suenaga <yasuenag@gmail.com>
 
