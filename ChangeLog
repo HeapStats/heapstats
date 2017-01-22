@@ -2,6 +2,7 @@
 
 	* Bug 3294: Reference counter should be handled in TClassContainer::allClear()
 	* Bug 3295: Incorrect condition for removing TObjectData instance
+	* Bug 3251: HeapStats Analyzer cannot extract zip archive when CSV has just one entry
 
 2017-01-17  Yasumasa Suenaga <yasuenag@gmail.com>
 
