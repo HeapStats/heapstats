@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2016 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2015-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -647,6 +647,19 @@ public class LogResourcesController implements Initializable {
         }
 
         private void setChartData() {
+            
+            if(targetLogData.isEmpty() || targetDiffData.isEmpty()){
+                Stream.of(javaMemoryChart, threadChart)
+                      .flatMap(c -> c.getData().stream())
+                      .forEach(s -> s.getData().clear());
+                Stream.of(javaCPUChart, systemCPUChart, safepointChart, safepointTimeChart, monitorChart)
+                      .flatMap(c -> c.getData().stream())
+                      .forEach(s -> s.getData().clear());
+                procSummary.getItems().clear();
+                suspectList = null;
+                return;
+            }
+            
             /* Set chart range */
             long startLogEpoch = targetLogData.get(0).getDateTime().atZone(ZoneId.systemDefault()).toEpochSecond();
             long endLogEpoch = targetLogData.get(targetLogData.size() - 1).getDateTime().atZone(ZoneId.systemDefault()).toEpochSecond();
