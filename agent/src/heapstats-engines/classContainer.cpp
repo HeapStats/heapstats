@@ -373,12 +373,9 @@ void TClassContainer::allClear(void) {
          ++cur) {
       TObjectData *pos = (*cur).second;
 
-      if (pos != NULL) {
-        atomic_inc(&pos->numRefsFromChildren, -1);
-        if (atomic_get(&pos->numRefsFromChildren) == 0) {
-          free(pos->className);
-          free(pos);
-        }
+      if ((pos != NULL) && (atomic_get(&pos->numRefsFromChildren) == 0)) {
+        free(pos->className);
+        free(pos);
       }
     }
 

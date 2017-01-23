@@ -1,6 +1,7 @@
 2017-01-23  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3294: Reference counter should be handled in TClassContainer::allClear()
+	* Bug 3295: Incorrect condition for removing TObjectData instance
 
 2017-01-17  Yasumasa Suenaga <yasuenag@gmail.com>
 
