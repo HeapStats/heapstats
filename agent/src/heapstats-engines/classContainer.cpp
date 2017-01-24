@@ -283,7 +283,7 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop,
       try {
         /* Append class data. */
         (*classMap)[klassOop] = objData;
-        atomic_inc(&objData->numRefsFromChildren, 1);
+        atomic_inc(&objData->numRefs, 1);
       } catch (...) {
         /*
          * Maybe failed to allocate memory at "std::map::operator[]".
@@ -335,7 +335,7 @@ void TClassContainer::popClass(TObjectData *target) {
 void TClassContainer::removeClass(TObjectData *target) {
   /* Remove item from map. Please callee has container's lock. */
   classMap->erase(target->klassOop);
-  atomic_inc(&target->numRefsFromChildren, -1);
+  atomic_inc(&target->numRefs, -1);
 
   /* Get spin lock of containers queue. */
   spinLockWait(&queueLock);
@@ -349,7 +349,7 @@ void TClassContainer::removeClass(TObjectData *target) {
         spinLockWait(&(*it)->lockval);
         {
           (*it)->classMap->erase(target->klassOop);
-          atomic_inc(&target->numRefsFromChildren, -1);
+          atomic_inc(&target->numRefs, -1);
         }
         /* Release local container's spin lock. */
         spinLockRelease(&(*it)->lockval);
@@ -388,7 +388,7 @@ void TClassContainer::allClear(void) {
          ++cur) {
       TObjectData *pos = (*cur).second;
 
-      if ((pos != NULL) && (atomic_get(&pos->numRefsFromChildren) == 0)) {
+      if ((pos != NULL) && (atomic_get(&pos->numRefs) == 0)) {
         free(pos->className);
         free(pos);
       }
@@ -996,7 +996,7 @@ void TClassContainer::commitClassChange(void) {
 
         /* If class is prepared remove from class container. */
         if (unlikely(objData->isRemoved &&
-                     (atomic_get(&objData->numRefsFromChildren) == 0))) {
+                     (atomic_get(&objData->numRefs) == 0))) {
           /*
            * If we do removing map item here,
            * iterator's relationship will be broken.

@@ -79,7 +79,7 @@ typedef struct {
   jlong clsLoaderTag;      /*!< Class loader class tag.                       */
   bool isRemoved;          /*!< Class is already unloaded.                    */
   jlong instanceSize;      /*!< Class size if this class is instanceKlass.    */
-  int numRefsFromChildren; /*!< Number of references from TChildClassCounter. */
+  int numRefs;             /*!< Number of references.                         */
 } TObjectData;
 #pragma pack(pop)
 
