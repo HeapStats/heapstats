@@ -205,7 +205,7 @@ TSnapShotContainer::~TSnapShotContainer(void) {
       counter = counter->next;
 
       /* Deallocate TChildClassCounter. */
-      atomic_inc(&aCounter->objData->numRefsFromChildren, -1);
+      atomic_inc(&aCounter->objData->numRefs, -1);
       free(aCounter->counter);
       free(aCounter);
     }
@@ -300,7 +300,7 @@ TChildClassCounter *TSnapShotContainer::pushNewChildClass(
     return NULL;
   }
 
-  atomic_inc(&objData->numRefsFromChildren, 1);
+  atomic_inc(&objData->numRefs, 1);
   this->clearObjectCounter(newCounter->counter);
   newCounter->objData = objData;
 
@@ -481,7 +481,7 @@ void TSnapShotContainer::mergeChildren(void) {
            * TClassContainer::commitClassChange().
            */
           if (objData->isRemoved) {
-            atomic_inc(&objData->numRefsFromChildren, -1);
+            atomic_inc(&objData->numRefs, -1);
             TChildClassCounter *nextCounter = counter->next;
 
             if (prevCounter == NULL) {
@@ -501,7 +501,7 @@ void TSnapShotContainer::mergeChildren(void) {
                                     &childClsData, &parentPrevData,
                                     &parentMorePrevData);
             if (likely(childClsData != NULL)) {
-              atomic_inc(&objData->numRefsFromChildren, -1);
+              atomic_inc(&objData->numRefs, -1);
 
               if (parentPrevData == NULL) {
                 clsCounter->child = childClsData->next;

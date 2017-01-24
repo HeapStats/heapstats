@@ -1,3 +1,7 @@
+2017-01-24 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3296: Reference counter should manage TObjectData instance
+
 2017-01-23  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3294: Reference counter should be handled in TClassContainer::allClear()
