@@ -1,0 +1,178 @@
+# According to Net-SNMP reference [1], snmp_sess_init() will allocate memory,
+# but Net-SNMP does not provide the function to release its resource.
+# So we should allow leaks about snmp_sess_init().
+#
+# [1] http://www.net-snmp.org/docs/README.thread.html
+
+
+{
+   leak-1
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:strdup
+   obj:*
+   obj:*
+   obj:*
+   fun:_ZN11TTrapSender10initializeEiPcS0_i
+   fun:_Z20CommonInitializationP7JavaVM_PP9_jvmtiEnvPc
+   fun:Agent_OnLoad
+   fun:create_vm_init_agents
+   fun:_ZN7Threads9create_vmEP14JavaVMInitArgsPb
+   fun:JNI_CreateJavaVM
+   fun:InitializeJVM
+   fun:JavaMain
+   fun:start_thread
+}
+
+{
+   leak-2
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   fun:_ZN11TTrapSender10initializeEiPcS0_i
+   fun:_Z20CommonInitializationP7JavaVM_PP9_jvmtiEnvPc
+   fun:Agent_OnLoad
+   fun:create_vm_init_agents
+   fun:_ZN7Threads9create_vmEP14JavaVMInitArgsPb
+   fun:JNI_CreateJavaVM
+   fun:InitializeJVM
+   fun:JavaMain
+   fun:start_thread
+}
+
+{
+   leak-3
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   fun:_ZN11TTrapSender10initializeEiPcS0_i
+}
+
+{
+   leak-4
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   obj:*
+   obj:*
+   obj:*
+   fun:_ZN11TTrapSender10initializeEiPcS0_i
+   fun:_Z20CommonInitializationP7JavaVM_PP9_jvmtiEnvPc
+   fun:Agent_OnLoad
+   fun:create_vm_init_agents
+   fun:_ZN7Threads9create_vmEP14JavaVMInitArgsPb
+   fun:JNI_CreateJavaVM
+   fun:InitializeJVM
+   fun:JavaMain
+   fun:start_thread
+}
+
+{
+   leak-5
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   fun:_ZN11TTrapSender10initializeEiPcS0_i
+   fun:_Z20CommonInitializationP7JavaVM_PP9_jvmtiEnvPc
+   fun:Agent_OnLoad
+   fun:create_vm_init_agents
+   fun:_ZN7Threads9create_vmEP14JavaVMInitArgsPb
+   fun:JNI_CreateJavaVM
+   fun:InitializeJVM
+   fun:JavaMain
+}
+
+{
+   leak-6
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   obj:*
+   fun:_ZN11TTrapSenderC1Ev
+   fun:_ZN15TClassContainerC1EPS_b
+   fun:_Z22onAgentInitForSnapShotP9_jvmtiEnv
+   fun:_Z20CommonInitializationP7JavaVM_PP9_jvmtiEnvPc
+   fun:Agent_OnLoad
+   fun:create_vm_init_agents
+   fun:_ZN7Threads9create_vmEP14JavaVMInitArgsPb
+   fun:JNI_CreateJavaVM
+   fun:InitializeJVM
+   fun:JavaMain
+   fun:start_thread
+}
+
+{
+   leak-7
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   fun:_ZN11TTrapSender10initializeEiPcS0_i
+   fun:_Z20CommonInitializationP7JavaVM_PP9_jvmtiEnvPc
+}
+
+{
+   leak-7
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:calloc
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   fun:_ZN11TTrapSender10initializeEiPcS0_i
+   fun:_Z20CommonInitializationP7JavaVM_PP9_jvmtiEnvPc
+   fun:Agent_OnLoad
+   fun:create_vm_init_agents
+   fun:_ZN7Threads9create_vmEP14JavaVMInitArgsPb
+   fun:JNI_CreateJavaVM
+}
+
+{
+   leak-8
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   fun:_ZN11TTrapSender10initializeEiPcS0_i
+}
+
