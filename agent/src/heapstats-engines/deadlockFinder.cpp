@@ -1,7 +1,7 @@
 /*!
  * \file deadlockFinder.cpp
  * \brief This file is used by find deadlock.
- * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -249,8 +249,7 @@ void TDeadlockFinder::sendSNMPTrap(TMSecTime nowTime,
 
   try {
     /* Send resource trap. */
-    TTrapSender sender(SNMP_VERSION_2c, conf->SnmpTarget()->get(),
-                       conf->SnmpComName()->get(), 162);
+    TTrapSender sender;
 
     /* Setting sysUpTime */
     sender.setSysUpTime();

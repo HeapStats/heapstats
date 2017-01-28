@@ -1,7 +1,7 @@
 /*!
  * \file trapSender.hpp
  * \brief This file is used to send SNMP trap.
- * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -200,22 +200,18 @@ class TTrapSender {
 
   /*!
    * \brief Mutex for TTrapSender.<br>
-   * <br>
-   * This mutex used in below process.<br>
-   *   - TTrapSender::TTrapSender @ trapSender.hpp<br>
-   *     To initialize SNMP trap section.<br>
-   *   - TTrapSender::~TTrapSender @ trapSender.hpp<br>
-   *     To finalize SNMP trap section.<br>
-   *   - TTrapSender::sendTrap @ trapSender.hpp<br>
-   *     To change SNMP trap section and send SNMP trap.<br>
    */
   static pthread_mutex_t senderMutex;
 
   /*!
    * \brief TTrapSender initialization.
+   * \param snmp      [in] SNMP version.
+   * \param pPeer     [in] Target of SNMP trap.
+   * \param pCommName [in] Community name use for SNMP.
+   * \param port      [in] Port used by SNMP trap.
    * \return true if succeeded.
    */
-  static bool initialize(void);
+  static bool initialize(int snmp, char *pPeer, char *pCommName, int port);
 
   /*!
    * \brief TTrapSender global finalization.
@@ -224,12 +220,8 @@ class TTrapSender {
 
   /*!
    * \brief TrapSender constructor.
-   * \param snmp      [in] SNMP version.
-   * \param pPeer     [in] Target of SNMP trap.
-   * \param pCommName [in] Community name use for SNMP.
-   * \param port      [in] Port used by SNMP trap.
    */
-  TTrapSender(int snmp, char *pPeer, char *pCommName, int port);
+  TTrapSender(void);
 
   /*!
    * \brief TrapSender destructor.
@@ -299,11 +291,11 @@ class TTrapSender {
    * \brief Functions in NET-SNMP client library.
    */
   static TNetSNMPFunctions netSnmpFuncs;
-
   /*!
    * \brief SNMP session information.
    */
-  netsnmp_session session;
+  static netsnmp_session session;
+
   /*!
    * \brief SNMP PDU information.
    */
