@@ -1,5 +1,14 @@
 #!/bin/bash
 
+### Usage
+###   - Without Valgrind
+###       ./testcase.sh /path/to/heapstats
+###
+###   - With Valgrind
+###       VALGRIND_OPTION="--leak-check=yes --suppressions=/path/to/suppress" \
+###             JAVA_OPTS="<Java options (-X, -XX, ...)" \
+###                    ./testcase.sh /path/to/heapstats
+
 TARGET_HEAPSTATS=$1
 
 if [ "x$TARGET_HEAPSTATS" = "x" ]; then
@@ -11,36 +20,43 @@ if [ "x$JAVA_HOME" = "x" ]; then
   JAVA_HOME=/usr/lib/jvm/java-openjdk
 fi
 
+EXEC_COMMAND="$JAVA_HOME/bin/java $JAVA_OPTS"
+
+if [ -n "$VALGRIND_OPTION" ]; then
+  EXEC_COMMAND="valgrind $VALGRIND_OPTION $EXEC_COMMAND"
+fi
+
+EXEC_COMMAND="$EXEC_COMMAND -agentpath:$TARGET_HEAPSTATS"
 
 # Check1: Parallel
 echo "Check1-1: Parallel"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseParallelGC -XX:-UseParallelOldGC Simple
+$EXEC_COMMAND -XX:+UseParallelGC -XX:-UseParallelOldGC Simple
 echo "Check1-2: Parallel (-UseCOOP)"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseParallelGC -XX:-UseParallelOldGC -XX:-UseCompressedOops Simple
+$EXEC_COMMAND -XX:+UseParallelGC -XX:-UseParallelOldGC -XX:-UseCompressedOops Simple
 
 # Check2: ParallelOld
 echo "Check2-1: ParallelOld"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseParallelOldGC Simple
+$EXEC_COMMAND -XX:+UseParallelOldGC Simple
 echo "Check2-2: ParallelOld (-UseCOOP)"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseParallelOldGC -XX:-UseCompressedOops Simple
+$EXEC_COMMAND -XX:+UseParallelOldGC -XX:-UseCompressedOops Simple
 
 # Check3: CMS
 echo "Check3-1: CMS"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseConcMarkSweepGC Simple
+$EXEC_COMMAND -XX:+UseConcMarkSweepGC Simple
 echo "Check3-2: CMS (-UseCOOP)"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseConcMarkSweepGC -XX:-UseCompressedOops Simple
+$EXEC_COMMAND -XX:+UseConcMarkSweepGC -XX:-UseCompressedOops Simple
 echo "Check3-3: CMS (+ExplicitGC)"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseConcMarkSweepGC -XX:+ExplicitGCInvokesConcurrent Simple
+$EXEC_COMMAND -XX:+UseConcMarkSweepGC -XX:+ExplicitGCInvokesConcurrent Simple
 echo "Check3-4: CMS (+ExplicitGC -UseCOOP)"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseConcMarkSweepGC -XX:+ExplicitGCInvokesConcurrent -XX:-UseCompressedOops Simple
+$EXEC_COMMAND -XX:+UseConcMarkSweepGC -XX:+ExplicitGCInvokesConcurrent -XX:-UseCompressedOops Simple
 
 # Check4: G1
 echo "Check4-1: G1"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseG1GC Simple
+$EXEC_COMMAND -XX:+UseG1GC Simple
 echo "Check4-2: G1 (-UseCOOP)"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseG1GC -XX:-UseCompressedOops Simple
+$EXEC_COMMAND -XX:+UseG1GC -XX:-UseCompressedOops Simple
 echo "Check4-3: G1 (+ExplicitGC)"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent Simple
+$EXEC_COMMAND -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent Simple
 echo "Check4-4: G1 (+ExplicitGC -UseCOOP)"
-$JAVA_HOME/bin/java -agentpath:$TARGET_HEAPSTATS $JAVA_OPTS -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:-UseCompressedOops Simple
+$EXEC_COMMAND -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:-UseCompressedOops Simple
 
