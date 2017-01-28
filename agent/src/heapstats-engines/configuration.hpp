@@ -1,7 +1,7 @@
 /*!
  * \file configuration.hpp
  * \brief This file treats HeapStats configuration.
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -84,7 +84,7 @@ class TConfigElement : public TConfigElementSuper {
   /*!
    * \brief Configuration name in heapstats.conf .
    */
-  const char *configName;
+  char *configName;
 
   /*!
    * \brief Setter of this configuration.
@@ -128,6 +128,8 @@ class TConfigElement : public TConfigElementSuper {
   }
 
   virtual ~TConfigElement() {
+    free(configName);
+
     if (finalizer != NULL) {
       finalizer(value);
     }

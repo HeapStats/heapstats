@@ -1,7 +1,7 @@
 /*!
  * \file trapSender.cpp
  * \brief This file is used to send SNMP trap.
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,12 +40,10 @@ unsigned long int TTrapSender::initializeTime;
  * \brief Mutex for TTrapSender.<br>
  * <br>
  * This mutex used in below process.<br>
- *   - TTrapSender::TTrapSender @ trapSender.hpp<br>
- *     To initialize SNMP trap section.<br>
- *   - TTrapSender::~TTrapSender @ trapSender.hpp<br>
- *     To finalize SNMP trap section.<br>
- *   - TTrapSender::sendTrap @ trapSender.hpp<br>
- *     To change SNMP trap section and send SNMP trap.<br>
+ *   - TTrapSender::initialize()
+ *   - TTrapSender::finalize()
+ *   - TTrapSender::~TTrapSender
+ *   - TTrapSender::sendTrap
  */
 pthread_mutex_t TTrapSender::senderMutex =
                                 PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
@@ -65,12 +63,27 @@ void * TTrapSender::libnetsnmp_handle = NULL;
  */
 TNetSNMPFunctions TTrapSender::netSnmpFuncs;
 
+ /*!
+  * \brief SNMP session information.
+  */
+netsnmp_session TTrapSender::session;
+
 
 /*!
  * \brief TTrapSender initialization.
+ * \param snmp      [in] SNMP version.
+ * \param pPeer     [in] Target of SNMP trap.
+ * \param pCommName [in] Community name use for SNMP.
+ * \param port      [in] Port used by SNMP trap.
  * \return true if succeeded.
  */
-bool TTrapSender::initialize(void) {
+bool TTrapSender::initialize(int snmp, char *pPeer, char *pCommName, int port) {
+  /* If snmp target is illegal. */
+  if (pPeer == NULL) {
+    logger->printWarnMsg("Illegal SNMP target.");
+    return false;
+  }
+
   /* Get now date and set time as agent init-time. */
   struct timeval tv;
   gettimeofday(&tv, NULL);
@@ -82,6 +95,17 @@ bool TTrapSender::initialize(void) {
     return false;
   }
 
+  /* Initialize session. */
+  ENTER_PTHREAD_SECTION(&senderMutex) {
+    memset(&session, 0, sizeof(netsnmp_session));
+    netSnmpFuncs.snmp_sess_init(&session);
+    session.version = snmp;
+    session.peername = strdup(pPeer);
+    session.remote_port = port;
+    session.community = (u_char *)strdup(pCommName);
+    session.community_len = (pCommName != NULL) ? strlen(pCommName) : 0;
+  } EXIT_PTHREAD_SECTION(&senderMutex)
+
   return true;
 }
 
@@ -89,6 +113,13 @@ bool TTrapSender::initialize(void) {
  * \brief TTrapSender global finalization.
  */
 void TTrapSender::finalize(void) {
+  /* Close and free SNMP session. */
+  ENTER_PTHREAD_SECTION(&senderMutex) {
+    netSnmpFuncs.snmp_close(&session);
+    free(session.peername);
+    free(session.community);
+  } EXIT_PTHREAD_SECTION(&senderMutex)
+
   /* Unload library */
   if (libnetsnmp_handle != NULL) {
     dlclose(libnetsnmp_handle);
@@ -97,35 +128,15 @@ void TTrapSender::finalize(void) {
 
 /*!
  * \brief TrapSender constructor.
- * \param snmp      [in] SNMP version.
- * \param pPeer     [in] Target of SNMP trap.
- * \param pCommName [in] Community name use for SNMP.
- * \param port      [in] Port used by SNMP trap.
  */
-TTrapSender::TTrapSender(int snmp, char *pPeer, char *pCommName, int port) {
+TTrapSender::TTrapSender() {
   /* Lock to use in multi-thread. */
   ENTER_PTHREAD_SECTION(&senderMutex) {
     /* Disable NETSNMP logging. */
     netSnmpFuncs.netsnmp_register_loghandler(
                                NETSNMP_LOGHANDLER_NONE, LOG_EMERG);
-
-    /* If snmp target is illegal. */
-    if (pPeer == NULL) {
-      logger->printWarnMsg("Illegal SNMP target.");
-      pPdu = NULL;
-    } else {
-      /* Initialize session. */
-      memset(&session, 0, sizeof(netsnmp_session));
-      netSnmpFuncs.snmp_sess_init(&session);
-      session.version = snmp;
-      session.peername = strdup(pPeer);
-      session.remote_port = port;
-      session.community = (u_char *)strdup(pCommName);
-      session.community_len = (pCommName != NULL) ? strlen(pCommName) : 0;
-
-      /* Make a PDU */
-      pPdu = netSnmpFuncs.snmp_pdu_create(SNMP_MSG_TRAP2);
-    }
+    /* Make a PDU */
+    pPdu = netSnmpFuncs.snmp_pdu_create(SNMP_MSG_TRAP2);
   }
   /* Unlock to use in multi-thread. */
   EXIT_PTHREAD_SECTION(&senderMutex)
@@ -144,8 +155,7 @@ TTrapSender::~TTrapSender(void) {
     if (pPdu != NULL) {
       netSnmpFuncs.snmp_free_pdu(pPdu);
     }
-    /* Close and free SNMP session. */
-    netSnmpFuncs.snmp_close(&session);
+
   }
   /* Unlock to use in multi-thread. */
   EXIT_PTHREAD_SECTION(&senderMutex)
@@ -278,7 +288,10 @@ int TTrapSender::sendTrap(void) {
     return SNMP_PROC_FAILURE;
   }
 
-  /* Send trap. */
+  /*
+   * Send trap.
+   * snmp_send() will free pPDU.
+   */
   int success = netSnmpFuncs.snmp_send(sess, pPdu);
 
   /* Clean up after send trap. */
@@ -290,6 +303,8 @@ int TTrapSender::sendTrap(void) {
     netSnmpFuncs.snmp_free_pdu(pPdu);
     logger->printWarnMsg("Send SNMP trap failed!");
   }
+
+  pPdu = NULL;
 
   /* Clean up. */
   SOCK_CLEANUP;
@@ -306,11 +321,6 @@ int TTrapSender::sendTrap(void) {
  * \brief Clear PDU and allocated strings.
  */
 void TTrapSender::clearValues(void) {
-  /* If snmp target is illegal. */
-  if (pPdu == NULL) {
-    return;
-  }
-
   /* Free allocated strings. */
   std::set<char *>::iterator it = strSet.begin();
   while (it != strSet.end()) {
@@ -319,8 +329,9 @@ void TTrapSender::clearValues(void) {
   }
   strSet.clear();
 
-  /* Make a PDU. */
-  pPdu = netSnmpFuncs.snmp_pdu_create(SNMP_MSG_TRAP2);
+  if (pPdu == NULL) {
+    pPdu = netSnmpFuncs.snmp_pdu_create(SNMP_MSG_TRAP2);
+  }
 }
 
 /*!

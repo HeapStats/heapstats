@@ -1,7 +1,7 @@
 /*!
  * \file globals.hpp
  * \brief Definitions of global variables.
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,9 +63,6 @@ extern TSnapShotProcessor *snapShotProcessor;
 
 #include "gcWatcher.hpp"
 extern TGCWatcher *gcWatcher;
-
-#include "snapShotContainer.hpp"
-extern TSnapShotContainer *snapshotByGC;
 
 /*!
  * \brief Mutex of working directory.

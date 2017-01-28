@@ -206,8 +206,7 @@ void JNICALL OnResourceExhausted(jvmtiEnv *jvmti, JNIEnv *env, jint flags,
 
     try {
       /* Send resource trap. */
-      TTrapSender sender(SNMP_VERSION_2c, conf->SnmpTarget()->get(),
-                         conf->SnmpComName()->get(), 162);
+      TTrapSender sender;
 
       /* Setting sysUpTime */
       sender.setSysUpTime();
