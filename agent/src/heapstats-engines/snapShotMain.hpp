@@ -1,7 +1,7 @@
 /*!
  * \file snapShotMain.hpp
  * \brief This file is used to take snapshot.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,6 +56,11 @@ jint setEventEnableForSnapShot(jvmtiEnv *jvmti, bool enable);
  * \param enable [in] Event notification is enable.
  */
 void setThreadEnableForSnapShot(jvmtiEnv *jvmti, JNIEnv *env, bool enable);
+
+/*!
+ * \brief Clear current SnapShot.
+ */
+void clearCurrentSnapShot();
 
 /*!
  * \brief JVM initialization event for snapshot function.

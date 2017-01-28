@@ -1,7 +1,7 @@
 /*!
  * \file util.cpp
  * \brief This file is utilities.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -169,7 +169,14 @@ jint GetClassUnloadingExtEventIndex(jvmtiEnv *jvmti) {
   }
 
   /* Clean up. */
-
+  for (int Cnt = 0; Cnt < count; Cnt++) {
+    jvmti->Deallocate((unsigned char *)events[Cnt].id);
+    jvmti->Deallocate((unsigned char *)events[Cnt].short_description);
+    for (int Cnt2 = 0; Cnt2 < events[Cnt].param_count; Cnt2++) {
+      jvmti->Deallocate((unsigned char *)events[Cnt].params[Cnt2].name);
+    }
+    jvmti->Deallocate((unsigned char *)events[Cnt].params);
+  }
   jvmti->Deallocate((unsigned char *)events);
   return ret;
 }

@@ -225,6 +225,8 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop) {
     free(cur->className);
     free(cur);
   }
+
+  atomic_inc(&result->numRefs, 1);
   return result;
 }
 
@@ -283,7 +285,6 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop,
       try {
         /* Append class data. */
         (*classMap)[klassOop] = objData;
-        atomic_inc(&objData->numRefs, 1);
       } catch (...) {
         /*
          * Maybe failed to allocate memory at "std::map::operator[]".
@@ -388,9 +389,14 @@ void TClassContainer::allClear(void) {
          ++cur) {
       TObjectData *pos = (*cur).second;
 
-      if ((pos != NULL) && (atomic_get(&pos->numRefs) == 0)) {
-        free(pos->className);
-        free(pos);
+      if (likely(pos != NULL)) {
+        /* Decrement reference from this class map. */
+        atomic_inc(&pos->numRefs, -1);
+
+        if (atomic_get(&pos->numRefs) == 0) {
+          free(pos->className);
+          free(pos);
+        }
       }
     }
 

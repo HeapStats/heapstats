@@ -1,7 +1,7 @@
 /*!
  * \file overrider.cpp
  * \brief Controller of overriding functions in HotSpot VM.
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,6 +26,7 @@
 #include "vmVariables.hpp"
 #include "vmFunctions.hpp"
 #include "overrider.hpp"
+#include "snapShotMain.hpp"
 
 #if PROCESSOR_ARCH == X86
 #include "arch/x86/x86BitMapMarker.hpp"
@@ -1368,9 +1369,6 @@ bool setGCHookState(bool enable) {
     list = cms_sweep_hook;
     checkObjectMap->clear();
   } else if (vmVal->getUseG1()) {
-    /* If users select G1, we prepare TSnapShotContainer NOW! */
-    snapshotByGC = TSnapShotContainer::getInstance();
-
     /* Switch G1GC event hooking. */
     switchOverrideFunction(g1Event_hook, enable);
 
@@ -1727,7 +1725,7 @@ void callbackForG1Full(void *thisptr) {
   switchOverrideFunction(g1_hook, false);
 
   /* Discard existed snapshot data */
-  snapshotByGC->clear(false);
+  clearCurrentSnapShot();
   checkObjectMap->clear();
 }
 

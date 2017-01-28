@@ -758,6 +758,14 @@ void setThreadEnableForSnapShot(jvmtiEnv *jvmti, JNIEnv *env, bool enable) {
         gcWatcher->stop();
       }
 
+      if (TVMVariables::getInstance()->getUseG1()) {
+        if (snapshotByGC == NULL) {
+          snapshotByGC = TSnapShotContainer::getInstance();
+        } else {
+          snapshotByGC->clear(false);
+        }
+      }
+
       /* Switch GC hooking state. */
       setGCHookState(enable);
     }
@@ -781,6 +789,13 @@ void setThreadEnableForSnapShot(jvmtiEnv *jvmti, JNIEnv *env, bool enable) {
   } catch (const char *errMsg) {
     logger->printWarnMsg(errMsg);
   }
+}
+
+/*!
+ * \brief Clear current SnapShot.
+ */
+void clearCurrentSnapShot() {
+  snapshotByGC->clear(false);
 }
 
 /*!
@@ -844,6 +859,7 @@ void onVMDeathForSnapShot(jvmtiEnv *jvmti, JNIEnv *env) {
   TSnapShotContainer *snapshot = popSnapShotQueue();
   /* Output all waiting snapshot. */
   while (snapshot != NULL) {
+    snapshot->setTotalSize(jvmInfo->getTotalMemory());
     notifySnapShot(snapshot);
     snapshot = popSnapShotQueue();
   }
@@ -908,15 +924,26 @@ jint onAgentInitForSnapShot(jvmtiEnv *jvmti) {
  * \param env [in] JNI environment object.
  */
 void onAgentFinalForSnapShot(JNIEnv *env) {
-  /* Destroy object that is for snapshot. */
-  delete clsContainer;
-  clsContainer = NULL;
-
+  /* Destroy SnapShot Processor instance. */
   delete snapShotProcessor;
   snapShotProcessor = NULL;
 
+  /*
+   * Delete snapshot instances
+   */
+  if (snapshotByCMS != NULL) {
+    TSnapShotContainer::releaseInstance(snapshotByCMS);
+  }
+  if (snapshotByGC != NULL) {
+    TSnapShotContainer::releaseInstance(snapshotByGC);
+  }
+
   /* Finalize and deallocate old snapshot containers. */
   TSnapShotContainer::globalFinalize();
+
+  /* Destroy object that is for snapshot. */
+  delete clsContainer;
+  clsContainer = NULL;
 
   /* Destroy object that is each snapshot trigger. */
   delete gcWatcher;
