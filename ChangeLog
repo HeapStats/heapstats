@@ -1,3 +1,7 @@
+2017-01-30  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3309: JDK 9 crashes at Agent_OnUnload()
+
 2017-01-29  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3308: Valgrind reports some memory issues
