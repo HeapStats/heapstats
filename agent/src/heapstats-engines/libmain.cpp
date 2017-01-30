@@ -662,7 +662,9 @@ JNIEXPORT void JNICALL Agent_OnUnload(JavaVM *vm) {
   loadConfigPath = NULL;
 
   /* Cleanup TTrapSender. */
-  TTrapSender::finalize();
+  if (conf->SnmpSend()->get()) {
+    TTrapSender::finalize();
+  }
 }
 
 /*!
