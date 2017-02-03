@@ -654,9 +654,6 @@ JNIEXPORT void JNICALL Agent_OnUnload(JavaVM *vm) {
   /* Delete logger */
   delete logger;
 
-  /* Delete configuration */
-  delete conf;
-
   /* Free allocated configuration file path string. */
   free(loadConfigPath);
   loadConfigPath = NULL;
@@ -665,6 +662,9 @@ JNIEXPORT void JNICALL Agent_OnUnload(JavaVM *vm) {
   if (conf->SnmpSend()->get()) {
     TTrapSender::finalize();
   }
+
+  /* Delete configuration */
+  delete conf;
 }
 
 /*!
