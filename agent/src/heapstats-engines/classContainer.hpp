@@ -1,7 +1,7 @@
 /*!
  * \file classContainer.hpp
  * \brief This file is used to add up using size every class.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -139,16 +139,6 @@ class TClassContainer {
     spinLockRelease(&lockval);
 
     return result;
-  }
-
-  /*!
-   * \brief Search class from container without container lock.
-   * \param klassOop [in] Target class oop.
-   * \return Class data of target class.
-   */
-  inline TObjectData *findClassWithoutLock(void *klassOop) {
-    TClassMap::iterator it = classMap->find(klassOop);
-    return (it != classMap->end()) ? it->second : NULL;
   }
 
   /*!
