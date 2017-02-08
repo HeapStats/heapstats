@@ -335,7 +335,7 @@ inline TObjectData *getObjectDataFromKlassOop(TClassContainer *aClsContainer,
   TObjectData *clsData = NULL;
 
   /* Search child class at local class container. */
-  clsData = aClsContainer->findClassWithoutLock(klassOop);
+  clsData = aClsContainer->findClass(klassOop);
   if (unlikely(clsData == NULL)) {
     /* Search child class at root class container. */
     clsData = clsContainer->findClass(klassOop);
