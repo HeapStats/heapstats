@@ -1,6 +1,7 @@
 2017-02-09  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3322: TClassContainer instance might be broken in multithreaded access
+	* Bug 3323: Memory for thread name leaks in thread recorder
 
 2017-02-04  Yasumasa Suenaga <yasuenag@gmail.com>
 

@@ -1,7 +1,7 @@
 /*!
  * \iile threadRecorder.cpp
  * \brief Recording thread status.
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -346,6 +346,19 @@ TThreadRecorder::TThreadRecorder(size_t buffer_size) : threadIDMap() {
  */
 TThreadRecorder::~TThreadRecorder() {
   munmap(record_buffer, aligned_buffer_size);
+
+  /* Deallocate memory for thread name. */
+  spinLockWait(&idmapLockVal);
+  {
+    for (std::tr1::unordered_map<jlong, char *,
+                                 TNumericalHasher<jlong> >::iterator itr =
+                                                            threadIDMap.begin();
+         itr != threadIDMap.end(); itr++) {
+      free(itr->second);
+    }
+  }
+  spinLockRelease(&idmapLockVal);
+
 }
 
 /*!
