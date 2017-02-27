@@ -146,31 +146,6 @@ void JNICALL
 }
 
 /*!
- * \brief Class unload event.
- * \param jvmti  [in] JVMTI environment object.
- * \param env    [in] JNI environment object.
- * \param thread [in] Java thread object.
- * \param klass  [in] Unload class object.
- * \sa    from: hotspot/src/share/vm/prims/jvmti.xml
- */
-void JNICALL
-    OnClassUnload(jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jclass klass) {
-  /* Get klassOop. */
-  void *mirror = *(void **)klass;
-  void *klassOop = TVMFunctions::getInstance()->AsKlassOop(mirror);
-
-  if (likely(klassOop != NULL)) {
-    /* Search class. */
-    TObjectData *counter = clsContainer->findClass(klassOop);
-
-    if (likely(counter != NULL)) {
-      /* Remove class data. */
-      clsContainer->popClass(counter);
-    }
-  }
-}
-
-/*!
  * \brief Setting JVM information to snapshot.
  * \param snapshot [in] Snapshot instance.
  * \param cause    [in] Cause of taking a snapshot.<br>
@@ -378,12 +353,7 @@ void iterateFieldObjectCallBack(void *oop, void *data) {
     TObjectData *clsData =
         getObjectDataFromKlassOop(localClsContainer, klassOop);
     /* Push new child loaded class. */
-    if (!clsData->isRemoved) {
-      clsCounter = localSnapshot->pushNewChildClass(parentCounter, clsData);
-    } else {
-      /* We should return if clsData has already been removed (unloaded). */
-      return;
-    }
+    clsCounter = localSnapshot->pushNewChildClass(parentCounter, clsData);
   }
 
   if (unlikely(clsCounter == NULL)) {

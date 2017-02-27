@@ -40,6 +40,11 @@ pthread_mutex_t TSnapShotContainer::instanceLocker =
 TSnapShotQueue *TSnapShotContainer::stockQueue = NULL;
 
 /*!
+ * \brief Set of active TSnapShotContainer set
+ */
+TActiveSnapShots TSnapShotContainer::activeSnapShots;
+
+/*!
  * \brief Initialize snapshot caontainer class.
  * \return Is process succeed.
  * \warning Please call only once from main thread.
@@ -92,18 +97,19 @@ TSnapShotContainer *TSnapShotContainer::getInstance(void) {
       result = stockQueue->front();
       stockQueue->pop();
     }
-  }
-  EXIT_PTHREAD_SECTION(&instanceLocker)
 
-  /* If need create new instance. */
-  if (result == NULL) {
-    /* Create new snapshot container instance. */
-    try {
-      result = new TSnapShotContainer();
-    } catch (...) {
-      result = NULL;
+    /* If need create new instance. */
+    if (result == NULL) {
+      /* Create new snapshot container instance. */
+      try {
+        result = new TSnapShotContainer();
+        activeSnapShots.insert(result);
+      } catch (...) {
+        result = NULL;
+      }
     }
   }
+  EXIT_PTHREAD_SECTION(&instanceLocker)
 
   return result;
 }
@@ -150,10 +156,15 @@ void TSnapShotContainer::releaseInstance(TSnapShotContainer *instance) {
     EXIT_PTHREAD_SECTION(&instanceLocker)
   }
 
-  if (unlikely(!existStockSpace)) {
-    /* Deallocate instance. */
-    delete instance;
+  ENTER_PTHREAD_SECTION(&instanceLocker)
+  {
+    if (unlikely(!existStockSpace)) {
+      /* Deallocate instance. */
+      activeSnapShots.erase(instance);
+      delete instance;
+    }
   }
+  EXIT_PTHREAD_SECTION(&instanceLocker)
 }
 
 /*!
@@ -205,7 +216,6 @@ TSnapShotContainer::~TSnapShotContainer(void) {
       counter = counter->next;
 
       /* Deallocate TChildClassCounter. */
-      atomic_inc(&aCounter->objData->numRefs, -1);
       free(aCounter->counter);
       free(aCounter);
     }
@@ -300,7 +310,6 @@ TChildClassCounter *TSnapShotContainer::pushNewChildClass(
     return NULL;
   }
 
-  atomic_inc(&objData->numRefs, 1);
   this->clearObjectCounter(newCounter->counter);
   newCounter->objData = objData;
 
@@ -470,68 +479,24 @@ void TSnapShotContainer::mergeChildren(void) {
 
         /* Loop each children class. */
         TChildClassCounter *counter = srcClsCounter->child;
-        TChildClassCounter *prevCounter = NULL;
         while (counter != NULL) {
           TObjectData *objData = counter->objData;
 
-          /*
-           * If the class of objData is already unloaded, we should free and
-           * shold decrement reference count.
-           * TChildClassCounter reference count will be checked at
-           * TClassContainer::commitClassChange().
-           */
-          if (objData->isRemoved) {
-            atomic_inc(&objData->numRefs, -1);
-            TChildClassCounter *nextCounter = counter->next;
-
-            if (prevCounter == NULL) {
-              srcClsCounter->child = nextCounter;
-            } else {
-              prevCounter->next = nextCounter;
-            }
-
-            /* Deallocate TChildClassCounter. */
-            free(counter->counter);
-            free(counter);
-
-            /* Deallocate TChildClassCounter in parent container. */
-            TChildClassCounter *childClsData, *parentPrevData,
-                               *parentMorePrevData;
-            this->findChildCounters(clsCounter, objData->klassOop,
-                                    &childClsData, &parentPrevData,
-                                    &parentMorePrevData);
-            if (likely(childClsData != NULL)) {
-              atomic_inc(&objData->numRefs, -1);
-
-              if (parentPrevData == NULL) {
-                clsCounter->child = childClsData->next;
-              } else {
-                parentPrevData->next = childClsData->next;
-              }
-
-              free(childClsData->counter);
-              free(childClsData);
-            }
-
-            counter = nextCounter;
-          } else {
-            /* Search child class. */
-            TChildClassCounter *childClsData =
+          /* Search child class. */
+          TChildClassCounter *childClsData =
                       this->findChildClass(clsCounter, objData->klassOop);
 
-            /* Register class as child class. */
-            if (unlikely(childClsData == NULL)) {
-              childClsData = this->pushNewChildClass(clsCounter, objData);
-            }
-
-            if (likely(childClsData != NULL)) {
-              /* Marge children class heap usage. */
-              this->addInc(childClsData->counter, counter->counter);
-            }
-
-            prevCounter = counter;
-            counter = counter->next;
+          /* Register class as child class. */
+          if (unlikely(childClsData == NULL)) {
+            childClsData = this->pushNewChildClass(clsCounter, objData);
           }
+
+          if (likely(childClsData != NULL)) {
+            /* Marge children class heap usage. */
+            this->addInc(childClsData->counter, counter->counter);
+          }
+
+          counter = counter->next;
         }
       }
     }
@@ -539,3 +504,81 @@ void TSnapShotContainer::mergeChildren(void) {
   /* Release snapshot container's spin lock. */
   spinLockRelease(&lockval);
 }
+
+/*!
+ * \brief Remove unloaded TObjectData in this snapshot container.
+ *        This function should be called at safepoint.
+ * \param unloadedList Set of unloaded TObjectData.
+ */
+void TSnapShotContainer::removeObjectData(TClassInfoSet &unloadedList) {
+  TSizeMap::iterator itr;
+
+  /* Remove the target from parent container. */
+  for (TClassInfoSet::iterator target = unloadedList.begin();
+       target != unloadedList.end(); target++) {
+    itr = counterMap.find(*target);
+    if (itr != counterMap.end()) {
+      TClassCounter *clsCounter = itr->second;
+      TChildClassCounter *childCounter = clsCounter->child;
+
+      while (childCounter != NULL) {
+        TChildClassCounter *nextCounter = childCounter->next;
+        free(childCounter->counter);
+        free(childCounter);
+        childCounter = nextCounter;
+      }
+
+      free(clsCounter->counter);
+      free(clsCounter);
+      counterMap.erase(itr);
+    }
+  }
+
+  /* Remove the target from all children in counterMap. */
+  for (itr = counterMap.begin(); itr != counterMap.end(); itr++) {
+    TClassCounter *clsCounter = itr->second;
+    TChildClassCounter *childCounter = clsCounter->child;
+    TChildClassCounter *prevChildCounter = NULL;
+
+    while (childCounter != NULL) {
+      TChildClassCounter *nextCounter = childCounter->next;
+
+      if (unloadedList.find(childCounter->objData) != unloadedList.end()) {
+        free(childCounter->counter);
+        free(childCounter);
+        if (prevChildCounter == NULL) {
+          clsCounter->child = nextCounter;
+        } else {
+          prevChildCounter->next = nextCounter;
+        }
+      } else {
+        prevChildCounter = childCounter;
+      }
+
+      childCounter = nextCounter;
+    }
+  }
+
+  /* Remove the target from local containers. */
+  for (TLocalSnapShotContainer::iterator container = containerMap.begin();
+       container != containerMap.end(); container++) {
+    container->second->removeObjectData(unloadedList);
+  }
+}
+
+/*!
+ * \brief Remove unloaded TObjectData all active snapshot container.
+ * \param unloadedList Set of unloaded TObjectData.
+ */
+void TSnapShotContainer::removeObjectDataFromAllSnapShots(
+                                                 TClassInfoSet &unloadedList) {
+  ENTER_PTHREAD_SECTION(&instanceLocker)
+  {
+    for (TActiveSnapShots::iterator itr = activeSnapShots.begin();
+         itr != activeSnapShots.end(); itr++) {
+      (*itr)->removeObjectData(unloadedList);
+    }
+  }
+  EXIT_PTHREAD_SECTION(&instanceLocker)
+}
+

@@ -22,6 +22,7 @@
 #include <fcntl.h>
 
 #include "globals.hpp"
+#include "vmFunctions.hpp"
 #include "classContainer.hpp"
 
 /*!
@@ -76,6 +77,9 @@ static oid OID_METASPACEALERT_MAX_CAPACITY[] = {SNMP_OID_METASPACEALERT, 3};
  */
 static char ORDER_USAGE[6] = "USAGE";
 
+static TClassInfoSet unloadedList;
+volatile int unloadedList_lock = 0;
+
 /*!
  * \briefString of DELTA order.
  */
@@ -94,7 +98,6 @@ TClassContainer::TClassContainer(TClassContainer *base, bool needToClr)
   needToClear = needToClr;
   classMap = NULL;
   pSender = NULL;
-  unloadedList = NULL;
 
   if (likely(base != NULL)) {
     /* Get parent container's spin lock. */
@@ -127,9 +130,6 @@ TClassContainer::TClassContainer(TClassContainer *base, bool needToClr)
     /* Create trap sender. */
     pSender = conf->SnmpSend()->get() ? new TTrapSender() : NULL;
 
-    /* Create unloaded class information queue. */
-    unloadedList = new TClassInfoQueue();
-
     /* Create thread storage key. */
     if (unlikely(pthread_key_create(&clsContainerKey, NULL) != 0)) {
       throw 1;
@@ -137,7 +137,6 @@ TClassContainer::TClassContainer(TClassContainer *base, bool needToClr)
   } catch (...) {
     delete classMap;
     delete pSender;
-    delete unloadedList;
     throw "TClassContainer initialize failed!";
   }
 }
@@ -160,7 +159,6 @@ TClassContainer::~TClassContainer(void) {
   /* Cleanup instances. */
   delete classMap;
   delete pSender;
-  delete unloadedList;
 
   /* Cleanup thread storage key. */
   pthread_key_delete(clsContainerKey);
@@ -220,8 +218,6 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop) {
     free(cur->className);
     free(cur);
   }
-
-  atomic_inc(&result->numRefs, 1);
   return result;
 }
 
@@ -256,22 +252,14 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop,
                      strcmp(objData->className, expectData->className) == 0 &&
                      objData->clsLoaderId == expectData->clsLoaderId)) {
           /* Return existing data on map. */
-          /*
-           * We should not increment reference counter because we do not add
-           * reference.
-           */
           existData = expectData;
         } else {
           /* klass oop is doubling for another class. */
-          removeClass(expectData);
-          try {
-            unloadedList->push(expectData);
-          } catch (...) {
-            /*
-             * We try to continue running without crash
-             * even if failed to allocate memory.
-             */
+          spinLockWait(&unloadedList_lock);
+          {
+            unloadedList.insert(expectData);
           }
+          spinLockRelease(&unloadedList_lock);
         }
       }
     }
@@ -301,27 +289,12 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop,
     /* Broadcast to each local container. */
     for (TLocalClassContainer::iterator it = localContainers.begin();
          it != localContainers.end(); it++) {
-      // We should skip myself if "this" ptr is in local container.
-      if (*it != this) {
-        (*it)->pushNewClass(klassOop, objData);
-      }
+      (*it)->pushNewClass(klassOop, objData);
     }
   }
   /* Release spin lock of containers queue. */
   spinLockRelease(&queueLock);
   return objData;
-}
-
-/*!
- * \brief Mark class in container to remove class.
- * \param target [in] Remove class data.
- */
-void TClassContainer::popClass(TObjectData *target) {
-  /*
-   * This function isn't remove item from map.
-   * Remove item and deallocate memory at "commitClassChange".
-   */
-  target->isRemoved = true;
 }
 
 /*!
@@ -331,35 +304,7 @@ void TClassContainer::popClass(TObjectData *target) {
 void TClassContainer::removeClass(TObjectData *target) {
   /* Remove item from map. Please callee has container's lock. */
   classMap->erase(target->klassOop);
-  atomic_inc(&target->numRefs, -1);
 
-  /* Get spin lock of containers queue. */
-  spinLockWait(&queueLock);
-  {
-    /* Broadcast to each local container. */
-    for (TLocalClassContainer::iterator it = localContainers.begin();
-         it != localContainers.end(); it++) {
-      // We should skip myself if "this" ptr is in local container.
-      if (*it != this) {
-        /* Get local container's spin lock. */
-        spinLockWait(&(*it)->lockval);
-        {
-          (*it)->classMap->erase(target->klassOop);
-          atomic_inc(&target->numRefs, -1);
-        }
-        /* Release local container's spin lock. */
-        spinLockRelease(&(*it)->lockval);
-      }
-    }
-  }
-  /* Release spin lock of containers queue. */
-  spinLockRelease(&queueLock);
-}
-
-/*!
- * \brief Remove all-class from container.
- */
-void TClassContainer::allClear(void) {
   /* Get spin lock of containers queue. */
   spinLockWait(&queueLock);
   {
@@ -368,47 +313,33 @@ void TClassContainer::allClear(void) {
          it != localContainers.end(); it++) {
       /* Get local container's spin lock. */
       spinLockWait(&(*it)->lockval);
-      { (*it)->classMap->clear(); }
+      { (*it)->classMap->erase(target->klassOop); }
       /* Release local container's spin lock. */
       spinLockRelease(&(*it)->lockval);
     }
   }
   /* Release spin lock of containers queue. */
   spinLockRelease(&queueLock);
+}
 
-  /* Get class container's spin lock. */
-  spinLockWait(&lockval);
-  {
-    /* Free allocated memory at class map. */
-    for (TClassMap::iterator cur = classMap->begin(); cur != classMap->end();
-         ++cur) {
-      TObjectData *pos = (*cur).second;
-
-      if (likely(pos != NULL)) {
-        /* Decrement reference from this class map. */
-        atomic_inc(&pos->numRefs, -1);
-
-        if (atomic_get(&pos->numRefs) == 0) {
-          free(pos->className);
-          free(pos);
-        }
-      }
-    }
-
-    /* Free allocated memory at unloaded list. */
-    while (!unloadedList->empty()) {
-      TObjectData *pos = unloadedList->front();
-      unloadedList->pop();
-
-      free(pos->className);
-      free(pos);
-    }
-
-    /* Clear all class. */
-    classMap->clear();
+/*!
+ * \brief Remove all-class from container.
+ *        This function will be called from d'tor of TClassContainer.
+ *        So we do not get any lock because d'tor calls at Agent_OnUnload.
+ */
+void TClassContainer::allClear(void) {
+  /* Add all TObjectData pointers in parent container map to unloadedList */
+  for (TClassMap::iterator cur = classMap->begin(); cur != classMap->end();
+       ++cur) {
+    unloadedList.insert(cur->second);
   }
-  /* Release class container's spin lock. */
-  spinLockRelease(&lockval);
+
+  /* Release all memory for TObjectData. */
+  for (TClassInfoSet::iterator itr = unloadedList.begin();
+       itr != unloadedList.end(); itr++) {
+    free((*itr)->className);
+    free(*itr);
+  }
 }
 
 /*!
@@ -965,74 +896,57 @@ int TClassContainer::afterTakeSnapShot(TSnapShotContainer *snapshot,
 }
 
 /*!
- * \brief Commit class information changing in class container.<br>
- *        This function is for avoiding trouble with class map.<br>
- *        At "afterTakeSnapShot", map is copied as shadow copy.<br>
- *        So crash JVM,
- *        if we remove item and output map at the same times.
+ * \brief Class unload event. Unloaded class will be added to unloaded list.
+ * \param jvmti  [in] JVMTI environment object.
+ * \param env    [in] JNI environment object.
+ * \param thread [in] Java thread object.
+ * \param klass  [in] Unload class object.
+ * \sa    from: hotspot/src/share/vm/prims/jvmti.xml
  */
-void TClassContainer::commitClassChange(void) {
-  TClassInfoQueue *list = NULL;
+void JNICALL
+    OnClassUnload(jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jclass klass) {
+  /* Get klassOop. */
+  void *mirror = *(void **)klass;
+  void *klassOop = TVMFunctions::getInstance()->AsKlassOop(mirror);
 
-  /* Get class container's spin lock. */
-  spinLockWait(&lockval);
-  {
-    /* Remove unloaded class which detected at "pushNewClass". */
-    while (!unloadedList->empty()) {
-      TObjectData *target = unloadedList->front();
-      unloadedList->pop();
-
-      /* Free allocated memory. */
-      free(target->className);
-      free(target);
-    }
-
-    try {
-      list = new TClassInfoQueue();
-
-      /* Search delete target. */
-      for (TClassMap::iterator cur = classMap->begin(); cur != classMap->end();
-           ++cur) {
-        TObjectData *objData = (*cur).second;
-
-        /* If class is prepared remove from class container. */
-        if (unlikely(objData->isRemoved &&
-                     (atomic_get(&objData->numRefs) == 0))) {
-          /*
-           * If we do removing map item here,
-           * iterator's relationship will be broken.
-           * So we store to list. And we remove after iterator loop.
-           */
-          list->push(objData);
-        }
-      }
-    } catch (...) {
+  if (likely(klassOop != NULL)) {
+    /* Search class. */
+    TObjectData *counter = clsContainer->findClass(klassOop);
+    if (likely(counter != NULL)) {
       /*
-       * Maybe failed to allocate memory.
-       * E.g. raise exception at "new", "std::queue<T>::push" or etc..
+       * This function will be called at safepoint and be called by VMThread
+       * because class unloading is single-threaded process.
+       * So we can lock-free access.
        */
-      delete list;
-      list = NULL;
-    }
-
-    if (likely(list != NULL)) {
-      /* Remove delete target. */
-      while (!list->empty()) {
-        TObjectData *target = list->front();
-        list->pop();
-
-        /* Remove from all containers. */
-        removeClass(target);
-
-        /* Free allocated memory. */
-        free(target->className);
-        free(target);
-      }
+      unloadedList.insert(counter);
     }
   }
-  /* Release class container's spin lock. */
-  spinLockRelease(&lockval);
-
-  /* Cleanup. */
-  delete list;
 }
+
+/*!
+ * \brief GarbageCollectionFinish JVMTI event to release memory for unloaded
+ *        TObjectData.
+ *        This function will be called at safepoint.
+ *        All GC worker and JVMTI agent threads for HeapStats will not work
+ *        at this point.
+ *        So we can lock-free access.
+ */
+void JNICALL OnGarbageCollectionFinishForUnload(jvmtiEnv *jvmti) {
+  if (!unloadedList.empty()) {
+    /* Remove targets from snapshot container. */
+    TSnapShotContainer::removeObjectDataFromAllSnapShots(unloadedList);
+
+    /* Remove targets from class container. */
+    for (TClassInfoSet::iterator itr = unloadedList.begin();
+         itr != unloadedList.end(); itr++) {
+      TObjectData *objData = *itr;
+      clsContainer->removeClass(objData);
+      free(objData->className);
+      free(objData);
+    }
+
+    /* Clear unloaded list. */
+    unloadedList.clear();
+  }
+}
+

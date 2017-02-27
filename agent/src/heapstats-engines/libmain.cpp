@@ -435,6 +435,10 @@ jint InitEventSetting(jvmtiEnv *jvmti, bool isOnLoad) {
   /* Set capabilities for Thread Recording. */
   TThreadRecorder::setCapabilities(&capabilities);
 
+  /* Setup GarbageCollectionFinish callback for class unloading. */
+  TGarbageCollectionFinishCallback::registerCallback(
+                                           &OnGarbageCollectionFinishForUnload);
+
   /* Setup ClassPrepare event. */
   TClassPrepareCallback::mergeCapabilities(&capabilities);
   TClassPrepareCallback::registerCallback(&OnClassPrepare);

@@ -25,6 +25,7 @@
 #include <pthread.h>
 
 #include <tr1/unordered_map>
+#include <tr1/unordered_set>
 #include <queue>
 
 #include "jvmInfo.hpp"
@@ -67,21 +68,23 @@ typedef struct {
 /*!
  * \brief This structure stored class information.
  */
-#pragma pack(push, 4)
 typedef struct {
-  jlong tag;               /*!< Class tag.                                    */
-  jlong classNameLen;      /*!< Class name.                                   */
-  char *className;         /*!< Class name length.                            */
-  void *klassOop;          /*!< Java inner class object.                      */
-  jlong oldTotalSize;      /*!< Class old total use size.                     */
-  TOopType oopType;        /*!< Type of class.                                */
-  jlong clsLoaderId;       /*!< Class loader instance id.                     */
-  jlong clsLoaderTag;      /*!< Class loader class tag.                       */
-  bool isRemoved;          /*!< Class is already unloaded.                    */
-  jlong instanceSize;      /*!< Class size if this class is instanceKlass.    */
-  int numRefs;             /*!< Number of references.                         */
+  jlong tag;          /*!< Class tag.                                 */
+  jlong classNameLen; /*!< Class name.                                */
+  char *className;    /*!< Class name length.                         */
+  void *klassOop;     /*!< Java inner class object.                   */
+  jlong oldTotalSize; /*!< Class old total use size.                  */
+  TOopType oopType;   /*!< Type of class.                             */
+  jlong clsLoaderId;  /*!< Class loader instance id.                  */
+  jlong clsLoaderTag; /*!< Class loader class tag.                    */
+  jlong instanceSize; /*!< Class size if this class is instanceKlass. */
 } TObjectData;
-#pragma pack(pop)
+
+/*!
+ * \brief This type is for storing unloaded class information.
+ */
+typedef std::tr1::unordered_set<TObjectData *,
+                                TNumericalHasher<void *> > TClassInfoSet;
 
 /*!
  * \brief This structure stored child class size information.
@@ -154,6 +157,10 @@ class TSnapShotContainer;
 typedef std::tr1::unordered_map<pthread_t, TSnapShotContainer *,
                                 TNumericalHasher<pthread_t> >
     TLocalSnapShotContainer;
+
+typedef std::tr1::unordered_set<TSnapShotContainer *,
+                                TNumericalHasher<void *> > TActiveSnapShots;
+
 
 /*!
  * \brief This class is stored class object usage on heap.
@@ -263,38 +270,6 @@ class TSnapShotContainer {
   }
 
   /*!
-   * \brief Find child class and its prevous data.
-   * \param clsCounter [in] Parent class counter object.
-   * \param klassOop   [in] Child class key object.
-   * \param counter [out] Child data
-   * \param prevCounter [out] previous counter of `counter`
-   * \param morePrevCounter [out] previous counter of `prevCounter`
-   */
-  inline void findChildCounters(TClassCounter *clsCounter, void *klassOop,
-                                TChildClassCounter **counter,
-                                TChildClassCounter** prevCounter,
-                                TChildClassCounter **morePrevCounter) {
-    *prevCounter = NULL;
-    *morePrevCounter = NULL;
-    *counter = clsCounter->child;
-
-    if (*counter == NULL) {
-      return;
-    }
-
-    /* Search children class list. */
-    while ((*counter)->objData->klassOop != klassOop) {
-      *morePrevCounter = *prevCounter;
-      *prevCounter = *counter;
-      *counter = (*counter)->next;
-
-      if (*counter == NULL) {
-        return;
-      }
-    }
-  };
-
-  /*!
    * \brief Find child class data.
    * \param clsCounter [in] Parent class counter object.
    * \param klassOop   [in] Child class key object.
@@ -307,11 +282,19 @@ class TSnapShotContainer {
     TChildClassCounter *morePrevCounter = NULL;
     TChildClassCounter *counter = clsCounter->child;
 
-    this->findChildCounters(clsCounter, klassOop,
-                            &counter, &prevCounter, &morePrevCounter);
-
     if (counter == NULL) {
       return NULL;
+    }
+
+    /* Search children class list. */
+    while (counter->objData->klassOop != klassOop) {
+      morePrevCounter = prevCounter;
+      prevCounter = counter;
+      counter = counter->next;
+
+      if (counter == NULL) {
+        return NULL;
+      }
     }
 
     /* LFU (Least Frequently Used). */
@@ -424,6 +407,19 @@ class TSnapShotContainer {
    */
   inline void setIsCleared(bool flag) { this->isCleared = flag; }
 
+  /*!
+   * \brief Remove unloaded TObjectData in this snapshot container.
+   *        This function should be called at safepoint.
+   * \param unloadedList Set of unloaded TObjectData.
+   */
+  void removeObjectData(TClassInfoSet &unloadedList);
+
+  /*!
+   * \brief Remove unloaded TObjectData all active snapshot container.
+   * \param unloadedList Set of unloaded TObjectData.
+   */
+  static void removeObjectDataFromAllSnapShots(TClassInfoSet &unloadedList);
+
  protected:
   /*!
    * \brief TSnapshotContainer constructor.
@@ -509,6 +505,11 @@ class TSnapShotContainer {
    * \brief Is this container is cleared ?
    */
   volatile bool isCleared;
+
+  /*!
+   * \brief Set of active TSnapShotContainer set
+   */
+  static TActiveSnapShots activeSnapShots;
 };
 
 /* Include optimized inline functions. */

@@ -368,14 +368,6 @@ class TNumericalHasher {
 };
 
 /* CPU Specific utilities. */
-#if PROCESSOR_ARCH == X86
-#include "arch/x86/util.inline.hpp"
-#elif PROCESSOR_ARCH == ARM
-#include "arch/arm/util.inline.hpp"
-#else
-#error "Unknown CPU architecture."
-#endif
-
 #ifdef AVX
 #include "arch/x86/avx/util.hpp"
 #elif defined(SSE2) || defined(SSE3) || defined(SSE4)
