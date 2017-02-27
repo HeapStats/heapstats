@@ -67,11 +67,6 @@ class TClassContainer;
 typedef std::deque<TClassContainer *> TLocalClassContainer;
 
 /*!
- * \brief This type is for storing unloaded class information.
- */
-typedef std::queue<TObjectData *> TClassInfoQueue;
-
-/*!
  * \brief This class is stored class information.<br>
  *        e.g. class-name, class instance count, size, etc...
  */
@@ -104,12 +99,6 @@ class TClassContainer {
    *         if already registered equivalence class.
    */
   virtual TObjectData *pushNewClass(void *klassOop, TObjectData *objData);
-
-  /*!
-   * \brief Mark class in container to remove class.
-   * \param target [in] Remove class data.
-   */
-  virtual void popClass(TObjectData *target);
 
   /*!
    * \brief Remove class from container.
@@ -258,15 +247,6 @@ class TClassContainer {
     return result;
   }
 
-  /*!
-   * \brief Commit class information changing in class container.<br>
-   *        This function needs to prevent the crash which is related
-   *        to class unloading. <br>
-   *        Agent have to keep ObjectData structure(s) until dumping
-   *        SnapShot and showing heap ranking.
-   */
-  virtual void commitClassChange(void);
-
  protected:
   /*!
    * \brief ClassContainer in TLS of each threads.
@@ -303,11 +283,26 @@ class TClassContainer {
    * \brief Do we need to clear at destructor?
    */
   bool needToClear;
-
-  /*!
-   * \brief List of class information which detected unloading.
-   */
-  TClassInfoQueue *unloadedList;
 };
+
+/*!
+ * \brief Class unload event. Unloaded class will be added to unloaded list.
+ * \param jvmti  [in] JVMTI environment object.
+ * \param env    [in] JNI environment object.
+ * \param thread [in] Java thread object.
+ * \param klass  [in] Unload class object.
+ * \sa    from: hotspot/src/share/vm/prims/jvmti.xml
+ */
+void JNICALL
+     OnClassUnload(jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jclass klass);
+
+/*!
+ * \brief GarbageCollectionFinish JVMTI event to release memory for unloaded
+ *        TObjectData.
+ *        This function will be called at safepoint.
+ *        All GC worker and JVMTI agent threads for HeapStats will not work
+ *        at this point.
+ */
+void JNICALL OnGarbageCollectionFinishForUnload(jvmtiEnv *jvmti);
 
 #endif  // CLASS_CONTAINER_HPP

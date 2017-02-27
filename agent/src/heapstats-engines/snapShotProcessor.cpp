@@ -1,7 +1,7 @@
 /*!
  * \file snapShotProcessor.cpp
  * \brief This file is used to output ranking and call snapshot function.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -127,7 +127,6 @@ void JNICALL
       }
 
       /* Clean up. */
-      controller->_container->commitClassChange();
       TSnapShotContainer::releaseInstance(snapshot);
       delete ranking;
       ranking = NULL;

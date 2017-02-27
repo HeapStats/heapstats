@@ -102,17 +102,6 @@ void JNICALL
     OnClassPrepare(jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jclass klass);
 
 /*!
- * \brief Class unload event.
- * \param jvmti  [in] JVMTI environment object.
- * \param env    [in] JNI environment object.
- * \param thread [in] Java thread object.
- * \param klass  [in] Unload class object.
- * \sa    from: hotspot/src/share/vm/prims/jvmti.xml
- */
-void JNICALL
-    OnClassUnload(jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jclass klass);
-
-/*!
  * \brief Before garbage collection event.
  * \param jvmti [in] JVMTI environment object.
  */
