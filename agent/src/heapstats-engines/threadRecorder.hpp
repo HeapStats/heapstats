@@ -1,7 +1,7 @@
 /*!
  * \file threadRecorder.hpp
  * \brief Recording thread status.
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@
 
 #include <stddef.h>
 
-#include <tr1/unordered_map>
+#include <tbb/concurrent_hash_map.h>
 
 /*!
  * \brief Header of recording data.
@@ -79,6 +79,12 @@ typedef enum {
 } TThreadEvent;
 
 /*!
+ * \brief Type of ThreadID-ThreadName map.
+ */
+typedef tbb::concurrent_hash_map<jlong, char *, TNumericalHasher<jlong> >
+                                                                  TThreadIDMap;
+
+/*!
  * \brief Implementation of HeapStats Thread Recorder.
  *        This instance must be singleton.
  */
@@ -111,17 +117,12 @@ class TThreadRecorder {
    * \brief ThreadID-ThreadName map.
    *        Key is thread ID, Value is thread name.
    */
-  std::tr1::unordered_map<jlong, char *, TNumericalHasher<jlong> > threadIDMap;
+  TThreadIDMap threadIDMap;
 
   /*!
    * \brief SpinLock variable for Ring Buffer operation.
    */
   volatile int bufferLockVal;
-
-  /*!
-   * \brief SpinLock variable for Thread ID map operation.
-   */
-  volatile int idmapLockVal;
 
   /*!
    * \brief Instance of TThreadRecorder.

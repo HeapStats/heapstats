@@ -321,7 +321,6 @@ JNIEXPORT void JNICALL IoTrace_fileWriteEnd(JNIEnv *env, jclass cls,
 TThreadRecorder::TThreadRecorder(size_t buffer_size) : threadIDMap() {
   aligned_buffer_size = ALIGN_SIZE_UP(buffer_size, systemPageSize);
   bufferLockVal = 0;
-  idmapLockVal = 0;
 
   /* manpage of mmap(2):
    *
@@ -348,17 +347,9 @@ TThreadRecorder::~TThreadRecorder() {
   munmap(record_buffer, aligned_buffer_size);
 
   /* Deallocate memory for thread name. */
-  spinLockWait(&idmapLockVal);
-  {
-    for (std::tr1::unordered_map<jlong, char *,
-                                 TNumericalHasher<jlong> >::iterator itr =
-                                                            threadIDMap.begin();
-         itr != threadIDMap.end(); itr++) {
-      free(itr->second);
-    }
+  for (auto itr = threadIDMap.begin(); itr != threadIDMap.end(); itr++) {
+    free(itr->second);
   }
-  spinLockRelease(&idmapLockVal);
-
 }
 
 /*!
@@ -579,27 +570,21 @@ void TThreadRecorder::dump(const char *fname) {
   char bom = BOM;
   write(fd, &bom, sizeof(char));
 
-  spinLockWait(&idmapLockVal);
-  {
-    /* Dump thread list. */
-    int threadIDMapSize = threadIDMap.size();
-    write(fd, &threadIDMapSize, sizeof(int));
+  /* Dump thread list. */
+  auto workIDMap(threadIDMap);
+  int threadIDMapSize = workIDMap.size();
+  write(fd, &threadIDMapSize, sizeof(int));
 
-    for (std::tr1::unordered_map<jlong, char *,
-                                 TNumericalHasher<jlong> >::iterator itr =
-             threadIDMap.begin();
-         itr != threadIDMap.end(); itr++) {
-      jlong id = itr->first;
-      int classname_length = strlen(itr->second);
-      write(fd, &id, sizeof(jlong));
-      write(fd, &classname_length, sizeof(int));
-      write(fd, itr->second, classname_length);
-    }
-
-    /* Dump thread event. */
-    write(fd, record_buffer, aligned_buffer_size);
+  for (auto itr = workIDMap.begin(); itr != workIDMap.end(); itr++) {
+    jlong id = itr->first;
+    int classname_length = strlen(itr->second);
+    write(fd, &id, sizeof(jlong));
+    write(fd, &classname_length, sizeof(int));
+    write(fd, itr->second, classname_length);
   }
-  spinLockRelease(&idmapLockVal);
+
+  /* Dump thread event. */
+  write(fd, record_buffer, aligned_buffer_size);
 
   close(fd);
 }
@@ -657,17 +642,13 @@ void TThreadRecorder::registerNewThread(jvmtiEnv *jvmti, jthread thread) {
   jvmtiThreadInfo threadInfo;
   jvmti->GetThreadInfo(thread, &threadInfo);
 
-  spinLockWait(&idmapLockVal);
   {
-    char *current_val = threadIDMap[id];
-
-    if (unlikely(current_val != NULL)) {
-      free(current_val);
+    TThreadIDMap::accessor acc;
+    if (!threadIDMap.insert(acc, id)) {
+      free(acc->second);
     }
-
-    threadIDMap[id] = strdup(threadInfo.name);
+    acc->second = strdup(threadInfo.name);
   }
-  spinLockRelease(&idmapLockVal);
 
   jvmti->Deallocate((unsigned char *)threadInfo.name);
 }
@@ -711,17 +692,11 @@ void TThreadRecorder::putEvent(jthread thread, TThreadEvent event,
   eventRecord.additionalData = additionalData;
 
   if (unlikely(top_of_buffer->event == ThreadEnd)) {
-    spinLockWait(&idmapLockVal);
-    {
-      std::tr1::unordered_map<jlong, char *, TNumericalHasher<jlong> >
-              ::iterator entry = threadIDMap.find(top_of_buffer->thread_id);
-
-      if (likely(entry != threadIDMap.end())) {
-        free(entry->second);
-        threadIDMap.erase(entry);
-      }
+    TThreadIDMap::accessor acc;
+    if (threadIDMap.find(acc, top_of_buffer->thread_id)) {
+      free(acc->second);
+      threadIDMap.erase(acc);
     }
-    spinLockRelease(&idmapLockVal);
   }
 
   spinLockWait(&bufferLockVal);

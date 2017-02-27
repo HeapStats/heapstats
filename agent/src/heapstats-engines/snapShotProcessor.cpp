@@ -84,10 +84,7 @@ void JNICALL
       if (likely(controller->_numRequests > 0)) {
         controller->_numRequests--;
         needProcess = true;
-        if (likely(!controller->snapQueue.empty())) {
-          snapshot = controller->snapQueue.front();
-          controller->snapQueue.pop();
-        }
+        controller->snapQueue.try_pop(snapshot);
       }
 
       /* Check remaining work. */
@@ -102,9 +99,6 @@ void JNICALL
         /* Count working time. */
         static const char *label = "Write SnapShot and calculation";
         TElapsedTimer elapsedTime(label);
-
-        /* Marge children snapshot's data to parent snapshot. */
-        snapshot->mergeChildren();
 
         /* Output class-data. */
         result = controller->_container->afterTakeSnapShot(snapshot, &ranking);
