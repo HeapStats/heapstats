@@ -35,13 +35,13 @@ inline void TJvmInfo::loadGCCause(void) {
    *     Code Name Sandy Bridge
    */
   asm volatile(
-    "lddqu    (%0), %%xmm0;"
-    "lddqu  16(%0), %%xmm1;"
+    "movdqu   (%0), %%xmm0;"
+    "movdqu 16(%0), %%xmm1;"
     "movdqa %%xmm0,   (%1);"
-    "lddqu  32(%0), %%xmm0;"
-    "lddqu  48(%0), %%xmm2;"
+    "movdqu 32(%0), %%xmm0;"
+    "movdqu 48(%0), %%xmm2;"
     "movdqa %%xmm1, 16(%1);"
-    "lddqu  64(%0), %%xmm1;"
+    "movdqu 64(%0), %%xmm1;"
     "movdqa %%xmm0, 32(%1);"
     "movdqa %%xmm2, 48(%1);"
     "movdqa %%xmm1, 64(%1);"
