@@ -1,3 +1,7 @@
+2017-04-10 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3353: [TEST]Add a test runner for deadlock and thread-recording
+
 2017-03-25 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3342: Replace LDDQU instruction for uncached memory regions
