@@ -2,6 +2,7 @@
 
 	* Bug 3353: [TEST]Add a test runner for deadlock and thread-recording
 	* Bug 3354: [TEST]Modify test runners for testing in a similar way
+	* Bug 3355: [TEST]Add unit test cases
 
 2017-03-25 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
