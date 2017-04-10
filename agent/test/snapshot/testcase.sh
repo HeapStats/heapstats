@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+pushd $(dirname $0) >/dev/null
 
 ### Usage
 ###   - Without Valgrind
@@ -9,16 +11,20 @@
 ###             JAVA_OPTS="<Java options (-X, -XX, ...)" \
 ###                    ./testcase.sh /path/to/heapstats
 
+if [[ $1 == "--clean" ]]; then
+  rm -rf *class heapstats_log.csv heapstats_snapshot.dat heapstats_analyze*zip
+  exit
+fi
+
 TARGET_HEAPSTATS=$1
 
-if [ "x$TARGET_HEAPSTATS" = "x" ]; then
-  echo "You must set HeapStats agent that you want to check."
-  exit 1
+if [ ! -z "$TARGET_HEAPSTATS" ]; then
+  HEAPSTATS_OPT="-agentpath:${TARGET_HEAPSTATS}"
+else
+  HEAPSTATS_OPT="-agentpath:${HEAPSTATS_LIB:-/usr/lib64/heapstats/libheapstats.so}"
 fi
 
-if [ "x$JAVA_HOME" = "x" ]; then
-  JAVA_HOME=/usr/lib/jvm/java-openjdk
-fi
+${JAVA_HOME:=/usr/lib/jvm/java-openjdk/}/bin/javac Simple.java
 
 EXEC_COMMAND="$JAVA_HOME/bin/java $JAVA_OPTS"
 
@@ -26,7 +32,10 @@ if [ -n "$VALGRIND_OPTION" ]; then
   EXEC_COMMAND="valgrind $VALGRIND_OPTION $EXEC_COMMAND"
 fi
 
-EXEC_COMMAND="$EXEC_COMMAND -agentpath:$TARGET_HEAPSTATS"
+EXEC_COMMAND="$EXEC_COMMAND ${HEAPSTATS_OPT}"
+
+# This testcase calls errors by OOME
+set +e
 
 # Check1: Parallel
 echo "Check1-1: Parallel"
@@ -60,3 +69,4 @@ $EXEC_COMMAND -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent Simple
 echo "Check4-4: G1 (+ExplicitGC -UseCOOP)"
 $EXEC_COMMAND -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:-UseCompressedOops Simple
 
+popd >/dev/null
