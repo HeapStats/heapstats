@@ -40,3 +40,8 @@ Makefile
 
 # IntelliJ (2016.3)
 .idea/workspace.xml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
