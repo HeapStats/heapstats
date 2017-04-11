@@ -38,7 +38,9 @@
 
 ```
 Test summary:
-  ClassPrepare/ClassPrepare: succeeded
+  Testcase1: succeeded
+  Testcase2: succeeded
+  Testcase3: failed
   :
 ```
 
