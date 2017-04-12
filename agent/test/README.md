@@ -7,20 +7,26 @@ Test cases for HeapStats. These test cases could run on containers.
 ### on container
 
 ```
-docker build --pull -t heapstats/$(basename $PWD) -f ./Dockerfile(.el7) .
+docker build --pull -t heapstatas/test -f ./Dockerfile .
 ```
 If run under proxy, run with `--build-arg http_proxy=<proxy> --build-arg https_proxy=<proxy> --build-arg _JAVA_OPTIONS="-Dhttps.proxyHost=<proxy host> -Dhttps.proxyPort=<proxy port>"`
 
 Once you have the image, you can easily run tests as below.
 
 ```
-docker run --rm  -t heapstats/$(basename $PWD) ./<dirctory>/testcase.sh
+docker run --rm  -t heapstats/test ./<dirctory>/testcase.sh
 
 # You need security option when you run race-condition/testcase.sh
-docker run --rm --security-opt seccomp=unconfined -t heapstats/$(basename $PWD) ./race-condition/testcase.sh
+docker run --rm --security-opt seccomp=unconfined -t heapstats/test ./race-condition/testcase.sh
 ```
 
-Note: You need to get and build gtest when you test ./gtest on a container of el7.
+These commands are just example, you can use container as you like.
+
+#### Container for RHEL 7
+
+You can create an image of RHEL 7 by using Dockerfile.el7. This requires Red Hat subscription(s), read [Red Hat's documentations](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/7.0_Release_Notes/sect-Red_Hat_Enterprise_Linux-7.0_Release_Notes-Linux_Containers_with_Docker_Format-Using_Docker.html) for details.
+
+Also, you need to get and build gtest when you test by ./gtest .
 
 ### on local machine
 

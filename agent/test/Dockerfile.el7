@@ -1,5 +1,3 @@
-# docker build --pull -t $(basename $PWD):${0#*.} -f $0 .
-# docker run --rm --security-opt seccomp=unconfined -t ...
 FROM registry.access.redhat.com/rhel7:latest
 
 MAINTAINER KUBOTA Yuji <kubota.yuji@gmail.com>
@@ -18,16 +16,19 @@ RUN yum install -y \
     ant \
     binutils-devel \
     gcc-c++ \
-#    java-1.6.0-openjdk-devel java-1.6.0-openjdk-devel \
+# If you want to test with old jdk, use below
+#    java-1.6.0-openjdk-devel java-1.7.0-openjdk-devel \
     java-1.8.0-openjdk-devel \
     make \
     net-snmp-devel net-snmp-libs \
     pcre-devel \
+# When RHEL provides maven 3.3 or later, use below.
 # && yum install -y --enablerepo="rhel-7-server-optional-rpms" \
 #    maven \
  && yum install -y --enablerepo="rhel-server-rhscl-7-beta-rpms" \
     rh-maven33 \
  && yum install -y --enablerepo="*debug*" --disablerepo="*beta*,*test*" \
+# If you want to test with old jdk, use below.
 #    java-1.6.0-openjdk-debuginfo java-1.7.0-openjdk-debuginfo \
     java-1.8.0-openjdk-debuginfo
 

@@ -1,5 +1,3 @@
-# docker build --pull -t $(basename $PWD):${0#*.} -f $0 .
-# docker run --rm --security-opt seccomp=unconfined -t ...
 FROM fedora:latest
 
 MAINTAINER KUBOTA Yuji <kubota.yuji@gmail.com>
@@ -18,6 +16,7 @@ RUN dnf install -y \
     ant \
     binutils-devel \
     gcc-c++ \
+# If you want to test with old jdk, use below
 #    java-1.6.0-openjdk-devel java-1.7.0-openjdk-devel \
     java-1.8.0-openjdk-devel \
     maven \
@@ -25,6 +24,7 @@ RUN dnf install -y \
     pcre-devel \
  && dnf install -y \
     --enablerepo="*debug*" --disablerepo="*test*" \
+# If you want to test with old jdk, use below
 #    java-1.6.0-openjdk-debuginfo java-1.7.0-openjdk-debuginfo \
     java-1.8.0-openjdk-debuginfo
 
