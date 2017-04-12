@@ -6,6 +6,8 @@ syntax: regexp
 #
 # Using negative lookahead expression
 ^(?!eclipse).*\.(settings|project|classpath)
+# Auto generated Makefile for mercurial
+^Makefile$
 
 syntax: glob
 target/*
@@ -31,8 +33,13 @@ analyzer/cli/heapstats-cli
 *.so.*
 *.lai
 *.class
-Makefile
 /heapstats.properties
+# Auto generated Makefile
+/Makefile
+mbean/**/Makefile
+agent/Makefile
+agent/src/**/Makefile
+agent/attacher/**/Makefile
 
 # SCM
 .hg
