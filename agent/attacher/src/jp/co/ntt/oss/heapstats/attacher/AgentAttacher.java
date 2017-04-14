@@ -44,11 +44,11 @@ public class AgentAttacher {
       System.out.printf("%d\t%s\n", idx++, vmd.displayName());
     }
   }
-	
+
   public static void attachProcess(VirtualMachineDescriptor vmd,
                                    String agentPath, String options) throws
-                                   IOException, AttachNotSupportedException, 
-                              AgentLoadException, AgentInitializationException {
+                                   IOException, AttachNotSupportedException,
+                                   AgentLoadException, AgentInitializationException {
     VirtualMachine vm = null;
 
     try {
@@ -56,6 +56,23 @@ public class AgentAttacher {
       if ((vm = VirtualMachine.attach(vmd)) == null) {
         throw new IllegalStateException("Could not attach to " +
                                         vmd.displayName());
+      }
+
+      /* Recommend jcmd instead of Attach API if jdk9 or later */
+      /* See https://bugs.openjdk.java.net/browse/JDK-8177154 */
+      String[] versions = vm.getSystemProperties().getProperty("java.version").split("\\.", 3);
+      /* Check early access. See https://bugs.openjdk.java.net/browse/JDK-8061493 */
+      int earlyAccess = versions[0].indexOf('-');
+      int major = 0;
+      if (earlyAccess > 0) {
+        major = Integer.parseInt(versions[0].substring(0,earlyAccess));
+      } else {
+        major = Integer.parseInt(versions[0]);
+      }
+      if (major >= 9) {
+        System.err.println("For Java 9 or later, use jcmd with below command instead.");
+        System.err.println("jcmd " + vm.id() + " JVMTI.agent_load " + agentPath);
+        System.exit(-1);
       }
 
       /* load agent to JVM. */

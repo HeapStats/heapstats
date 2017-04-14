@@ -1,3 +1,7 @@
+2017-05-08 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3371: Recommend jcmd instead of Attach API
+
 2017-04-13 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3359: Ignore only auto generated Makefile
