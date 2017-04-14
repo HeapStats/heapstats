@@ -162,11 +162,12 @@ bool TJvmInfo::setHSVersion(jvmtiEnv *jvmti) {
       if (unlikely(result != 4)) {
         /*
          * Support JDK 9 EA
+         * See https://bugs.openjdk.java.net/browse/JDK-8061493
          */
 #if USE_PCRE
-        TPCRERegex versionRegex("^(\\d+)-ea\\+(\\d+)$", 9);
+        TPCRERegex versionRegex("^(\\d+)-ea\\+(\\d+).*", 9);
 #else
-        TCPPRegex versionRegex("^(\\d+)-ea\\+(\\d+)$");
+        TCPPRegex versionRegex("^(\\d+)-ea\\+(\\d+).*");
 #endif
         if (versionRegex.find(versionStr)) {
           char *minorStr = versionRegex.group(1);
