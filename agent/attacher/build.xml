@@ -40,9 +40,6 @@
   <target name="jar" depends="compile">
     <jar destfile="${dist.dir}/heapstats-attacher.jar">
       <zipfileset dir="${build.dir}" excludes=".keep"/>
-      <manifest>
-        <attribute name="Main-Class" value="jp.co.ntt.oss.heapstats.attacher.AgentAttacher" />
-      </manifest>
     </jar>
   </target>
  
