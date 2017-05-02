@@ -30,7 +30,24 @@
     <groupId>jp.co.ntt.oss.heapstats</groupId>
     <artifactId>heapstats-core</artifactId>
     <packaging>jar</packaging>
+
     <name>HeapStats Analyzer Core</name>
+
+    <description>A core Java library for HeapStats analyzer</description>
+    <url>http://icedtea.classpath.org/wiki/HeapStats</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 2</name>
+            <url>https://www.gnu.org/licenses/gpl-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>http://icedtea.classpath.org/hg/heapstats</url>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -47,6 +64,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -62,9 +80,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
-                <configuration>
-                    <finalName>heapstats-core</finalName>
-                </configuration>
             </plugin>
         </plugins>
     </build>

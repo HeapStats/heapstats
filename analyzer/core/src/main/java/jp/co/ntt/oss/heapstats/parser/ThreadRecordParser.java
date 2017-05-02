@@ -57,7 +57,7 @@ public class ThreadRecordParser {
      * @param ch Channel to read.
      * @param buffer ByteBuffer to use.
      * @return ByteOrder in this channel.
-     * @throws IOException 
+     * @throws IOException If some other I/O error occurs.
      */
     private ByteOrder getByteOrder(SeekableByteChannel ch, ByteBuffer buffer) throws IOException{
         buffer.position(buffer.capacity() - 1);
@@ -70,7 +70,7 @@ public class ThreadRecordParser {
     
     /**
      * Get Thread ID - Thread Name map entry from channel.
-     * This method may throw UncheckedIOException if IOException occurrs.
+     * This method may throw UncheckedIOException if IOException occurs.
      * 
      * @param ch Channel to read.
      * @param buffer ByteBuffer to use.
@@ -111,7 +111,7 @@ public class ThreadRecordParser {
      * @param ch Channel to read.
      * @param buffer ByteBuffer to use.
      * @return Thread ID - Thread Name map.
-     * @throws IOException
+     * @throws IOException If some other I/O error occurs.
      */
     private Map<Long, String> getThreadIdMap(SeekableByteChannel ch, ByteBuffer buffer) throws IOException{
         int capacity = buffer.capacity();
@@ -136,7 +136,7 @@ public class ThreadRecordParser {
      * @param ch Channel to read.
      * @param buffer ByteBuffer to use.
      * @return Thread Stat list.
-     * @throws IOException 
+     * @throws IOException If some other I/O error occurs.
      */
     private List<ThreadStat> getThreadStatList(SeekableByteChannel ch, ByteBuffer buffer) throws IOException{
         List<ThreadStat> result = new ArrayList<>();
@@ -166,7 +166,7 @@ public class ThreadRecordParser {
      * Parse HeapStats Thread Recorder file.
      * 
      * @param path Path to recorder file.
-     * @throws IOException 
+     * @throws IOException If some other I/O error occurs.
      */
     public void parse(Path path) throws IOException{
         ByteBuffer buffer = ByteBuffer.allocateDirect(1024 * 1024); // 1MB

@@ -31,6 +31,9 @@ public class FunctionWrapper<T, R> implements Function<T, R>{
         this.function = function;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public R apply(T t) {
         try{

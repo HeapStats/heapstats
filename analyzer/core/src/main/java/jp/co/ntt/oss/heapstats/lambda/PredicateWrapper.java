@@ -31,6 +31,9 @@ public class PredicateWrapper<T> implements Predicate<T>{
         this.predicate = predicate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean test(T t) {
         try{

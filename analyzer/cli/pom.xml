@@ -30,7 +30,22 @@
     <groupId>jp.co.ntt.oss.heapstats</groupId>
     <artifactId>heapstats-cli</artifactId>
     <packaging>jar</packaging>
+
     <name>HeapStats CLI</name>
+    <description>Command Line Interface for HeapStats Analyzer</description>
+    <url>http://icedtea.classpath.org/wiki/HeapStats</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 2</name>
+            <url>https://www.gnu.org/licenses/gpl-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>http://icedtea.classpath.org/hg/heapstats</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,6 +58,7 @@
     </organization>
 
     <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -68,7 +84,6 @@
                             <customClasspathLayout>lib/${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
                         </manifest>
                     </archive>
-                    <finalName>heapstats-cli</finalName>
                 </configuration>
             </plugin>
             <plugin>

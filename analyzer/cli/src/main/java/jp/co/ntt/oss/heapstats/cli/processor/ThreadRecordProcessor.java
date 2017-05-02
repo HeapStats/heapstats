@@ -46,8 +46,6 @@ public class ThreadRecordProcessor implements CliProcessor{
     public ThreadRecordProcessor(Options options) {
         this.options = options;
     }
-    
-    
 
     /**
      * {@inheritDoc}

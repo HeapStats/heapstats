@@ -29,7 +29,7 @@ import java.util.stream.IntStream;
  * This class holds process summary information. It shows at process summary
  * table.
  *
- * @author Yasu
+ * @author Yasumasa Suenaga
  */
 public class SummaryData {
 

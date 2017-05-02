@@ -31,6 +31,9 @@ public class SupplierWrapper<T> implements Supplier<T>{
         this.supplier = supplier;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public T get() {
         try{

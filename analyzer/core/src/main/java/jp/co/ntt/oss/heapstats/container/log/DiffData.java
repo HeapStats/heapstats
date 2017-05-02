@@ -62,8 +62,8 @@ public class DiffData {
      * Constructor of DiffData.
      * Each fields is based on "current - prev" .
      * 
-     * @param prev
-     * @param current 
+     * @param prev Previous log data
+     * @param current Current log data
      */
     public DiffData(LogData prev, LogData current){
         dateTime = current.getDateTime();
@@ -143,7 +143,6 @@ public class DiffData {
 
     /**
      * Get %user of java process.
-     * 
      * @return %user
      */
     public double getJavaUserUsage() {

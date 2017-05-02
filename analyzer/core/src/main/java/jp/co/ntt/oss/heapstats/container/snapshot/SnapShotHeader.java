@@ -298,6 +298,7 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
     }
 
     /**
+     * Get GC cause by string.
      * @return Return the GC Cause
      */
     public final String getCauseString() {
@@ -630,22 +631,36 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
     public void setSnapShot(Map<Long, ObjectData> snapShot) {
         this.snapShotCache = new SoftReference<>(snapShot);
     }
-    
+
+    /**
+     * Get true if this snapshot data has a reference data.
+     * @return true if has a reference data.
+     */
     public boolean hasReferenceData(){
         final byte extended_reftree = EXTENDED_FORMAT | EXTENDED_FORMAT_FLAG_REFTREE;
         
         return (snapShotType == FILE_FORMAT_1_1) ||
                ((snapShotType & extended_reftree) == extended_reftree);
     }
-
+    /**
+     * Get true if this snapshot data has a safepoint time.
+     * @return true if has a safepoint time.
+     */
     public boolean hasSafepointTime(){
         return (snapShotType & EXTENDED_FORMAT_FLAG_SAFEPOINT_TIME) == EXTENDED_FORMAT_FLAG_SAFEPOINT_TIME;
     }
 
+    /**
+     * Get true if this snapshot data has a metaspace data.
+     * @return true if has a metaspace data.
+     */
     public boolean hasMetaspaceData(){
         return (snapShotType != FILE_FORMAT_1_0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final String toString() {
         StringBuilder buf = new StringBuilder();
@@ -692,14 +707,17 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
      * Compare function for SnapShotHeader. This method is based on
      * snapShotDate.
      *
-     * @param o
-     * @return
+     * @param o SnapHotHeader.
+     * @return Compared result.
      */
     @Override
     public int compareTo(SnapShotHeader o) {
         return snapShotDate.compareTo(o.snapShotDate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return snapShotDate.hashCode();
@@ -709,8 +727,8 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
      * equals method of this SnapShotHeader. This method is based on
      * snapShotDate.
      *
-     * @param obj
-     * @return
+     * @param obj Object
+     * @return Compared result.
      */
     @Override
     public boolean equals(Object obj) {
