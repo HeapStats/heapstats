@@ -22,7 +22,7 @@ import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
 /**
- * Summary data class.<br/>
+ * Summary data class.
  * This class holds process summary information.
  * It shows at process summary table.
  * @author Yasumasa Suenaga

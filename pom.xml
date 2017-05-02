@@ -37,9 +37,25 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Yasumasa Suenaga</name>
+            <email>yasuenag@gmail.com</email>
+            <organization>icedtea</organization>
+            <organizationUrl>http://www.icedtea.classpath.org</organizationUrl>
+        </developer>
+        <developer>
+            <name>KUBOTA Yuji</name>
+            <email>kubota.yuji@gmail.com</email>
+            <organization>icedtea</organization>
+            <organizationUrl>http://www.icedtea.classpath.org</organizationUrl>
+        </developer>
+    </developers>
+
     <scm>
         <url>http://icedtea.classpath.org/hg/heapstats</url>
         <connection>scm:hg:http://icedtea.classpath.org/hg/heapstats</connection>
+        <developerConnection>scm:hg:ssh://icedtea.classpath.org/hg/heapstats</developerConnection>
     </scm>
 
     <modules>

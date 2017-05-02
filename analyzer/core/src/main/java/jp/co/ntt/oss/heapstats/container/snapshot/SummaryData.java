@@ -25,9 +25,9 @@ import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 /**
- * Summary data class.<br/>
- * This class holds process summary information. It shows at process summary
- * table.
+ * Summary data class.
+ * This class holds process summary information.
+ * It shows at process summary table.
  *
  * @author Yasumasa Suenaga
  */

@@ -44,7 +44,7 @@ public class DiffData {
 
     /**
      * Constructor of DiffData.
-     * 
+     *
      * @param diffDate Date time of this difference data.
      * @param prev Previous data.
      * @param current Current data.
@@ -65,6 +65,7 @@ public class DiffData {
     /**
      * Constructor of DiffData.
      *
+     * @param tag Tag number.
      * @param diffDate Date time of this difference data.
      * @param className Class name.
      * @param classLoaderName Classloader name.

@@ -138,9 +138,9 @@ public class JMXHelper implements AutoCloseable{
      * 
      * @param path Path to save file.
      * 
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ExecutionException 
+     * @throws IOException Could not read or/and write a given SnapShot file.
+     * @throws InterruptedException Something interrupt has occurred.
+     * @throws ExecutionException Could not get a given SnapShot file.
      */
     public void getSnapShot(Path path) throws IOException, InterruptedException, ExecutionException{
         getFileInternal(path, true);
@@ -151,9 +151,9 @@ public class JMXHelper implements AutoCloseable{
      * 
      * @param path Path to save file.
      * 
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ExecutionException 
+     * @throws IOException Could not read a given resource log file.
+     * @throws InterruptedException Something interrupt has occurred.
+     * @throws ExecutionException Could not get a given resource log file.
      */
     public void getResourceLog(Path path) throws IOException, InterruptedException, ExecutionException{
         getFileInternal(path, false);

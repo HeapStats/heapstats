@@ -29,6 +29,7 @@
 
     <groupId>jp.co.ntt.oss.heapstats</groupId>
     <artifactId>heapstats-core</artifactId>
+    <version>2.0.trunk</version>
     <packaging>jar</packaging>
 
     <name>HeapStats Analyzer Core</name>
@@ -44,9 +45,33 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Yasumasa Suenaga</name>
+            <email>yasuenag@gmail.com</email>
+            <organization>icedtea</organization>
+            <organizationUrl>http://www.icedtea.classpath.org</organizationUrl>
+        </developer>
+        <developer>
+            <name>KUBOTA Yuji</name>
+            <email>kubota.yuji@gmail.com</email>
+            <organization>icedtea</organization>
+            <organizationUrl>http://www.icedtea.classpath.org</organizationUrl>
+        </developer>
+    </developers>
+
     <scm>
         <url>http://icedtea.classpath.org/hg/heapstats</url>
+        <connection>scm:hg:http://icedtea.classpath.org/hg/heapstats</connection>
+        <developerConnection>scm:hg:ssh://icedtea.classpath.org/hg/heapstats</developerConnection>
     </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -81,6 +106,87 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <!-- releasing for maven, mvn -DperformRelease=true deploy -->
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

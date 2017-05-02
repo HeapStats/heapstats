@@ -528,7 +528,7 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
      * FILE_FORMAT_NO_CHILD, FILE_FORMAT_HAVE_CHILD,
      * FILE_FORMAT_HAVE_CHILD_AND_METASPACE
      *
-     * @param snapShotType
+     * @param snapShotType SnapShot type.
      */
     public void setSnapShotType(byte snapShotType) {
         this.snapShotType = snapShotType;
@@ -564,7 +564,7 @@ public class SnapShotHeader implements Comparable<SnapShotHeader>, Serializable 
     /**
      * Set size of SnapShot header.
      *
-     * @param snapShotHeaderSize
+     * @param snapShotHeaderSize Size of SnapShot header.
      */
     public void setSnapShotHeaderSize(long snapShotHeaderSize) {
         this.snapShotHeaderSize = snapShotHeaderSize;
