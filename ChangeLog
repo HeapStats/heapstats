@@ -1,6 +1,10 @@
+2017-06-26 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3219: Upload artifacts to the Maven Central Repository
+
 2017-06-26 Yasumasa Suenaga <yasuenag@gmail.com>
 
-	* Bug 3405: HeapStats Agent cannot be built on CentOS 6 after Bug 3403
+	* Bug 3407: [TEST] jcmd should not be run for safepoint in ThreadExhausted tests
 
 2017-06-21 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 

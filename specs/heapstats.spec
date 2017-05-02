@@ -76,7 +76,7 @@ cp ./agent/mib/HeapStatsMibs.txt $RPM_BUILD_ROOT/usr/share/snmp/mibs/
 # We do not privide FX analyzer.
 # So we install CLI analyzer manually.
 mkdir -p ${RPM_BUILD_ROOT}/%{_libexecdir}/heapstats
-cp -fR ./analyzer/cli/target/heapstats-cli-%{version}-bin/heapstats-cli-%{version}/* \
+cp -fR ./analyzer/cli/target/heapstats-cli-*-bin/heapstats-cli-*/* \
                                     ${RPM_BUILD_ROOT}%{_libexecdir}/heapstats/
 cp -f ./analyzer/cli/heapstats-cli ${RPM_BUILD_ROOT}%{_bindir}
 chmod a+x ${RPM_BUILD_ROOT}%{_bindir}/heapstats-cli
@@ -119,6 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libexecdir}/heapstats/lib/
 %{_libexecdir}/heapstats/lib/heapstats-core.jar
 %{_libexecdir}/heapstats/lib/heapstats-mbean.jar
+%{_libexecdir}/heapstats/lib/heapstats-jmx-helper.jar
 
 
 %changelog

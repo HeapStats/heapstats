@@ -82,7 +82,7 @@ public abstract class PluginController implements Initializable{
      * Setter of veil region.
      * This region is used for veiling (e.g. showing progress)
      * 
-     * @param veil 
+     * @param veil veiling region.
      */
     public void setVeil(Region veil){
         this.veil = veil;
@@ -92,7 +92,7 @@ public abstract class PluginController implements Initializable{
      * Setter of progress indicator.
      * This region is used for veiling (e.g. showing progress)
      * 
-     * @param progress
+     * @param progress progress indicator.
      */
     public void setProgress(ProgressIndicator progress){
         this.progress = progress;

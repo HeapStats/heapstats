@@ -55,8 +55,8 @@ public abstract class ProgressRunnable implements Runnable{
     }
     
     /**
-     * Set progress notificator.
-     * @param updateProgress Progress notificator
+     * Set progress notification.
+     * @param updateProgress Progress notification.
      */
     public void setUpdateProgress(Consumer<Long> updateProgress){
         this.updateProgress = Optional.ofNullable(updateProgress);

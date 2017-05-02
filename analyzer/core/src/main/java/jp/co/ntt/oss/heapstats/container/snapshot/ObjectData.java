@@ -31,8 +31,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * implements {@link Serializable}, {@link Cloneable} <br>
- * <br>
+ * implements {@link Serializable}, {@link Cloneable}
+ *
  * Contains information about the classes loaded in the java virtual machine.
  */
 public class ObjectData implements Serializable, Cloneable {
@@ -254,6 +254,9 @@ public class ObjectData implements Serializable, Cloneable {
         this.referenceList = referenceList;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final String toString() {
         return (new StringJoiner(",")).add(Long.toHexString(tag))
@@ -265,6 +268,9 @@ public class ObjectData implements Serializable, Cloneable {
                                       .toString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final ObjectData clone() {
         
@@ -303,7 +309,7 @@ public class ObjectData implements Serializable, Cloneable {
      * Equals method of this ObjectData.
      * This method is based on Tag.
      * 
-     * @param obj
+     * @param obj Object.
      * @return true if object equals.
      */
     @Override

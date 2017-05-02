@@ -21,9 +21,9 @@ import javafx.util.StringConverter;
 import jp.co.ntt.oss.heapstats.container.threadrecord.ThreadStat;
 
 /**
- * StringConverter for LocalDateTime of SnapShotHeader. <br/>
+ * StringConverter for LocalDateTime of SnapShotHeader.
  * This class is used at JavaFX controls.
- * 
+ *
  * @author Yasumasa Suenaga
  */
 public class ThreadStatConverter extends StringConverter<ThreadStat>{

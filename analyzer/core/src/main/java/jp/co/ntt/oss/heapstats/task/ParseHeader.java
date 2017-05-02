@@ -48,7 +48,7 @@ public class ParseHeader extends ProgressRunnable{
      * 
      * @param files List of HeapStats SnapShot files.
      * @param needJavaStyle true if class name should be converted to Java-Style
-     * @param parseAsPossible Parse SnapShot before occuring error.
+     * @param parseAsPossible Parse SnapShot before occurring error.
      */
     public ParseHeader(List<String> files, boolean needJavaStyle, boolean parseAsPossible) {
         this.files = files;

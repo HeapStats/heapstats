@@ -79,7 +79,7 @@ public class CliMain implements Thread.UncaughtExceptionHandler{
         Throwable rootCause = thrwbl;
         
         // Find root cause of exception.
-        // Exceptions is recuesive. So we need to track exception(s) through Throwable#getCause().
+        // Exceptions is recursive. So we need to track exception(s) through Throwable#getCause().
         while(rootCause.getCause() != null){
             rootCause = rootCause.getCause();
         }

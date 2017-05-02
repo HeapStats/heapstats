@@ -22,7 +22,7 @@ import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
 /**
- * Summary data class.<br/>
+ * Summary data class.
  * This class holds process summary information.
  * It shows at process summary table.
  * @author Yasumasa Suenaga
@@ -118,7 +118,7 @@ public class SummaryData {
     }
 
     /**
-     * Get average virtual memoly size (VSZ) of java process.
+     * Get average virtual memory size (VSZ) of java process.
      * @return Average of VSZ
      */
     public double getAverageVSZ() {
@@ -166,7 +166,7 @@ public class SummaryData {
     }
     
     /**
-     * Statistics class for SnapSHot diff calculation.
+     * Statistics class for SnapShot diff calculation.
      */
     private class DiffSummaryStatistics{
         

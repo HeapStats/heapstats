@@ -178,9 +178,9 @@ public class Options {
         System.out.println("  -end  : End ID");
         System.out.println();
         System.out.println("mode:");
-        System.out.println("  -log     : Processs HeapStats resource log file.");
-        System.out.println("  -snapshot: Processs HeapStats snapshot file.");
-        System.out.println("  -event   : Processs HeapStats thread recorder file.");
+        System.out.println("  -log     : Process HeapStats resource log file.");
+        System.out.println("  -snapshot: Process HeapStats snapshot file.");
+        System.out.println("  -event   : Process HeapStats thread recorder file.");
         System.out.println("  -jmx     : Control remote HeapStats agent through JMX.");
         System.out.println();
         System.out.println("options:");
@@ -204,7 +204,7 @@ public class Options {
         System.out.println("      -d <p|c>: Select the direction to traverse references. p means parent, c means child.");
         System.out.println("    -e <CSV file> : Dump class histogram(s) as CSV.");
         System.out.println("    -g <CSV file> : Dump GC information as CSV.");
-        System.out.println("  -event: Processs HeapStats thread recorder file.");
+        System.out.println("  -event: Process HeapStats thread recorder file.");
         System.out.println("    -showids      : List all IDs in files.");
         System.out.println("    -threads: List all thread IDs in files.");
         System.out.println("    -id <ID>: Choose specified thread ID.");

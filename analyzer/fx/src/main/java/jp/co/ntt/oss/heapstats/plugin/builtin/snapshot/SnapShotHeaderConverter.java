@@ -23,7 +23,7 @@ import jp.co.ntt.oss.heapstats.container.snapshot.SnapShotHeader;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 
 /**
- * StringConverter for LocalDateTime of SnapShotHeader. <br/>
+ * StringConverter for LocalDateTime of SnapShotHeader.
  * This class is used at JavaFX controls.
  *
  * @author Yasumasa Suenaga

@@ -82,7 +82,7 @@ public class LogData implements Comparable<LogData>{
      * 
      * @param csv CSV data to be parsed.
      * @param logdir Directory to deflate if parser finds log archive.
-     * @throws IllegalArgumentException 
+     * @throws IllegalArgumentException If given csv data is not valid.
      */
     public void parseFromCSV(String csv, String logdir) throws IllegalArgumentException{
         String[] csvArray = csv.split(",");
@@ -236,7 +236,7 @@ public class LogData implements Comparable<LogData>{
 
     /**
      * Get soft IRQ time of system.
-     * @return soft IRQ time of system.
+     * @return Soft IRQ time of system.
      */
     public long getSystemSoftIRQTime() {
         return systemSoftIRQTime;
@@ -291,7 +291,7 @@ public class LogData implements Comparable<LogData>{
     }
 
     /**
-     * Get archive path when trouble occurrs.
+     * Get archive path when trouble occurs.
      * @return Archive path.
      */
     public String getArchivePath() {
@@ -299,11 +299,11 @@ public class LogData implements Comparable<LogData>{
     }
 
     /**
-     * This method compares with another LogData.
+     * Compares with another LogData.
      * This method is based on dateTime field.
      * 
-     * @param o
-     * @return 
+     * @param o Log data
+     * @return Compared result.
      */
     @Override
     public int compareTo(LogData o) {

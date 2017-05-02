@@ -106,11 +106,17 @@ public class ThreadStat implements Comparable<ThreadStat>{
         return additionalData;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int compareTo(ThreadStat o) {
         return time.compareTo(o.time);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return String.format("%d: %s: %s (%d)", id, time.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), event.toString(), additionalData);

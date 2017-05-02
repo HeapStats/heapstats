@@ -46,7 +46,6 @@ public class ChildObjectData {
 
     /**
      * Get tag of this child class.
-     * 
      * @return Tag of this child class.
      */
     public long getTag() {
@@ -63,7 +62,6 @@ public class ChildObjectData {
 
     /**
      * Get total size of this child class.
-     * 
      * @return Total size of this child class.
      */
     public long getTotalSize() {
