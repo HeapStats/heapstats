@@ -1,3 +1,7 @@
+2017-05-12  Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3382: Class Search window is too narrow
+
 2017-05-08 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3371: Recommend jcmd instead of Attach API
