@@ -67,10 +67,10 @@
                 </VBox>
                 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" spacing="5.0">
                     <children>
-                        <HBox spacing="5.0">
+                        <HBox maxWidth="1.7976931348623157E308" spacing="5.0">
                             <children>
                                 <Label text="%label.classsearch" />
-                                <TextField fx:id="searchText" onKeyReleased="#onSearchTextChanged" />
+                                <TextField fx:id="searchText" maxWidth="1.7976931348623157E308" minWidth="0.0" onKeyReleased="#onSearchTextChanged" HBox.hgrow="ALWAYS" />
                             </children>
                         </HBox>
                         <ListView fx:id="searchList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" VBox.vgrow="ALWAYS" />
