@@ -19,6 +19,8 @@
  *
  */
 
+#include <sched.h>
+
 #include "globals.hpp"
 #include "vmFunctions.hpp"
 #include "elapsedTimer.hpp"
@@ -135,6 +137,15 @@ jvmtiIterationControl JNICALL HeapObjectCallBack(jlong clsTag, jlong size,
  */
 void JNICALL
     OnClassPrepare(jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jclass klass) {
+
+  /*
+   * This process should be waited if VM is at safepoint (including safepoint
+   * synchronizing) because jclass (oop in JNIHandle) might be relocated.
+   */
+  while (!isAtNormalExecution()) {
+    sched_yield();
+  }
+
   /* Get klassOop. */
   void *mirror = *(void **)klass;
   void *klassOop = TVMFunctions::getInstance()->AsKlassOop(mirror);

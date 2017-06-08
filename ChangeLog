@@ -1,3 +1,7 @@
+2017-06-08 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3399: Fix potential error when conflict between class loading and GC
+
 2017-05-12  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3382: Class Search window is too narrow
