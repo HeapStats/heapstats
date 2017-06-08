@@ -37,7 +37,7 @@
 #define SAFEPOINT_STATE_SYMBOL "_ZN20SafepointSynchronize6_stateE"
 
 /*!
- * \brief Enumeration of safepoint state.
+ * \brief Numbering which shows safepoint state as enumeration.
  */
 #define SAFEPOINT_STATE_NORMAL_EXECUTION 0
 #define SAFEPOINT_STATE_SYNCHRONIZING    1

@@ -906,8 +906,8 @@ int TClassContainer::afterTakeSnapShot(TSnapShotContainer *snapshot,
 void JNICALL
     OnClassUnload(jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jclass klass) {
   /*
-   * Class Unloading occurs at safepoint.
-   * So we need not to check whether this process called at normal execution.
+   * This function does not require to check whether at safepoint because
+   * Class Unloading always executes at safepoint.
    */
 
   /* Get klassOop. */

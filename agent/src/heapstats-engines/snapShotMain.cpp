@@ -139,8 +139,8 @@ void JNICALL
     OnClassPrepare(jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jclass klass) {
 
   /*
-   * This process should be waited if VM is at safepoint (including safepoint
-   * synchronizing) because jclass (oop in JNIHandle) might be relocated.
+   * Wait if VM is at a safepoint which includes safepoint synchronizing,
+   * because jclass (oop in JNIHandle) might be relocated.
    */
   while (!isAtNormalExecution()) {
     sched_yield();
