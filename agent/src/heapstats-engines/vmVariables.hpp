@@ -1,7 +1,7 @@
 /*!
  * \file vmVariables.hpp
  * \brief This file includes variables in HotSpot VM.
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,6 +36,12 @@
  */
 #define SAFEPOINT_STATE_SYMBOL "_ZN20SafepointSynchronize6_stateE"
 
+/*!
+ * \brief Numbering which shows safepoint state as enumeration.
+ */
+#define SAFEPOINT_STATE_NORMAL_EXECUTION 0
+#define SAFEPOINT_STATE_SYNCHRONIZING    1
+#define SAFEPOINT_STATE_SYNCHRONIZED     2
 
 /* extern variables */
 extern "C" void *collectedHeap;
@@ -465,6 +471,26 @@ class TVMVariables {
   inline void *getYoungGen() const { return youngGen; };
   inline void *getYoungGenStartAddr() const { return youngGenStartAddr; };
   inline size_t getYoungGenSize() const { return youngGenSize; };
+};
+
+/* Utility functions for Safepoint */
+
+/*!
+ * \brief Check whether VM is at safepoint or not.
+ * \return true if VM is at safepoint.
+ */
+inline bool isAtSafepoint(void) {
+  return (TVMVariables::getInstance()->getSafePointState()
+                                          == SAFEPOINT_STATE_SYNCHRONIZED);
+};
+
+/*!
+ * \brief Check whether VM is at normal execution or not.
+ * \return true if VM is at normal execution.
+ */
+inline bool isAtNormalExecution(void) {
+  return (TVMVariables::getInstance()->getSafePointState()
+                                          == SAFEPOINT_STATE_NORMAL_EXECUTION);
 };
 
 #endif  // VMVARIABLES_H
