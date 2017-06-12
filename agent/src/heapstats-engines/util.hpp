@@ -25,6 +25,12 @@
 #include <jvmti.h>
 #include <jni.h>
 
+#ifdef HAVE_ATOMIC
+#include <atomic>
+#else
+#include <cstdatomic>
+#endif
+
 #include <stddef.h>
 #include <errno.h>
 #include <string.h>
@@ -365,6 +371,20 @@ class TNumericalHasher {
    * \return Hash value.
    */
   size_t operator()(const T &val) const { return (size_t)val; };
+};
+
+/*!
+ * \brief Utility class for flag of processing.
+ */
+class TProcessMark {
+
+  private:
+    std::atomic_int &flag;
+
+  public:
+    TProcessMark(std::atomic_int &flg) : flag(flg) { flag++; }
+    ~TProcessMark() { flag--; }
+
 };
 
 /* CPU Specific utilities. */

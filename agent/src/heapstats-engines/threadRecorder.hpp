@@ -1,7 +1,7 @@
 /*!
  * \file threadRecorder.hpp
  * \brief Recording thread status.
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -176,6 +176,13 @@ class TThreadRecorder {
    * \return true if succeeded.
    */
   static bool registerIOTracer(jvmtiEnv *jvmti, JNIEnv *env);
+
+  /*!
+   * \brief Unegister I/O tracer.
+   *
+   * \param env [in] JNI environment.
+   */
+  static void UnregisterIOTracer(JNIEnv *env);
 
  public:
   /*!
