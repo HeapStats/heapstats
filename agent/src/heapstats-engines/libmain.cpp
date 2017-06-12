@@ -381,11 +381,6 @@ void JNICALL OnVMDeath(jvmtiEnv *jvmti, JNIEnv *env) {
     reloadSigMngr = NULL;
   }
 
-  /* Invoke JVM finalize event of snapshot function. */
-  onVMDeathForSnapShot(jvmti, env);
-  /* Invoke JVM finalize event of log function. */
-  onVMDeathForLog(jvmti, env);
-
   /* If agent is attaching now. */
   if (likely(conf->Attach()->get())) {
     /* Stop and disable each thread. */
@@ -396,6 +391,13 @@ void JNICALL OnVMDeath(jvmtiEnv *jvmti, JNIEnv *env) {
                                 conf->ThreadRecordFileName()->get());
     }
   }
+
+  /* Invoke JVM finalize event of snapshot function. */
+  onVMDeathForSnapShot(jvmti, env);
+  /* Invoke JVM finalize event of log function. */
+  onVMDeathForLog(jvmti, env);
+  /* Unregister native functions for HeapStats MBean */
+  UnregisterHeapStatsNatives(env);
 }
 
 /*!

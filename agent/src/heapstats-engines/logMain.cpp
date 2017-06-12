@@ -20,6 +20,13 @@
  */
 
 #include <signal.h>
+#include <sched.h>
+
+#ifdef HAVE_ATOMIC
+#include <atomic>
+#else
+#include <cstdatomic>
+#endif
 
 #include "globals.hpp"
 #include "elapsedTimer.hpp"
@@ -67,6 +74,12 @@ volatile sig_atomic_t flagAllLogSignal;
  * \brief Flag of abortion by deadlock occurred.
  */
 bool abortionByDeadlock = false;
+
+/*!
+ * \brief processing flag
+ */
+static std::atomic_int processing(0);
+
 
 /*!
  * \brief Take log information.
@@ -134,6 +147,8 @@ void anotherLogProc(int signo, siginfo_t *siginfo, void *data) {
  * \param env   [in] JNI environment object.
  */
 void intervalSigProcForLog(jvmtiEnv *jvmti, JNIEnv *env) {
+  TProcessMark mark(processing);
+
   /* If catch normal log signal. */
   if (unlikely(flagLogSignal != 0)) {
     TMSecTime nowTime = (TMSecTime)getNowTimeSec();
@@ -163,6 +178,8 @@ void intervalSigProcForLog(jvmtiEnv *jvmti, JNIEnv *env) {
  *                   This value is always OccurredDeadlock.
  */
 void onOccurredDeadLock(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause) {
+  TProcessMark mark(processing);
+
   /* Get now date and time. */
   TMSecTime occurTime = TDeadlockFinder::getInstance()->getDeadlockTime();
 
@@ -190,6 +207,8 @@ void onOccurredDeadLock(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause) {
 void JNICALL OnResourceExhausted(jvmtiEnv *jvmti, JNIEnv *env, jint flags,
                                  const void *reserved,
                                  const char *description) {
+  TProcessMark mark(processing);
+
   /* Raise alert. */
   logger->printCritMsg("ALERT(RESOURCE): resource was exhausted. info:\"%s\"",
                        description);
@@ -408,6 +427,15 @@ void onVMDeathForLog(jvmtiEnv *jvmti, JNIEnv *env) {
   if (logAllSignalMngr != NULL) {
     delete logAllSignalMngr;
     logAllSignalMngr = NULL;
+  }
+
+  /*
+   * ResourceExhausted, MonitorContendedEnter for Deadlock JVMTI event,
+   * all callee of TakeLogInfo() will not be started at this point.
+   * So we wait to finish all existed tasks.
+   */
+  while (processing > 0) {
+    sched_yield();
   }
 }
 

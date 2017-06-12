@@ -99,6 +99,14 @@ AC_RUN_IFELSE(
   ]
 )
 AM_CONDITIONAL(USE_PCRE, test -n "${ac_cv_header_pcre_h}")
+
+# Check for atomic operation
+AC_CHECK_HEADERS([atomic], [],
+[
+  AC_CHECK_HEADERS([cstdatomic], [],
+                        [AC_MSG_ERROR([Compiler does not support C++ atomic.])])
+])
+
 AC_LANG_POP([C++])
 
 # Checks for library header files.

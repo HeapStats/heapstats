@@ -6471,6 +6471,38 @@ else
   USE_PCRE_FALSE=
 fi
 
+
+# Check for atomic operation
+for ac_header in atomic
+do :
+  ac_fn_cxx_check_header_mongrel "$LINENO" "atomic" "ac_cv_header_atomic" "$ac_includes_default"
+if test "x$ac_cv_header_atomic" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_ATOMIC 1
+_ACEOF
+
+else
+
+  for ac_header in cstdatomic
+do :
+  ac_fn_cxx_check_header_mongrel "$LINENO" "cstdatomic" "ac_cv_header_cstdatomic" "$ac_includes_default"
+if test "x$ac_cv_header_cstdatomic" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_CSTDATOMIC 1
+_ACEOF
+
+else
+  as_fn_error $? "Compiler does not support C++ atomic." "$LINENO" 5
+fi
+
+done
+
+
+fi
+
+done
+
+
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
