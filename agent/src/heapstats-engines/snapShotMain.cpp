@@ -21,6 +21,12 @@
 
 #include <sched.h>
 
+#ifdef HAVE_ATOMIC
+#include <atomic>
+#else
+#include <cstdatomic>
+#endif
+
 #include "globals.hpp"
 #include "vmFunctions.hpp"
 #include "elapsedTimer.hpp"
@@ -111,6 +117,12 @@ TSnapShotContainer *snapshotByJvmti = NULL;
  * \brief Index of JVM class unloading event.
  */
 int classUnloadEventIdx = -1;
+
+/*!
+ * \brief processing flag
+ */
+static std::atomic_int processing(0);
+
 
 /* Function defines. */
 
@@ -604,6 +616,7 @@ void JNICALL OnDataDumpRequestForSnapShot(jvmtiEnv *jvmti) {
  *                   e.g. GC, DumpRequest or Interval.
  */
 void TakeSnapShot(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause) {
+  TProcessMark mark(processing);
   TVMVariables *vmVal = TVMVariables::getInstance();
 
   /*
@@ -851,6 +864,18 @@ void onVMDeathForSnapShot(jvmtiEnv *jvmti, JNIEnv *env) {
   if (likely(classUnloadEventIdx >= 0)) {
     jvmti->SetExtensionEventCallback(classUnloadEventIdx, NULL);
   }
+
+  /* Wait until all tasks are finished. */
+  while (processing > 0) {
+    sched_yield();
+  }
+
+  /* Destroy object that is each snapshot trigger. */
+  delete gcWatcher;
+  gcWatcher = NULL;
+
+  delete timer;
+  timer = NULL;
 }
 
 /*!
@@ -925,13 +950,6 @@ void onAgentFinalForSnapShot(JNIEnv *env) {
   /* Destroy object that is for snapshot. */
   delete clsContainer;
   clsContainer = NULL;
-
-  /* Destroy object that is each snapshot trigger. */
-  delete gcWatcher;
-  gcWatcher = NULL;
-
-  delete timer;
-  timer = NULL;
 
   /* Finalize oop util. */
   oopUtilFinalize();
