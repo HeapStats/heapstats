@@ -1,7 +1,7 @@
 /*!
  * \file symbolFinder.cpp
  * \brief This file is used by search symbol in library.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
