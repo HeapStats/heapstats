@@ -1,3 +1,7 @@
+2017-06-14 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3404: Fix to show a path to debuginfo
+
 2017-06-14 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3403: HeapStats Agent might crash if application exits with System.exit()
