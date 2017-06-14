@@ -210,14 +210,14 @@ bool TSymbolFinder::loadLibrary(const char *pathPattern, const char *libname) {
     /* Load library's debuginfo with bfd record. */
     struct stat st = {0};
     if (unlikely(stat(&(dbgInfoPath[0]), &st) != 0)) {
-      logger->printWarnMsg("Cannot read debuginfo from ", dbgInfoPath);
+      logger->printWarnMsg("Cannot read debuginfo from %s", dbgInfoPath);
     } else {
-      logger->printDebugMsg("Try to read debuginfo from ", dbgInfoPath);
+      logger->printDebugMsg("Try to read debuginfo from %s", dbgInfoPath);
       loadLibraryInfo(dbgInfoPath, &debugBfdInfo);
     }
 
   } else {
-    logger->printDebugMsg("The same version of debuginfo not found: ",
+    logger->printDebugMsg("The same version of debuginfo not found: %s",
                           libBfdInfo.bfdInfo->filename);
   }
 
