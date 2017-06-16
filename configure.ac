@@ -72,12 +72,23 @@ AC_CHECK_HEADERS([ \
 AC_CHECK_HEADERS([sys/auxv.h], [], [])  # Supplemental headers
 AC_CACHE_SAVE
 
-# Check C++11 regex
-AC_MSG_CHECKING([for std::regex])
-
+# Check C++11 support
 AC_LANG_PUSH([C++])
 ORIG_CXXFLAGS=$CXXFLAGS
 CXXFLAGS+=" -std=c++11"
+CPP11=1
+
+AC_MSG_CHECKING([C++11 support])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [], [ CPP11=0 ])
+if test $CPP11 -eq 1; then
+  AC_MSG_RESULT([c++11])
+else
+  AC_MSG_RESULT([c++0x])
+  CXXFLAGS="$ORIG_CXXFLAGS -std=c++0x"
+fi
+
+# Check C++11 regex
+AC_MSG_CHECKING([for std::regex])
 
 AC_RUN_IFELSE(
   [AC_LANG_PROGRAM(
@@ -93,7 +104,6 @@ AC_RUN_IFELSE(
   ], [
     AC_MSG_RESULT([no])
     AC_DEFINE(USE_PCRE,1)
-    CXXFLAGS=$ORIG_CXXFLAGS
     AC_CHECK_HEADERS([pcre.h], [], [AC_MSG_ERROR([PCRE not found.])])
     AC_CHECK_LIB([pcre], [main], [], [AC_MSG_ERROR([PCRE not found.])])
   ]
@@ -103,7 +113,6 @@ AM_CONDITIONAL(USE_PCRE, test -n "${ac_cv_header_pcre_h}")
 # Check for atomic operation
 AC_CHECK_HEADERS([atomic], [],
 [
-  CXXFLAGS+=" -std=c++0x"
   AC_CHECK_HEADERS([cstdatomic], [],
                         [AC_MSG_ERROR([Compiler does not support C++ atomic.])])
 ])
