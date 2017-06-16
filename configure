@@ -6483,6 +6483,7 @@ _ACEOF
 
 else
 
+  CXXFLAGS+=" -std=c++0x"
   for ac_header in cstdatomic
 do :
   ac_fn_cxx_check_header_mongrel "$LINENO" "cstdatomic" "ac_cv_header_cstdatomic" "$ac_includes_default"

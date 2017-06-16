@@ -103,6 +103,7 @@ AM_CONDITIONAL(USE_PCRE, test -n "${ac_cv_header_pcre_h}")
 # Check for atomic operation
 AC_CHECK_HEADERS([atomic], [],
 [
+  CXXFLAGS+=" -std=c++0x"
   AC_CHECK_HEADERS([cstdatomic], [],
                         [AC_MSG_ERROR([Compiler does not support C++ atomic.])])
 ])
