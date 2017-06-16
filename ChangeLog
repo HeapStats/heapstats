@@ -1,3 +1,7 @@
+2017-06-20 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3405: HeapStats Agent cannot be built on CentOS 6 after Bug 3403
+
 2017-06-14 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3404: Fix to show a path to debuginfo
