@@ -73,6 +73,7 @@ void JNICALL TGCWatcher::entryPoint(jvmtiEnv *jvmti, JNIEnv *jni, void *data) {
         pthread_cond_wait(&controller->mutexCond, &controller->mutex);
       }
 
+RACE_COND_DEBUG_POINT:
       /* If waiting finished by notification. */
       if (likely(controller->_numRequests > 0)) {
         controller->_numRequests--;
