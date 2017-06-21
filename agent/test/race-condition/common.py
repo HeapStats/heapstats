@@ -1,4 +1,4 @@
-import gdb
+import gdb, threading, os
 
 class ContinueInvoker:
     def __init__(self, th):
@@ -25,31 +25,78 @@ class BreakPointHandler(gdb.Breakpoint):
             return False
 
 
+class SafepointBreaker(gdb.Breakpoint):
+    def __init__(self, rcgen):
+        super(SafepointBreaker, self).__init__("Interpreter::notice_safepoints")
+        self.at_safepoint = False
+        self.__rcgen = rcgen
+
+    def stop(self):
+        self.at_safepoint = True
+        self.enabled = False
+        self.__rcgen.coordinate()
+        return False
+
+
 class RaceConditionGenerator:
-    def __init__(self, primary, secondary, secondary_enabled):
+    def __init__(self, primary, secondary, secondary_enabled, need_safepoint, is_reverse):
         self.__primary = primary
         self.__secondary = secondary
         self.__secondary_enabled = secondary_enabled
+        self.__need_safepoint = need_safepoint
+        self.__safepoint_breaker = None
+        self.__is_reverse = is_reverse
 
     def coordinate(self):
         if((not self.__secondary_enabled) and (not self.__primary.enabled) and (self.__secondary.thread_num == -1)):
             self.__secondary.enabled = True
         elif((self.__primary.thread_num != -1) and (self.__secondary.thread_num != -1)):
-            gdb.write("Test start!\n")
-            gdb.post_event(ContinueInvoker(self.__primary.thread_num))
-            gdb.post_event(ContinueInvoker(self.__secondary.thread_num))
+            if self.__need_safepoint:
+                if self.__safepoint_breaker is None:
+                    self.__safepoint_breaker = SafepointBreaker(self)
+                    threading.Thread(target=os.system, args=("jcmd 0 GC.run",)).start()
+                    return
+                elif not self.__safepoint_breaker.at_safepoint:
+                    return
 
+            gdb.write("Test start!\n")
+            gdb.execute("p SafepointSynchronize::_state")
+
+            if self.__is_reverse:
+                gdb.post_event(ContinueInvoker(self.__secondary.thread_num))
+                gdb.post_event(ContinueInvoker(self.__primary.thread_num))
+            else:
+                gdb.post_event(ContinueInvoker(self.__primary.thread_num))
+                gdb.post_event(ContinueInvoker(self.__secondary.thread_num))
+
+
+def is_stopped():
+    result = True
+    for thread in gdb.selected_inferior().threads():
+        result &= thread.is_stopped()
+    return result
 
 class StopHandler:
     def __init__(self, rcgen):
         self.__rcgen = rcgen
+        self.__is_abort = False
 
     def __call__(self, event):
         # Ignore signals
-        if(isinstance(event, gdb.SignalEvent)):
-            gdb.post_event(ContinueInvoker(event.inferior_thread.num))
-        elif(isinstance(event, gdb.BreakpointEvent)):
+        if isinstance(event, gdb.SignalEvent):
+            if(event.stop_signal == "SIGABRT"):
+                self.__is_abort = True
+                gdb.write("Stop all threads...\n")
+                gdb.execute("interrupt -a")
+            else:
+                gdb.post_event(ContinueInvoker(event.inferior_thread.num))
+        elif isinstance(event, gdb.BreakpointEvent):
             self.__rcgen.coordinate()
+        elif(self.__is_abort and is_stopped()):
+            self.__is_abort = False
+            gdb.write("Dumping core...\n")
+            gdb.execute("gcore")
+            gdb.execute("quit")
 
 
 def return_true():
@@ -60,7 +107,8 @@ def exit_handler(event):
     gdb.execute("quit")
 
 
-def initialize(primary, primary_cond, secondary, secondary_cond, secondary_enabled):
+def initialize(primary, primary_cond, secondary, secondary_cond, secondary_enabled, is_reverse=False, at_safepoint=False):
+    gdb.execute("set confirm off")
     gdb.execute("set breakpoint pending on")
     gdb.execute("set target-async on")
     gdb.execute("set pagination off")
@@ -69,7 +117,7 @@ def initialize(primary, primary_cond, secondary, secondary_cond, secondary_enabl
     p = BreakPointHandler(primary, primary_cond)
     s = BreakPointHandler(secondary, secondary_cond)
     s.enabled = secondary_enabled
-    rcgen = RaceConditionGenerator(p, s, secondary_enabled)
+    rcgen = RaceConditionGenerator(p, s, secondary_enabled, at_safepoint, is_reverse)
 
     gdb.events.stop.connect(StopHandler(rcgen))
     gdb.events.exited.connect(exit_handler)

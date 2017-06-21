@@ -80,6 +80,7 @@ void JNICALL
         pthread_cond_wait(&controller->mutexCond, &controller->mutex);
       }
 
+RACE_COND_DEBUG_POINT:
       /* If get notification means output. */
       if (likely(controller->_numRequests > 0)) {
         controller->_numRequests--;

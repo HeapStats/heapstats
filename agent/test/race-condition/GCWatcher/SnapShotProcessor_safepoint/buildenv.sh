@@ -1,0 +1,1 @@
+../SnapShotProcessor/buildenv.sh

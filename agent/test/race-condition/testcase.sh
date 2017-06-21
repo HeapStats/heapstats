@@ -3,7 +3,7 @@
 pushd $(dirname $0) >/dev/null
 
 if [[ $1 == "--clean" ]]; then
-  find . \( -name "*.class" -o -name "core*" -o -name "hs_err*log" -o -name "*.gdb" -o -name "*.log" -o -name command.gdb -o -name "heapstats_*" -o -name "test-failed" -o -name "test-succeeded" \) -exec rm -f {} \;
+  find . \( -name "*.class" -o -name "core*" -o -name "hs_err*log" -o -name "*.gdb" -o -name "*.log" -o -name command.gdb -o -name "heapstats_*" -o -name "test-failed" -o -name "test-succeeded" -o -name "tmp*" -o -name core \) -exec rm -fR {} \;
   rm -fR __pycache__
   exit
 fi
