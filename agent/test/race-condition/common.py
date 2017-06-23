@@ -57,13 +57,14 @@ class SafepointBreaker(gdb.Breakpoint):
 
 
 class RaceConditionGenerator:
-    def __init__(self, primary, secondary, secondary_enabled, need_safepoint, is_reverse):
+    def __init__(self, primary, secondary, secondary_enabled, need_safepoint, is_reverse, jcmd_for_safepoint):
         self.__primary = primary
         self.__secondary = secondary
         self.__secondary_enabled = secondary_enabled
         self.__need_safepoint = need_safepoint
         self.__safepoint_breaker = None
         self.__is_reverse = is_reverse
+        self.__jcmd_for_safepoint = jcmd_for_safepoint
 
     def coordinate(self):
         if((not self.__secondary_enabled) and (not self.__primary.enabled) and (self.__secondary.thread_num == -1)):
@@ -72,7 +73,8 @@ class RaceConditionGenerator:
             if self.__need_safepoint:
                 if self.__safepoint_breaker is None:
                     self.__safepoint_breaker = SafepointBreaker(self)
-                    threading.Thread(target=os.system, args=("jcmd 0 GC.run",)).start()
+                    if self.__jcmd_for_safepoint:
+                        threading.Thread(target=os.system, args=("jcmd 0 GC.run",)).start()
                     return
                 elif not self.__safepoint_breaker.at_safepoint:
                     return
@@ -125,7 +127,7 @@ def exit_handler(event):
     gdb.execute("quit")
 
 
-def initialize(primary, primary_cond, secondary, secondary_cond, secondary_enabled, is_reverse=False, at_safepoint=False):
+def initialize(primary, primary_cond, secondary, secondary_cond, secondary_enabled, is_reverse=False, at_safepoint=False, jcmd_for_safepoint=True):
     gdb.execute("set confirm off")
     gdb.execute("set breakpoint pending on")
     gdb.execute("set target-async on")
@@ -135,7 +137,7 @@ def initialize(primary, primary_cond, secondary, secondary_cond, secondary_enabl
     p = BreakPointHandler(primary, primary_cond)
     s = BreakPointHandler(secondary, secondary_cond)
     s.enabled = secondary_enabled
-    rcgen = RaceConditionGenerator(p, s, secondary_enabled, at_safepoint, is_reverse)
+    rcgen = RaceConditionGenerator(p, s, secondary_enabled, at_safepoint, is_reverse, jcmd_for_safepoint)
 
     gdb.events.stop.connect(StopHandler(rcgen))
     gdb.events.exited.connect(exit_handler)

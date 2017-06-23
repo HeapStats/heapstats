@@ -27,4 +27,4 @@ def Cond_OnClassPrepare():
     return (symbol.find("DynLoad") != -1)
 
 
-common.initialize("OnClassPrepare", Cond_OnClassPrepare, "OnResourceExhausted", common.return_true, True, False, True)
+common.initialize("OnClassPrepare", Cond_OnClassPrepare, "OnResourceExhausted", common.return_true, True, at_safepoint=True, jcmd_for_safepoint=False)
