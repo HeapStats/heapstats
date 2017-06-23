@@ -1,3 +1,7 @@
+2017-06-26 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3405: HeapStats Agent cannot be built on CentOS 6 after Bug 3403
+
 2017-06-21 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3406: [TEST]Add race condition tests for core components
