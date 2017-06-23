@@ -36,4 +36,4 @@ def Cond_MemoryExhausted():
 def Cond_ThreadExhausted():
   return ((flagToInt() & JVMTI_RESOURCE_EXHAUSTED_THREADS) != 0)
 
-common.initialize("OnResourceExhausted", Cond_ThreadExhausted, "OnResourceExhausted", Cond_MemoryExhausted, True, False, True)
+common.initialize("OnResourceExhausted", Cond_ThreadExhausted, "OnResourceExhausted", Cond_MemoryExhausted, True, at_safepoint=True, jcmd_for_safepoint=False)
