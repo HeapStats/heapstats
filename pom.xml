@@ -53,6 +53,26 @@
         <connection>scm:hg:http://icedtea.classpath.org/hg/heapstats</connection>
         <developerConnection>scm:hg:ssh://icedtea.classpath.org/hg/heapstats</developerConnection>
     </scm>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+    <modules>
+        <module>mbean/java</module>
+        <module>analyzer/core</module>
+        <module>analyzer/cli</module>
+        <module>analyzer/fx</module>
+        <module>analyzer/jmx-helper</module>
+    </modules>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <profiles>
         <profile>
             <id>release-sign-artifacts</id>
@@ -83,14 +103,4 @@
             </build>
         </profile>
     </profiles>
-    <modules>
-        <module>mbean/java</module>
-        <module>analyzer/core</module>
-        <module>analyzer/cli</module>
-        <module>analyzer/fx</module>
-        <module>analyzer/jmx</module>
-    </modules>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 </project>

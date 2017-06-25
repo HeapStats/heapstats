@@ -101,7 +101,7 @@ public class ErrorReportDecoder extends Task<Void>{
      * @param crashList List of crash jvms.
      * @param ch AsynchronousSocketChannel to crash jvm.
      * 
-     * @throws IOException 
+     * @throws IOException If an I/O error occurs
      */
     public ErrorReportDecoder(ObservableList<ErrorReportDecoder> crashList, AsynchronousSocketChannel ch) throws IOException{
         crashedTime = LocalDateTime.now();
@@ -127,7 +127,7 @@ public class ErrorReportDecoder extends Task<Void>{
     /**
      * Parse header information in error report data.
      * 
-     * @param buf Received data 
+     * @param buf Received data
      */
     private void parseHeader(ByteBuffer buf){
         
