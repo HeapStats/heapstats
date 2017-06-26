@@ -44,7 +44,7 @@ public class DiffData {
 
     /**
      * Constructor of DiffData.
-     * 
+     *
      * @param diffDate Date time of this difference data.
      * @param prev Previous data.
      * @param current Current data.
@@ -62,6 +62,17 @@ public class DiffData {
         this.ranked = isRanked;
     }
 
+    /**
+     * Constructor of DiffData.
+     *
+     * @param tag Tag number.
+     * @param diffDate Date time of this difference data.
+     * @param className Class name.
+     * @param classLoaderName Classloader name.
+     * @param instances Amount of instances.
+     * @param totalSize Total heap size of this object data.
+     * @param ranked true if this object data is ranked in.
+     */
     public DiffData(long tag, LocalDateTime diffDate, String className, String classLoaderName, Long instances, long totalSize, boolean ranked) {
         this.tag = tag;
         this.diffDate = diffDate;

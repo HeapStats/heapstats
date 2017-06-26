@@ -18,7 +18,7 @@
 package jp.co.ntt.oss.heapstats.cli.processor;
 
 /**
- * Interfafce of CLI Processor.
+ * Interface of CLI Processor.
  * CLI task should implement this interface.
  * 
  * @author Yasumasa Suenaga
