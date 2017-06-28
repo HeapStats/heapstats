@@ -1,3 +1,7 @@
+2017-06-29 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3416: Remove inheritance from each modules
+
 2017-06-26 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3219: Upload artifacts to the Maven Central Repository
