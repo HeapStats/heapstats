@@ -354,10 +354,15 @@ void TSnapShotContainer::printGCInfo(void) {
  * \param unloadedList Set of unloaded TObjectData.
  */
 void TSnapShotContainer::removeObjectData(TClassInfoSet &unloadedList) {
-  TObjectData *objData;
-  while (unloadedList.try_pop(objData)) {
+  /*
+   * This function is called at safepoint.
+   *   (from OnGarbageCollectionFinishForUnload() in classContainer.cpp)
+   * So we can use *unsafe* iterator access in tbb::concurrent_queue.
+   */
+  for (auto itr = unloadedList.unsafe_begin();
+       itr != unloadedList.unsafe_end(); itr++) {
     TSizeMap::const_accessor acc;
-    if (counterMap.find(acc, objData)) {
+    if (counterMap.find(acc, *itr)) {
       TClassCounter *clsCounter = acc->second;
       acc.release();
 
@@ -369,9 +374,6 @@ void TSnapShotContainer::removeObjectData(TClassInfoSet &unloadedList) {
         free(child);
         child = next;
       }
-
-      free(objData->className);
-      free(objData);
     }
   }
 }
