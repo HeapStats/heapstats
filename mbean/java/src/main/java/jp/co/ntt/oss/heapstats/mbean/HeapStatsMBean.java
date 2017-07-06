@@ -122,26 +122,30 @@ public interface HeapStatsMBean{
   public boolean invokeAllLogCollection();
 
   /**
+   * Create a MBean service.
    * This function is for WildFly/JBoss.
-   * @throws java.lang.Exception
+   * @throws java.lang.Exception if cannot create service.
    */
   public void create() throws Exception;
 
   /**
+   * Start a MBean service.
    * This function is for WildFly/JBoss.
-   * @throws java.lang.Exception
+   * @throws java.lang.Exception if cannot start service.
    */
   public void start() throws Exception;
 
   /**
+   * Stop a MBean service.
    * This function is for WildFly/JBoss.
-   * @throws java.lang.Exception
+   * @throws java.lang.Exception if cannot stop service.
    */
   public void stop() throws Exception;
 
   /**
+   * Destory a MBean service.
    * This function is for WildFly/JBoss.
-   * @throws java.lang.Exception
+   * @throws java.lang.Exception if cannot destroy service.
    */
   public void destroy() throws Exception;
 

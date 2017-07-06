@@ -31,6 +31,9 @@ public class ConsumerWrapper<T> implements Consumer<T> {
         this.consumer = consumer;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void accept(T t) {
         try{

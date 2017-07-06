@@ -19,6 +19,14 @@
  *
  */
 
+#include <sched.h>
+
+#ifdef HAVE_ATOMIC
+#include <atomic>
+#else
+#include <cstdatomic>
+#endif
+
 #include "globals.hpp"
 #include "vmFunctions.hpp"
 #include "elapsedTimer.hpp"
@@ -96,6 +104,12 @@ TSnapShotContainer *snapshotByJvmti = NULL;
  */
 int classUnloadEventIdx = -1;
 
+/*!
+ * \brief processing flag
+ */
+static std::atomic_int processing(0);
+
+
 /* Function defines. */
 
 /*!
@@ -121,6 +135,15 @@ jvmtiIterationControl JNICALL HeapObjectCallBack(jlong clsTag, jlong size,
  */
 void JNICALL
     OnClassPrepare(jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jclass klass) {
+
+  /*
+   * Wait if VM is at a safepoint which includes safepoint synchronizing,
+   * because jclass (oop in JNIHandle) might be relocated.
+   */
+  while (!isAtNormalExecution()) {
+    sched_yield();
+  }
+
   /* Get klassOop. */
   void *mirror = *(void **)klass;
   void *klassOop = TVMFunctions::getInstance()->AsKlassOop(mirror);
@@ -531,6 +554,7 @@ void JNICALL OnDataDumpRequestForSnapShot(jvmtiEnv *jvmti) {
  *                   e.g. GC, DumpRequest or Interval.
  */
 void TakeSnapShot(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause) {
+  TProcessMark mark(processing);
   TVMVariables *vmVal = TVMVariables::getInstance();
 
   /*
@@ -778,6 +802,18 @@ void onVMDeathForSnapShot(jvmtiEnv *jvmti, JNIEnv *env) {
   if (likely(classUnloadEventIdx >= 0)) {
     jvmti->SetExtensionEventCallback(classUnloadEventIdx, NULL);
   }
+
+  /* Wait until all tasks are finished. */
+  while (processing > 0) {
+    sched_yield();
+  }
+
+  /* Destroy object that is each snapshot trigger. */
+  delete gcWatcher;
+  gcWatcher = NULL;
+
+  delete timer;
+  timer = NULL;
 }
 
 /*!
@@ -852,13 +888,6 @@ void onAgentFinalForSnapShot(JNIEnv *env) {
   /* Destroy object that is for snapshot. */
   delete clsContainer;
   clsContainer = NULL;
-
-  /* Destroy object that is each snapshot trigger. */
-  delete gcWatcher;
-  gcWatcher = NULL;
-
-  delete timer;
-  timer = NULL;
 
   /* Finalize oop util. */
   oopUtilFinalize();

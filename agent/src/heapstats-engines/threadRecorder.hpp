@@ -178,6 +178,13 @@ class TThreadRecorder {
    */
   static bool registerIOTracer(jvmtiEnv *jvmti, JNIEnv *env);
 
+  /*!
+   * \brief Unegister I/O tracer.
+   *
+   * \param env [in] JNI environment.
+   */
+  static void UnregisterIOTracer(JNIEnv *env);
+
  public:
   /*!
    * \brief JVMTI callback for ThreadStart event.

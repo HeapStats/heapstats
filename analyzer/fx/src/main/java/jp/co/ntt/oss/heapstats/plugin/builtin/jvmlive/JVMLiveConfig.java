@@ -50,7 +50,7 @@ public class JVMLiveConfig {
      * 
      * @param key configuration key.
      * @param defaultValue default value of configuration key.
-     * @throws HeapStatsConfigException 
+     * @throws HeapStatsConfigException when invalid HeapStats config is set.
      */
     private static void setupNumericProperty(String key, int defaultValue) throws HeapStatsConfigException{
         String valStr = prop.getProperty(key);
@@ -72,8 +72,8 @@ public class JVMLiveConfig {
     /**
      * Load configuration from &lt;HeapStats home directory&gt;/jvmlive.properties .
      * 
-     * @throws IOException
-     * @throws HeapStatsConfigException 
+     * @throws IOException when properties file cannot be read.
+     * @throws HeapStatsConfigException when invalid HeapStats config is set.
      */
     public static void load() throws IOException, HeapStatsConfigException{
         Path properties = Paths.get(HeapStatsUtils.getHeapStatsHomeDirectory().toString(), "jvmlive.properties");
@@ -91,7 +91,7 @@ public class JVMLiveConfig {
     }
     
     /**
-     * Wait duration for JDP packet.
+     * Get a Wait duration for JDP packet.
      * This value uses as duration for JdpValidatorService.
      * 
      * @return Wait duration for JDP packet.
@@ -101,6 +101,7 @@ public class JVMLiveConfig {
     }
     
     /**
+     * Get a wait duration time for JDP packet.
      * @return Await time for threadpool shutdown.
      */
     public static int getThreadpoolShutdownAwaitTime(){
@@ -108,6 +109,7 @@ public class JVMLiveConfig {
     }
     
     /**
+     * Get a prot of error report server.
      * @return Port for error report receiver.
      */
     public static int getErrorReportServerPort(){

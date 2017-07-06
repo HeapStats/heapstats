@@ -32,6 +32,7 @@ install-exec-local:
 	$(INSTALL_DATA) $(ANALYZER_DIR)/heapstats.properties $(DESTDIR)/$(libexecdir)
 	$(INSTALL_DATA) $(ANALYZER_DIR)/lib/heapstats-core.jar $(DESTDIR)/$(libexecdir)/lib
 	$(INSTALL_DATA) $(ANALYZER_DIR)/lib/heapstats-mbean.jar $(DESTDIR)/$(libexecdir)/lib
+	$(INSTALL_DATA) $(ANALYZER_DIR)/lib/heapstats-jmx-helper.jar $(DESTDIR)/$(libexecdir)/lib
 	$(INSTALL_DATA) $(ANALYZER_DIR)/lib/jgraphx.jar $(DESTDIR)/$(libexecdir)/lib
 	$(INSTALL_DATA) $(CLI_DIR)/heapstats-cli.jar $(DESTDIR)/$(libexecdir)
 	$(INSTALL_PROGRAM) $(srcdir)/analyzer/cli/heapstats-cli $(DESTDIR)/$(bindir)

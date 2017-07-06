@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- Copyright (C) 2015 Yasumasa Suenaga
+ Copyright (C) 2015-2017 Yasumasa Suenaga
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -20,17 +20,56 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>jp.co.ntt.oss.heapstats</groupId>
-        <artifactId>heapstats</artifactId>
-        <version>2.0.trunk</version>
-        <relativePath>../../pom.xml</relativePath>
-    </parent>
-
     <groupId>jp.co.ntt.oss.heapstats</groupId>
     <artifactId>heapstats-core</artifactId>
+    <version>2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
+
     <name>HeapStats Analyzer Core</name>
+
+    <description>A core Java library for HeapStats analyzer</description>
+    <url>http://icedtea.classpath.org/wiki/HeapStats</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 2</name>
+            <url>https://www.gnu.org/licenses/gpl-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Yasumasa Suenaga</name>
+            <email>yasuenag@gmail.com</email>
+            <organization>icedtea</organization>
+            <organizationUrl>http://www.icedtea.classpath.org</organizationUrl>
+        </developer>
+        <developer>
+            <name>KUBOTA Yuji</name>
+            <email>kubota.yuji@gmail.com</email>
+            <organization>icedtea</organization>
+            <organizationUrl>http://www.icedtea.classpath.org</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>http://icedtea.classpath.org/hg/heapstats</url>
+        <connection>scm:hg:http://icedtea.classpath.org/hg/heapstats</connection>
+        <developerConnection>scm:hg:ssh://icedtea.classpath.org/hg/heapstats</developerConnection>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -39,13 +78,6 @@
     <organization>
         <name>NTT OSS Center</name>
     </organization>
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>heapstats-mbean</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -62,10 +94,90 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
                 <configuration>
-                    <finalName>heapstats-core</finalName>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+                <executions>
+                    <execution>
+                        <id>deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <!-- releasing for maven repository, mvn -DperformRelease=true deploy -->
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

@@ -38,8 +38,8 @@ public class LogDataConverter extends StringConverter<LogData> {
     /**
      * This class DO NOT support this method.
      *
-     * @param string
-     * @return UnsupportedOperationException.
+     * @param string String
+     * @return UnsupportedOperationException This class cannot convert from string.
      */
     @Override
     public LogData fromString(String string) {

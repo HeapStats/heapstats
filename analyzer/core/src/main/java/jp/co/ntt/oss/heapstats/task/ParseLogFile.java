@@ -51,7 +51,7 @@ public class ParseLogFile extends ProgressRunnable{
      * Constructor of LogFileParser.
      * 
      * @param fileList List of log to be parsed.
-     * @param parseAsPossible Parse log before occuring error.
+     * @param parseAsPossible Parse log before occurring error.
      */
     public ParseLogFile(List<File> fileList, boolean parseAsPossible){
         logEntries = new ArrayList<>();
@@ -61,7 +61,7 @@ public class ParseLogFile extends ProgressRunnable{
     }
     
     /**
-     * This method addes log value from CSV.
+     * This method adds log value from CSV.
      * 
      * @param csvLine CSV data to be added. This value must be 1-raw (1-record).
      * @param logdir Log directory. This value is used to store log value.
@@ -76,9 +76,9 @@ public class ParseLogFile extends ProgressRunnable{
     /**
      * Parse log file.
      * 
-     * @param logfile Log to be parsedd.
-     * @param progress
-     * @throws java.io.IOException
+     * @param logfile Log to be parsed.
+     * @param progress Amount of progressed parsing.
+     * @throws java.io.IOException If some other I/O error occurs.
      */
     protected void parse(String logfile, AtomicLong progress) throws IOException{
         Path logPath = Paths.get(logfile);
@@ -101,7 +101,6 @@ public class ParseLogFile extends ProgressRunnable{
 
     /**
      * Returns diff entries of resulting on this task.
-     * 
      * @return results of this task.
      */
     public List<DiffData> getDiffEntries() {

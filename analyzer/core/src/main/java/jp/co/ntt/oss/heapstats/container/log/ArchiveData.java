@@ -87,7 +87,7 @@ public class ArchiveData {
      * Constructor of ArchiveData.
      * 
      * @param log LogData. This value must be included archive data.
-     * @throws java.io.IOException
+     * @throws java.io.IOException if heapstats_archive is not found
      */
     public ArchiveData(LogData log) throws IOException{
         this(log, null);
@@ -280,7 +280,12 @@ public class ArchiveData {
         }
         
     }
-    
+
+    /**
+     * Build zip entry.
+     *
+     * @throws IOException
+     */
     private void processZipEntry(ZipFile archive, ZipEntry entry) throws IOException{
         switch(entry.getName()){
             case "envInfo.txt":
@@ -315,7 +320,7 @@ public class ArchiveData {
     
     /**
      * Parsing Archive data.
-     * @throws java.io.IOException
+     * @throws java.io.IOException if could not read or/and write archive.
      */
     public void parseArchive() throws IOException{
         
@@ -336,6 +341,9 @@ public class ArchiveData {
         parsed = true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void finalize() throws Throwable {
         try {
@@ -387,7 +395,7 @@ public class ArchiveData {
      * 
      * @param file File to be got.
      * @return Contents of file.
-     * @throws IOException 
+     * @throws IOException if file not found.
      */
     public String getFileContents(String file) throws IOException{
         Path filePath = Paths.get(extractPath.getAbsolutePath(), file);

@@ -99,7 +99,7 @@ public class JdpReceiver extends Task<Void>{
      * @param jconsolePath Path to JConsole.
      * @param jmxPool ThreadPool which processes JMX access.
      * 
-     * @throws UnknownHostException 
+     * @throws UnknownHostException Invalid host information to access.
      */
     public JdpReceiver(ListView<JdpDecoder> jdpList, ExecutorService threadPool, Optional<String> jconsolePath, ExecutorService jmxPool) throws UnknownHostException{
         this(InetAddress.getByName(Optional.ofNullable(System.getProperty(JDP_ADDRESS_PROP_NAME)).orElse(JDP_DEFAULT_ADDRESS)),

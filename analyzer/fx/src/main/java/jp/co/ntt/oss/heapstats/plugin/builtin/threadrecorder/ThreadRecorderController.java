@@ -143,7 +143,7 @@ public class ThreadRecorderController extends PluginController implements Initia
     
     /**
      * Event handler for open button.
-     * @param event 
+     * @param event Pushing open button event.
      */
     @FXML
     public void onOpenBtnClick(ActionEvent event){
@@ -185,7 +185,7 @@ public class ThreadRecorderController extends PluginController implements Initia
 
     /**
      * Event handler for OK button.
-     * @param event 
+     * @param event Pushing ok button event.
      */
     @FXML
     private void onOkBtnClick(ActionEvent event){

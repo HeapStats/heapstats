@@ -1,7 +1,7 @@
 /*!
  * \file heapstatsMBean.cpp
  * \brief JNI implementation for HeapStatsMBean.
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,12 +22,20 @@
 #include <jni.h>
 
 #include <limits.h>
+#include <sched.h>
 
 #include <list>
+
+#ifdef HAVE_ATOMIC
+#include <atomic>
+#else
+#include <cstdatomic>
+#endif
 
 #include "globals.hpp"
 #include "configuration.hpp"
 #include "heapstatsMBean.hpp"
+#include "util.hpp"
 
 /* Variables */
 static jclass mapCls = NULL;
@@ -49,6 +57,11 @@ static jmethodID intValueOf = NULL;
 static jclass longCls = NULL;
 static jmethodID longValue = NULL;
 static jmethodID longValueOf = NULL;
+
+static jclass linkedCls = NULL;
+static volatile bool isLoaded = false;
+static std::atomic_int processing(0);
+
 
 /*!
  * \brief Raise Java Exception.
@@ -301,7 +314,11 @@ JNIEXPORT void JNICALL RegisterHeapStatsNative(JNIEnv *env, jclass cls) {
     return;
   }
 
+  TProcessMark mark(processing);
+
   /* Initialize variables. */
+  linkedCls = (jclass)env->NewGlobalRef(cls);
+  isLoaded = true;
 
   /* For Map object */
   if (!prepareForMapObject(env)) {
@@ -328,6 +345,52 @@ JNIEXPORT void JNICALL RegisterHeapStatsNative(JNIEnv *env, jclass cls) {
   }
 }
 
+static void *JNIDummy(void) {
+  return NULL;
+}
+
+/*!
+ * \brief Unregister JNI functions in libheapstats.
+ * \param env Pointer of JNI environment.
+ */
+void UnregisterHeapStatsNatives(JNIEnv *env) {
+  if (!isLoaded) {
+    return;
+  }
+
+  /* Regist JNI functions */
+  JNINativeMethod methods[] = {
+      {(char *)"getHeapStatsVersion0",
+       (char *)"()Ljava/lang/String;",
+       (void *)JNIDummy},
+      {(char *)"getConfiguration0",
+       (char *)"(Ljava/lang/String;)Ljava/lang/Object;",
+       (void *)JNIDummy},
+      {(char *)"getConfigurationList0",
+       (char *)"()Ljava/util/Map;",
+       (void *)JNIDummy},
+      {(char *)"changeConfiguration0",
+       (char *)"(Ljava/lang/String;Ljava/lang/Object;)Z",
+       (void *)JNIDummy},
+      {(char *)"invokeLogCollection0",
+       (char *)"()Z",
+       (void *)JNIDummy},
+      {(char *)"invokeAllLogCollection0",
+       (char *)"()Z",
+       (void *)JNIDummy}};
+
+  if (env->RegisterNatives(linkedCls, methods, 6) != 0) {
+    raiseException(env, "java/lang/UnsatisfiedLinkError",
+                   "Could not unregister HeapStats native functions.");
+  }
+
+  env->DeleteGlobalRef(linkedCls);
+
+  while (processing > 0) {
+    sched_yield();
+  }
+}
+
 /*!
  * \brief Get HeapStats version string from libheapstats.
  *
@@ -336,6 +399,7 @@ JNIEXPORT void JNICALL RegisterHeapStatsNative(JNIEnv *env, jclass cls) {
  * \return Version string which is attached.
  */
 JNIEXPORT jstring JNICALL GetHeapStatsVersion(JNIEnv *env, jobject obj) {
+  TProcessMark mark(processing);
   jstring versionStr = env->NewStringUTF(PACKAGE_STRING
                                          " ("
 #ifdef SSE2
@@ -432,6 +496,7 @@ static jobject getConfigAsJObject(JNIEnv *env, TConfigElementSuper *config) {
  */
 JNIEXPORT jobject JNICALL
     GetConfiguration(JNIEnv *env, jobject obj, jstring key) {
+  TProcessMark mark(processing);
   const char *opt = env->GetStringUTFChars(key, NULL);
   if (opt == NULL) {
     raiseException(env, "java/lang/RuntimeException",
@@ -467,6 +532,7 @@ JNIEXPORT jobject JNICALL
  * \return Current configuration list.
  */
 JNIEXPORT jobject JNICALL GetConfigurationList(JNIEnv *env, jobject obj) {
+  TProcessMark mark(processing);
   jobject result = env->NewObject(mapCls, map_ctor);
   if (result == NULL) {
     raiseException(env, "java/lang/RuntimeException",
@@ -509,6 +575,7 @@ JNIEXPORT jobject JNICALL GetConfigurationList(JNIEnv *env, jobject obj) {
  */
 JNIEXPORT jboolean JNICALL
     ChangeConfiguration(JNIEnv *env, jobject obj, jstring key, jobject value) {
+  TProcessMark mark(processing);
   jclass valueCls = env->GetObjectClass(value);
   char *opt = (char *)env->GetStringUTFChars(key, NULL);
   if (opt == NULL) {
@@ -631,6 +698,7 @@ JNIEXPORT jboolean JNICALL
  * \return Result of this call.
  */
 JNIEXPORT jboolean JNICALL InvokeLogCollection(JNIEnv *env, jobject obj) {
+  TProcessMark mark(processing);
   int ret = logManager->collectLog(NULL, env, Signal,
                                    (TMSecTime)getNowTimeSec(), "JMX event");
   return ret == 0 ? JNI_TRUE : JNI_FALSE;
@@ -644,6 +712,7 @@ JNIEXPORT jboolean JNICALL InvokeLogCollection(JNIEnv *env, jobject obj) {
  * \return Result of this call.
  */
 JNIEXPORT jboolean JNICALL InvokeAllLogCollection(JNIEnv *env, jobject obj) {
+  TProcessMark mark(processing);
   int ret = logManager->collectLog(NULL, env, AnotherSignal,
                                    (TMSecTime)getNowTimeSec(), "JMX event");
   return ret == 0 ? JNI_TRUE : JNI_FALSE;

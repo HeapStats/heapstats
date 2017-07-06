@@ -77,7 +77,7 @@ public class SnapShotParser {
      * 
      * @param ch Channel to be read.
      * @param size Read size.
-     * @throws IOException 
+     * @throws IOException If some other I/O error occurs.
      */
     private void readLong(SeekableByteChannel ch, int size) throws IOException{
         longBuffer.position(0);
@@ -91,7 +91,7 @@ public class SnapShotParser {
      * 
      * @param ch Channel to be read.
      * @return read value.
-     * @throws IOException 
+     * @throws IOException If some other I/O error occurs.
      */
     private int readInt(SeekableByteChannel ch) throws IOException{
         ch.read(intBuffer);
@@ -107,7 +107,7 @@ public class SnapShotParser {
      * @param header SnapShotHeader to parse.
      * @param handler SnapShot handler.
      * @return true if parsing is succeeded.
-     * @throws IOException 
+     * @throws IOException If some other I/O error occurs.
      */
     public boolean parseSingle(SnapShotHeader header, SnapShotParserEventHandler handler) throws IOException {
 

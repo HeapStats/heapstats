@@ -60,11 +60,10 @@ public class JMXHelper implements AutoCloseable{
      * 
      * @param url JMX URL to connect.
      * 
-     * @throws MalformedURLException
-     * @throws IOException
-     * @throws MalformedObjectNameException 
+     * @throws MalformedURLException if <code>url</code> is malformed.
+     * @throws MalformedObjectNameException if <code>url</code> does not correspond to a valid ObjectName.
      */
-    public JMXHelper(String url) throws MalformedURLException, IOException, MalformedObjectNameException{
+    public JMXHelper(String url) throws IOException, MalformedObjectNameException{
         this(new JMXServiceURL(url));
     }
     
@@ -72,8 +71,8 @@ public class JMXHelper implements AutoCloseable{
      * Constructor of JMXHelper.
      * @param url JMX URL to connect.
      * 
-     * @throws IOException
-     * @throws MalformedObjectNameException 
+     * @throws IOException if could not connect to <code>url</code>.
+     * @throws MalformedObjectNameException if <code>url</code> does not correspond to a valid ObjectName.
      */
     public JMXHelper(JMXServiceURL url) throws IOException, MalformedObjectNameException{
         this.url = url;
@@ -139,9 +138,9 @@ public class JMXHelper implements AutoCloseable{
      * 
      * @param path Path to save file.
      * 
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ExecutionException 
+     * @throws IOException Could not read or/and write a given SnapShot file.
+     * @throws InterruptedException Something interrupt has occurred.
+     * @throws ExecutionException Could not get a given SnapShot file.
      */
     public void getSnapShot(Path path) throws IOException, InterruptedException, ExecutionException{
         getFileInternal(path, true);
@@ -152,9 +151,9 @@ public class JMXHelper implements AutoCloseable{
      * 
      * @param path Path to save file.
      * 
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ExecutionException 
+     * @throws IOException Could not read a given resource log file.
+     * @throws InterruptedException Something interrupt has occurred.
+     * @throws ExecutionException Could not get a given resource log file.
      */
     public void getResourceLog(Path path) throws IOException, InterruptedException, ExecutionException{
         getFileInternal(path, false);

@@ -94,7 +94,7 @@ public class DiffCalculator extends ProgressRunnable {
     }
 
     /**
-     * Build TopN data from givien snapshot header.
+     * Build TopN data from given snapshot header.
      *
      * @param header SnapShot header to build.
      */

@@ -6390,7 +6390,7 @@ $as_echo "$as_me: not updating unwritable cache $cache_file" >&6;}
 fi
 rm -f confcache
 
-# Check C++11 regex
+# Check C++11 support
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -6399,10 +6399,43 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 ORIG_CXXFLAGS=$CXXFLAGS
 CXXFLAGS+=" -std=c++11"
+CPP11=1
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking C++11 support" >&5
+$as_echo_n "checking C++11 support... " >&6; }
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+else
+   CPP11=0
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+if test $CPP11 -eq 1; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: c++11" >&5
+$as_echo "c++11" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: c++0x" >&5
+$as_echo "c++0x" >&6; }
+  CXXFLAGS="$ORIG_CXXFLAGS -std=c++0x"
+fi
+
+# Check C++11 regex
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for std::regex" >&5
 $as_echo_n "checking for std::regex... " >&6; }
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for std::regex" >&5
+$as_echo_n "checking for std::regex... " >&6; }
 
 if test "$cross_compiling" = yes; then :
   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
@@ -6524,6 +6557,37 @@ fi
 
 done
   # Supplemental headers
+
+# Check for atomic operation
+for ac_header in atomic
+do :
+  ac_fn_cxx_check_header_mongrel "$LINENO" "atomic" "ac_cv_header_atomic" "$ac_includes_default"
+if test "x$ac_cv_header_atomic" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_ATOMIC 1
+_ACEOF
+
+else
+
+  for ac_header in cstdatomic
+do :
+  ac_fn_cxx_check_header_mongrel "$LINENO" "cstdatomic" "ac_cv_header_cstdatomic" "$ac_includes_default"
+if test "x$ac_cv_header_cstdatomic" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_CSTDATOMIC 1
+_ACEOF
+
+else
+  as_fn_error $? "Compiler does not support C++ atomic." "$LINENO" 5
+fi
+
+done
+
+
+fi
+
+done
+
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'

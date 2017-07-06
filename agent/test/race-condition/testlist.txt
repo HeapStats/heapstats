@@ -1,1 +1,5 @@
 ClassPrepare/*
+MemoryExhausted/*
+ThreadExhausted/*
+SnapShotProcessor/*
+GCWatcher/*

@@ -760,6 +760,11 @@ int TClassContainer::afterTakeSnapShot(TSnapShotContainer *snapshot,
  */
 void JNICALL
     OnClassUnload(jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jclass klass) {
+  /*
+   * This function does not require to check whether at safepoint because
+   * Class Unloading always executes at safepoint.
+   */
+
   /* Get klassOop. */
   void *mirror = *(void **)klass;
   void *klassOop = TVMFunctions::getInstance()->AsKlassOop(mirror);

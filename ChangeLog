@@ -1,3 +1,35 @@
+2017-06-29 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3416: Remove inheritance from each modules
+
+2017-06-26 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3219: Upload artifacts to the Maven Central Repository
+
+2017-06-26 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3407: [TEST] jcmd should not be run for safepoint in ThreadExhausted tests
+
+2017-06-21 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3406: [TEST]Add race condition tests for core components
+
+2017-06-20 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3405: HeapStats Agent cannot be built on CentOS 6 after Bug 3403
+
+2017-06-14 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3404: Fix to show a path to debuginfo
+
+2017-06-14 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3403: HeapStats Agent might crash if application exits with System.exit()
+
+2017-06-08 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3399: Fix potential error when conflict between class loading and GC
+
 2017-05-12  Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3382: Class Search window is too narrow

@@ -31,6 +31,13 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <sys/stat.h>
+#include <sched.h>
+
+#ifdef HAVE_ATOMIC
+#include <atomic>
+#else
+#include <cstdatomic>
+#endif
 
 #include "globals.hpp"
 #include "util.hpp"
@@ -51,6 +58,7 @@ TThreadRecorder *TThreadRecorder::inst = NULL;
 /* variables */
 jclass threadClass;
 jmethodID currentThreadMethod;
+static std::atomic_int processing(0);
 
 /* JVMTI event handler */
 
@@ -62,6 +70,7 @@ jmethodID currentThreadMethod;
  * \param thread [in] jthread object which is created.
  */
 void JNICALL OnThreadStart(jvmtiEnv *jvmti, JNIEnv *env, jthread thread) {
+  TProcessMark mark(processing);
   TThreadRecorder *recorder = TThreadRecorder::getInstance();
   recorder->registerNewThread(jvmti, thread);
   recorder->putEvent(thread, ThreadStart, 0);
@@ -75,6 +84,7 @@ void JNICALL OnThreadStart(jvmtiEnv *jvmti, JNIEnv *env, jthread thread) {
  * \param thread [in] jthread object which is created.
  */
 void JNICALL OnThreadEnd(jvmtiEnv *jvmti, JNIEnv *env, jthread thread) {
+  TProcessMark mark(processing);
   TThreadRecorder::getInstance()->putEvent(thread, ThreadEnd, 0);
 }
 
@@ -89,6 +99,7 @@ void JNICALL OnThreadEnd(jvmtiEnv *jvmti, JNIEnv *env, jthread thread) {
 void JNICALL
     OnMonitorContendedEnterForThreadRecording(jvmtiEnv *jvmti, JNIEnv *env,
                                               jthread thread, jobject object) {
+  TProcessMark mark(processing);
   TThreadRecorder::getInstance()->putEvent(thread, MonitorContendedEnter, 0);
 }
 
@@ -104,6 +115,7 @@ void JNICALL OnMonitorContendedEnteredForThreadRecording(jvmtiEnv *jvmti,
                                                          JNIEnv *env,
                                                          jthread thread,
                                                          jobject object) {
+  TProcessMark mark(processing);
   TThreadRecorder::getInstance()->putEvent(thread, MonitorContendedEntered, 0);
 }
 
@@ -118,6 +130,7 @@ void JNICALL OnMonitorContendedEnteredForThreadRecording(jvmtiEnv *jvmti,
  */
 void JNICALL OnMonitorWait(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread,
                            jobject object, jlong timeout) {
+  TProcessMark mark(processing);
   TThreadRecorder::getInstance()->putEvent(thread, MonitorWait, timeout);
 }
 
@@ -132,6 +145,7 @@ void JNICALL OnMonitorWait(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread,
  */
 void JNICALL OnMonitorWaited(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread,
                              jobject object, jboolean timeout) {
+  TProcessMark mark(processing);
   TThreadRecorder::getInstance()->putEvent(thread, MonitorWaited, timeout);
 }
 
@@ -141,6 +155,7 @@ void JNICALL OnMonitorWaited(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread,
  * \param jvmti [in] JVMTI environment.
  */
 void JNICALL OnDataDumpRequestForDumpThreadRecordData(jvmtiEnv *jvmti) {
+  TProcessMark mark(processing);
   TThreadRecorder::inst->dump(conf->ThreadRecordFileName()->get());
 }
 
@@ -168,6 +183,7 @@ void *GetCurrentThread(JNIEnv *env) {
  * \param millis [in] Time of sleeping.
  */
 void JNICALL JVM_SleepPrologue(JNIEnv *env, jclass threadClass, jlong millis) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread,
                                            ThreadSleepStart, millis);
@@ -181,6 +197,7 @@ void JNICALL JVM_SleepPrologue(JNIEnv *env, jclass threadClass, jlong millis) {
  * \param millis [in] Time of sleeping.
  */
 void JNICALL JVM_SleepEpilogue(JNIEnv *env, jclass threadClass, jlong millis) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread,
                                            ThreadSleepEnd, millis);
@@ -196,6 +213,7 @@ void JNICALL JVM_SleepEpilogue(JNIEnv *env, jclass threadClass, jlong millis) {
  */
 void JNICALL UnsafeParkPrologue(JNIEnv *env, jobject unsafe,
                                 jboolean isAbsolute, jlong time) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread, Park, time);
 }
@@ -210,17 +228,24 @@ void JNICALL UnsafeParkPrologue(JNIEnv *env, jobject unsafe,
  */
 void JNICALL UnsafeParkEpilogue(JNIEnv *env, jobject unsafe,
                                 jboolean isAbsolute, jlong time) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread, Unpark, time);
 }
 
 /* I/O tracer */
 
+/* Dummy method */
+void * JNICALL IoTrace_dummy(void) {
+  return NULL;
+}
+
 /*
  * Method:    socketReadBegin
  * Signature: ()Ljava/lang/Object;
  */
 JNIEXPORT jobject JNICALL IoTrace_socketReadBegin(JNIEnv *env, jclass cls) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread,
                                            SocketReadStart, 0);
@@ -235,6 +260,7 @@ JNIEXPORT void JNICALL IoTrace_socketReadEnd(JNIEnv *env, jclass cls,
                                              jobject context, jobject address,
                                              jint port, jint timeout,
                                              jlong bytesRead) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread,
                                            SocketReadEnd, bytesRead);
@@ -245,6 +271,7 @@ JNIEXPORT void JNICALL IoTrace_socketReadEnd(JNIEnv *env, jclass cls,
  * Signature: ()Ljava/lang/Object;
  */
 JNIEXPORT jobject JNICALL IoTrace_socketWriteBegin(JNIEnv *env, jclass cls) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread,
                                            SocketWriteStart, 0);
@@ -258,6 +285,7 @@ JNIEXPORT jobject JNICALL IoTrace_socketWriteBegin(JNIEnv *env, jclass cls) {
 JNIEXPORT void JNICALL IoTrace_socketWriteEnd(JNIEnv *env, jclass cls,
                                               jobject context, jobject address,
                                               jint port, jlong bytesWritten) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread,
                                            SocketWriteEnd, bytesWritten);
@@ -269,6 +297,7 @@ JNIEXPORT void JNICALL IoTrace_socketWriteEnd(JNIEnv *env, jclass cls,
  */
 JNIEXPORT jobject JNICALL
     IoTrace_fileReadBegin(JNIEnv *env, jclass cls, jstring path) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread,
                                            FileReadStart, 0);
@@ -281,6 +310,7 @@ JNIEXPORT jobject JNICALL
  */
 JNIEXPORT void JNICALL IoTrace_fileReadEnd(JNIEnv *env, jclass cls,
                                            jobject context, jlong bytesRead) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread,
                                            FileReadEnd, bytesRead);
@@ -292,6 +322,7 @@ JNIEXPORT void JNICALL IoTrace_fileReadEnd(JNIEnv *env, jclass cls,
  */
 JNIEXPORT jobject JNICALL
     IoTrace_fileWriteBegin(JNIEnv *env, jclass cls, jstring path) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread,
                                            FileWriteStart, 0);
@@ -305,6 +336,7 @@ JNIEXPORT jobject JNICALL
 JNIEXPORT void JNICALL IoTrace_fileWriteEnd(JNIEnv *env, jclass cls,
                                             jobject context,
                                             jlong bytesWritten) {
+  TProcessMark mark(processing);
   void *javaThread = GetCurrentThread(env);
   TThreadRecorder::getInstance()->putEvent((jthread)&javaThread,
                                            FileWriteEnd, bytesWritten);
@@ -517,6 +549,55 @@ bool TThreadRecorder::registerIOTracer(jvmtiEnv *jvmti, JNIEnv *env) {
 }
 
 /*!
+ * \brief Unegister I/O tracer.
+ *
+ * \param env [in] JNI environment.
+ */
+void TThreadRecorder::UnregisterIOTracer(JNIEnv *env) {
+  if (conf->ThreadRecordIOTracer()->get() == NULL) {
+    return;
+  }
+
+  jclass iotraceClass = env->FindClass("sun/misc/IoTrace");
+
+  if (iotraceClass == NULL) {
+    env->ExceptionClear();  // It may occur NoClassDefFoumdError
+    return;
+  }
+
+  /* Register hook native methods. */
+  JNINativeMethod methods[] = {
+      {(char *)"socketReadBegin",
+       (char *)"()Ljava/lang/Object;",
+       (void *)&IoTrace_dummy},
+      {(char *)"socketReadEnd",
+       (char *)"(Ljava/lang/Object;Ljava/net/InetAddress;IIJ)V",
+       (void *)&IoTrace_dummy},
+      {(char *)"socketWriteBegin",
+       (char *)"()Ljava/lang/Object;",
+       (void *)&IoTrace_dummy},
+      {(char *)"socketWriteEnd",
+       (char *)"(Ljava/lang/Object;Ljava/net/InetAddress;IJ)V",
+       (void *)&IoTrace_dummy},
+      {(char *)"fileReadBegin",
+       (char *)"(Ljava/lang/String;)Ljava/lang/Object;",
+       (void *)&IoTrace_dummy},
+      {(char *)"fileReadEnd",
+       (char *)"(Ljava/lang/Object;J)V",
+       (void *)&IoTrace_dummy},
+      {(char *)"fileWriteBegin",
+       (char *)"(Ljava/lang/String;)Ljava/lang/Object;",
+       (void *)&IoTrace_dummy},
+      {(char *)"fileWriteEnd",
+       (char *)"(Ljava/lang/Object;J)V",
+       (void *)&IoTrace_dummy}};
+
+  env->RegisterNatives(iotraceClass, methods, 8);
+
+  return;
+}
+
+/*!
  * \brief Initialize HeapStats Thread Recorder.
  *
  * \param jvmti [in] JVMTI environment.
@@ -610,6 +691,14 @@ void TThreadRecorder::finalize(jvmtiEnv *jvmti, JNIEnv *env,
   /* Stop to hook JNI function */
   TJVMSleepCallback::switchCallback(env, false);
   TUnsafeParkCallback::switchCallback(env, false);
+
+  /* Stop to hook IoTrace */
+  UnregisterIOTracer(env);
+
+  /* Wait until all tasks are finished. */
+  while (processing > 0) {
+    sched_yield();
+  }
 
   /* Stop HeapStats Thread Recorder */
   inst->dump(fname);

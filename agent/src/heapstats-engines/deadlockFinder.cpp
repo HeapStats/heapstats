@@ -62,16 +62,6 @@
 TDeadlockFinder *TDeadlockFinder::inst = NULL;
 
 
-/* Common methods. */
-
-/*!
- * \brief Get safepoint state.
- * \return Is synchronizing or working at safepoint now.
- */
-inline bool isAtSafepoint(void) {
-  return (TVMVariables::getInstance()->getSafePointState() == 2);
-}
-
 /*!
  * \brief Event handler of JVMTI MonitorContendedEnter for finding deadlock.
  * \param jvmti  [in] JVMTI environment.
