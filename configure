@@ -6434,8 +6434,6 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for std::regex" >&5
 $as_echo_n "checking for std::regex... " >&6; }
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for std::regex" >&5
-$as_echo_n "checking for std::regex... " >&6; }
 
 if test "$cross_compiling" = yes; then :
   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
@@ -6473,7 +6471,6 @@ else
 $as_echo "no" >&6; }
     $as_echo "#define USE_PCRE 1" >>confdefs.h
 
-    CXXFLAGS="$ORIG_CXXFLAGS -std=c++0x"
     for ac_header in pcre.h
 do :
   ac_fn_cxx_check_header_mongrel "$LINENO" "pcre.h" "ac_cv_header_pcre_h" "$ac_includes_default"

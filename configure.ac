@@ -92,7 +92,6 @@ fi
 # Check C++11 regex
 AC_MSG_CHECKING([for std::regex])
 
-AC_MSG_CHECKING([for std::regex])
 AC_RUN_IFELSE(
   [AC_LANG_PROGRAM(
     [[
@@ -107,7 +106,6 @@ AC_RUN_IFELSE(
   ], [
     AC_MSG_RESULT([no])
     AC_DEFINE(USE_PCRE,1)
-    CXXFLAGS="$ORIG_CXXFLAGS -std=c++0x"
     AC_CHECK_HEADERS([pcre.h], [], [AC_MSG_ERROR([PCRE not found.])])
     AC_CHECK_LIB([pcre], [main], [], [AC_MSG_ERROR([PCRE not found.])])
   ]
