@@ -438,6 +438,7 @@ jint InitEventSetting(jvmtiEnv *jvmti, bool isOnLoad) {
   TThreadRecorder::setCapabilities(&capabilities);
 
   /* Setup GarbageCollectionFinish callback for class unloading. */
+  TGarbageCollectionFinishCallback::mergeCapabilities(&capabilities);
   TGarbageCollectionFinishCallback::registerCallback(
                                            &OnGarbageCollectionFinishForUnload);
 
@@ -456,7 +457,6 @@ jint InitEventSetting(jvmtiEnv *jvmti, bool isOnLoad) {
     /* FullGC on G1, we handle it at callbackForG1Full() */
     if (!vmVal->getUseG1()) {
       TGarbageCollectionStartCallback::mergeCapabilities(&capabilities);
-      TGarbageCollectionFinishCallback::mergeCapabilities(&capabilities);
 
       if (vmVal->getUseCMS()) {
         TGarbageCollectionStartCallback::registerCallback(&OnCMSGCStart);
