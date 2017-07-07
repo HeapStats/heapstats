@@ -364,6 +364,7 @@ void TSnapShotContainer::removeObjectData(TClassInfoSet &unloadedList) {
     TSizeMap::const_accessor acc;
     if (counterMap.find(acc, *itr)) {
       TClassCounter *clsCounter = acc->second;
+      counterMap.erase(acc);
       acc.release();
 
       TChildClassCounter *child = clsCounter->child;
