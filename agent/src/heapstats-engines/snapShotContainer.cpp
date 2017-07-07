@@ -194,7 +194,7 @@ TClassCounter *TSnapShotContainer::pushNewClass(TObjectData *objData) {
     cur = NULL;
   }
 
-  return acc.second;
+  return acc->second;
 }
 
 /*!
