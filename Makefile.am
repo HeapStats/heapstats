@@ -3,8 +3,8 @@ SUBDIRS = agent mbean
 MVN = @MVN@
 JAVA_HOME = @JDK_DIR@
 
-ANALYZER_DIR = $(srcdir)/analyzer/fx/target/heapstats-analyzer-$(PACKAGE_VERSION)-bin/heapstats-analyzer-$(PACKAGE_VERSION)
-CLI_DIR = $(srcdir)/analyzer/cli/target/heapstats-cli-$(PACKAGE_VERSION)-bin/heapstats-cli-$(PACKAGE_VERSION)
+ANALYZER_DIR = $(srcdir)/analyzer/fx/target/heapstats-analyzer-*-bin/heapstats-analyzer-*
+CLI_DIR = $(srcdir)/analyzer/cli/target/heapstats-cli-*-bin/heapstats-cli-*
 
 .PHONY: $(SUBDIRS) analyzer
 
@@ -36,8 +36,9 @@ install-exec-local:
 	$(INSTALL_DATA) $(ANALYZER_DIR)/lib/jgraphx.jar $(DESTDIR)/$(libexecdir)/lib
 	$(INSTALL_DATA) $(CLI_DIR)/heapstats-cli.jar $(DESTDIR)/$(libexecdir)
 	$(INSTALL_PROGRAM) $(srcdir)/analyzer/cli/heapstats-cli $(DESTDIR)/$(bindir)
+	$(INSTALL_PROGRAM) $(srcdir)/analyzer/fx/heapstats-analyzer $(DESTDIR)/$(bindir)
 
 uninstall-local:
 	rm -fR $(DESTDIR)/$(libexecdir)/lib
-	$(RM) $(DESTDIR)/$(libexecdir)/THIRD_PARTY_README $(DESTDIR)/$(libexecdir)/filterDefine.xsd $(DESTDIR)/$(libexecdir)/heapstats* $(DESTDIR)/$(bindir)/heapstats-cli
+	$(RM) $(DESTDIR)/$(libexecdir)/THIRD_PARTY_README $(DESTDIR)/$(libexecdir)/filterDefine.xsd $(DESTDIR)/$(libexecdir)/heapstats* $(DESTDIR)/$(bindir)/heapstats-cli  $(DESTDIR)/$(bindir)/heapstats-analyzer
 
