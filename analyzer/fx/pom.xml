@@ -141,6 +141,7 @@
                             <Class-Path>lib/jgraphx.jar</Class-Path>
                         </manifestEntries>
                     </archive>
+                    <finalName>heapstats-analyzer</finalName>
                 </configuration>
             </plugin>
             <plugin>
