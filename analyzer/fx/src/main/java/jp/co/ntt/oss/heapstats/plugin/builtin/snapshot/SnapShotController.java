@@ -51,7 +51,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import jp.co.ntt.oss.heapstats.WindowController;
+import jp.co.ntt.oss.heapstats.MainWindowController;
 import jp.co.ntt.oss.heapstats.container.snapshot.ObjectData;
 import jp.co.ntt.oss.heapstats.container.snapshot.SnapShotHeader;
 import jp.co.ntt.oss.heapstats.container.snapshot.SummaryData;
@@ -261,7 +261,7 @@ public class SnapShotController extends PluginController implements Initializabl
         dialog.getExtensionFilters().addAll(new ExtensionFilter("SnapShot file (*.dat)", "*.dat"),
                 new ExtensionFilter("All files", "*.*"));
 
-        List<File> snapshotFileList = dialog.showOpenMultipleDialog(WindowController.getInstance().getOwner());
+        List<File> snapshotFileList = dialog.showOpenMultipleDialog(MainWindowController.getInstance().getOwner());
 
         if (snapshotFileList != null) {
             clearAllItems();
@@ -349,7 +349,7 @@ public class SnapShotController extends PluginController implements Initializabl
         dialog.setInitialDirectory(new File(HeapStatsUtils.getDefaultDirectory()));
         dialog.getExtensionFilters().addAll(new ExtensionFilter("CSV file (*.csv)", "*.csv"),
                 new ExtensionFilter("All files", "*.*"));
-        File csvFile = dialog.showSaveDialog(WindowController.getInstance().getOwner());
+        File csvFile = dialog.showSaveDialog(MainWindowController.getInstance().getOwner());
 
         if (csvFile != null) {
             TaskAdapter<CSVDumpGC> task = new TaskAdapter<>(new CSVDumpGC(csvFile, isSelected ? currentTarget.get() : snapShotHeaders));
@@ -375,7 +375,7 @@ public class SnapShotController extends PluginController implements Initializabl
         dialog.setInitialDirectory(new File(HeapStatsUtils.getDefaultDirectory()));
         dialog.getExtensionFilters().addAll(new ExtensionFilter("CSV file (*.csv)", "*.csv"),
                 new ExtensionFilter("All files", "*.*"));
-        File csvFile = dialog.showSaveDialog(WindowController.getInstance().getOwner());
+        File csvFile = dialog.showSaveDialog(MainWindowController.getInstance().getOwner());
 
         if (csvFile != null) {
             Predicate<? super ObjectData> filter = histogramController.getFilter();

@@ -11,8 +11,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="heapstats-jmx" />
+    <orderEntry type="module" module-name="heapstats-jmx-helper" />
     <orderEntry type="module" module-name="heapstats-mbean" />
+    <orderEntry type="module" module-name="heapstats-plugin-api" />
     <orderEntry type="module" module-name="heapstats-core" />
     <orderEntry type="module-library">
       <library name="Maven: com.mxgraph:jgraphx:3.3.1.1">
