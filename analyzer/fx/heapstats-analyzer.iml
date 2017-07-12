@@ -11,7 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="heapstats-jmx" />
+    <orderEntry type="module" module-name="heapstats-jmx-helper" />
     <orderEntry type="module" module-name="heapstats-mbean" />
     <orderEntry type="module" module-name="heapstats-core" />
     <orderEntry type="module-library">

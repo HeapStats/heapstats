@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,7 +28,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.Region;
-import jp.co.ntt.oss.heapstats.WindowController;
+import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
 
 /**
  * Base class for HeapStats FX Analyzer plugin.
@@ -115,8 +115,8 @@ public abstract class PluginController implements Initializable{
     }
  
     public void setOnWindowResize(ChangeListener<? super Number> event){
-        WindowController.getInstance().getOwner().widthProperty().addListener(event);
-        WindowController.getInstance().getOwner().heightProperty().addListener(event);
+        HeapStatsUtils.getWindowController().getOwner().widthProperty().addListener(event);
+        HeapStatsUtils.getWindowController().getOwner().heightProperty().addListener(event);
     }
     
     /** 
@@ -127,8 +127,8 @@ public abstract class PluginController implements Initializable{
      * @param select Plugin tab will be actived if this value is true. 
      */ 
     public void setData(Object data, boolean select){ 
-        if(select){ 
-            WindowController.getInstance().selectTab(getPluginName()); 
+        if(select){
+            HeapStatsUtils.getWindowController().selectTab(getPluginName());
         } 
     } 
 

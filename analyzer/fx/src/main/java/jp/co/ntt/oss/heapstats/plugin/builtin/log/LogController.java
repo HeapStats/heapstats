@@ -34,7 +34,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import jp.co.ntt.oss.heapstats.WindowController;
+import jp.co.ntt.oss.heapstats.MainWindowController;
 import jp.co.ntt.oss.heapstats.container.log.ArchiveData;
 import jp.co.ntt.oss.heapstats.container.log.DiffData;
 import jp.co.ntt.oss.heapstats.container.log.LogData;
@@ -167,7 +167,7 @@ public class LogController extends PluginController implements Initializable {
         dialog.getExtensionFilters().addAll(new ExtensionFilter("Log file (*.csv)", "*.csv"),
                 new ExtensionFilter("All files", "*.*"));
 
-        List<File> logList = dialog.showOpenMultipleDialog(WindowController.getInstance().getOwner());
+        List<File> logList = dialog.showOpenMultipleDialog(MainWindowController.getInstance().getOwner());
 
         if (logList != null) {
             logResourcesController.clearAllItems();

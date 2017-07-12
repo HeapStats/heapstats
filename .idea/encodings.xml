@@ -5,6 +5,7 @@
     <file url="file://$PROJECT_DIR$/analyzer/cli" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/analyzer/core" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/analyzer/fx" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/analyzer/jmx-helper" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mbean/java" charset="UTF-8" />
   </component>
 </project>

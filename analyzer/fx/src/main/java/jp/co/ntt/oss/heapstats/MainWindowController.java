@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,11 +27,11 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -59,6 +59,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import jp.co.ntt.oss.heapstats.lambda.FunctionWrapper;
 import jp.co.ntt.oss.heapstats.plugin.PluginController;
+import jp.co.ntt.oss.heapstats.plugin.builtin.jvmlive.JVMLiveController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.log.LogController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.SnapShotController;
 import jp.co.ntt.oss.heapstats.plugin.builtin.threadrecorder.ThreadRecorderController;
@@ -69,7 +70,7 @@ import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
  *
  * @author Yasumasa Suenaga
  */
-public class WindowController implements Initializable {
+public class MainWindowController implements Initializable, WindowController {
 
     private Map<String, PluginController> pluginList;
 
@@ -91,7 +92,7 @@ public class WindowController implements Initializable {
 
     private Scene aboutDialogScene;
 
-    private static WindowController thisController;
+    private static MainWindowController thisController;
     
     private HostServices hostServices;
 
@@ -175,7 +176,7 @@ public class WindowController implements Initializable {
         pluginList.put(controller.getPluginName(), controller);
     }
 
-    public static WindowController getInstance(){
+    public static MainWindowController getInstance(){
         return thisController;
     }
 
@@ -307,10 +308,10 @@ public class WindowController implements Initializable {
                                       .toArray(new URL[0]);
         }
         catch(IOException ex) {
-            Logger.getLogger(WindowController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return (jarURLList == null) ? WindowController.class.getClassLoader() : new URLClassLoader(jarURLList);
+        return (jarURLList == null) ? MainWindowController.class.getClassLoader() : new URLClassLoader(jarURLList);
     }
 
     /**
@@ -321,11 +322,18 @@ public class WindowController implements Initializable {
         String appJarString = this.getClass().getResource(resourceName).getPath();
 
         pluginClassLoader = appJarString.contains("!") ? createPluginClassLoader(appJarString.substring(0, appJarString.indexOf('!')).replaceFirst("file:", ""))
-                                                       : WindowController.class.getClassLoader();
+                                                       : MainWindowController.class.getClassLoader();
 
         FXMLLoader.setDefaultClassLoader(pluginClassLoader);
 
-        List<String> plugins = HeapStatsUtils.getPlugins();
+        List<String> plugins =  new ArrayList<>();
+        /* Add built-in plugins */
+        plugins.add(LogController.class.getPackage().getName());
+        plugins.add(SnapShotController.class.getPackage().getName());
+        plugins.add(ThreadRecorderController.class.getPackage().getName());
+        plugins.add(JVMLiveController.class.getPackage().getName());
+        /* Add customized plugins by config */
+        plugins.addAll(HeapStatsUtils.getPlugins());
         plugins.stream().forEach(s -> addPlugin(s));
 
         aboutDialogController.setPluginInfo();

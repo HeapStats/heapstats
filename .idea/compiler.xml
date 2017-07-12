@@ -9,6 +9,7 @@
         <module name="heapstats-analyzer" />
         <module name="heapstats-cli" />
         <module name="heapstats-core" />
+        <module name="heapstats-jmx-helper" />
         <module name="heapstats-mbean" />
       </profile>
     </annotationProcessing>
@@ -17,6 +18,7 @@
       <module name="heapstats-analyzer" target="1.8" />
       <module name="heapstats-cli" target="1.8" />
       <module name="heapstats-core" target="1.8" />
+      <module name="heapstats-jmx-helper" target="1.8" />
       <module name="heapstats-mbean" target="1.6" />
     </bytecodeTargetLevel>
   </component>

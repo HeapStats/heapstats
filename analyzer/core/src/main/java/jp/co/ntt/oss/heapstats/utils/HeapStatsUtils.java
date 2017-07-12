@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,7 +29,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -42,10 +41,7 @@ import java.util.stream.Stream;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
-import jp.co.ntt.oss.heapstats.plugin.builtin.jvmlive.JVMLiveController;
-import jp.co.ntt.oss.heapstats.plugin.builtin.log.LogController;
-import jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.SnapShotController;
-import jp.co.ntt.oss.heapstats.plugin.builtin.threadrecorder.ThreadRecorderController;
+import jp.co.ntt.oss.heapstats.WindowController;
 
 /**
  * Utility class for HeapStats FX Analyzer.
@@ -69,8 +65,11 @@ public class HeapStatsUtils {
     /* Resource bundle for HeapStats Analyzer. */
     private static ResourceBundle resource;
     
-    /* Cached DatetTimeFormatter */
+    /* Cached DateTimeFormatter */
     private static DateTimeFormatter formatter;
+
+    /* Main window controller */
+    private static WindowController controller;
 
     public static Path getHeapStatsHomeDirectory() {
 
@@ -227,19 +226,13 @@ public class HeapStatsUtils {
     }
 
     /**
-     * Get plugin list.
+     * Get plugin list by config.
      *
      * @return Plugin list.
      */
     public static List<String> getPlugins() {
-        List<String> pluginList = new ArrayList<>();
-        pluginList.add(LogController.class.getPackage().getName());
-        pluginList.add(SnapShotController.class.getPackage().getName());
-        pluginList.add(ThreadRecorderController.class.getPackage().getName());
-        pluginList.add(JVMLiveController.class.getPackage().getName());
-        pluginList.addAll(Arrays.asList(prop.getProperty("plugins", "").split(";")));
-
-        return pluginList.stream()
+        return Arrays.asList(prop.getProperty("plugins", "").split(";"))
+                .stream()
                 .map(s -> s.trim())
                 .filter(s -> s.length() > 0)
                 .distinct()
@@ -390,7 +383,7 @@ public class HeapStatsUtils {
      *
      * @return String result of e.printStackTrace()
      */
-    public static String stackTarceToString(Throwable e) {
+    public static String stackTraceToString(Throwable e) {
         String result = null;
 
         try (StringWriter strWriter = new StringWriter();
@@ -410,7 +403,7 @@ public class HeapStatsUtils {
      * @param e Throwable instance to show.
      */
     public static void showExceptionDialog(Throwable e) {
-        TextArea details = new TextArea(HeapStatsUtils.stackTarceToString(e));
+        TextArea details = new TextArea(HeapStatsUtils.stackTraceToString(e));
         details.setEditable(false);
 
         Alert dialog = new Alert(Alert.AlertType.ERROR);
@@ -418,6 +411,22 @@ public class HeapStatsUtils {
         dialog.setHeaderText(e.getLocalizedMessage());
         dialog.getDialogPane().setExpandableContent(details);
         dialog.showAndWait();
+    }
+
+    /**
+     * Set an instance of main window controller.
+     *
+     * @param cont an instance of WindowController.
+     */
+    public static void setWindowController(WindowController cont) {
+        controller = cont;
+    }
+
+    /**
+     * Get an instance of main window controller.
+     */
+    public static WindowController getWindowController() {
+        return controller;
     }
 
 }
