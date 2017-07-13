@@ -235,7 +235,6 @@ public class HeapStatsUtils {
                 .stream()
                 .map(s -> s.trim())
                 .filter(s -> s.length() > 0)
-                .distinct()
                 .collect(Collectors.toList());
     }
 

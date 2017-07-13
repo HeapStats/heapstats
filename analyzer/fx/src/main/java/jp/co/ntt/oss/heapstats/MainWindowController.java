@@ -334,7 +334,7 @@ public class MainWindowController implements Initializable, WindowController {
         plugins.add(JVMLiveController.class.getPackage().getName());
         /* Add customized plugins by config */
         plugins.addAll(HeapStatsUtils.getPlugins());
-        plugins.stream().forEach(s -> addPlugin(s));
+        plugins.stream().distinct().forEach(s -> addPlugin(s));
 
         aboutDialogController.setPluginInfo();
     }
