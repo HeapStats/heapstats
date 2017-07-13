@@ -207,12 +207,7 @@ void TClassContainer::removeClass(TObjectData *target) {
 void TClassContainer::allClear(void) {
   /* Add all TObjectData pointers in container map to unloadedList */
   for (auto cur = classMap.begin(); cur != classMap.end(); cur++) {
-    unloadedList.push(cur->second);
-  }
-
-  /* Release all memory for TObjectData. */
-  TObjectData *objData;
-  while (unloadedList.try_pop(objData)) {
+    TObjectData *objData = cur->second;
     free(objData->className);
     free(objData);
   }
