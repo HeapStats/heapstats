@@ -11,6 +11,7 @@
         <module name="heapstats-core" />
         <module name="heapstats-jmx-helper" />
         <module name="heapstats-mbean" />
+        <module name="heapstats-plugin-api" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -20,6 +21,7 @@
       <module name="heapstats-core" target="1.8" />
       <module name="heapstats-jmx-helper" target="1.8" />
       <module name="heapstats-mbean" target="1.6" />
+      <module name="heapstats-plugin-api" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -67,6 +67,7 @@
         <module>mbean/java</module>
         <module>analyzer/core</module>
         <module>analyzer/cli</module>
+        <module>analyzer/plugin-api</module>
         <module>analyzer/fx</module>
         <module>analyzer/jmx-helper</module>
     </modules>

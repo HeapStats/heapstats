@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- Copyright (C) 2015-2017 Yasumasa Suenaga
+ Copyright (C) 2017 Nippon Telegraph and Telephone Corporation
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -21,12 +21,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>jp.co.ntt.oss.heapstats</groupId>
-    <artifactId>heapstats-analyzer</artifactId>
+    <artifactId>heapstats-plugin-api</artifactId>
     <version>2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>HeapStats Analyzer</name>
-    <description>HeapStats JavaFX GUI analyzer</description>
+    <name>HeapStats Analyzer Plugin API</name>
+    <description>The API for HeapStats Analyzer plugins</description>
     <url>http://icedtea.classpath.org/wiki/HeapStats</url>
 
     <licenses>
@@ -60,7 +60,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>jp.co.ntt.oss.heapstats.HeapStatsFXAnalyzer</mainClass>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -72,30 +71,13 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>heapstats-jmx-helper</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>heapstats-mbean</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>heapstats-plugin-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>heapstats-core</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.mxgraph</groupId>
-            <artifactId>jgraphx</artifactId>
-            <version>3.3.1.1</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/jgraphx.jar</systemPath>
         </dependency>
     </dependencies>
 
@@ -112,62 +94,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <id>default-cli</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${java.home}/bin/java</executable>
-                            <commandlineArgs>-jar ${project.build.directory}/heapstats-analyzer-${project.version}-bin/heapstats-analyzer-${project.version}/heapstats-analyzer.jar</commandlineArgs>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.javafx.main.Main</mainClass>
-                            <addClasspath>true</addClasspath>
-                            <classpathLayoutType>custom</classpathLayoutType>
-                            <customClasspathLayout>lib/${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
-                        </manifest>
-                        <manifestEntries>
-                            <JavaFX-Version>8.0.40+</JavaFX-Version>
-                            <JavaFX-Application-Class>${mainClass}</JavaFX-Application-Class>
-                            <Class-Path>lib/jgraphx.jar</Class-Path>
-                        </manifestEntries>
-                    </archive>
-                    <finalName>heapstats-analyzer</finalName>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/main/assembly/distribution.xml</descriptor>
-                    </descriptors>
-                    <attach>false</attach>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
