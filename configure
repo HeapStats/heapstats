@@ -8781,7 +8781,7 @@ fi
 
 # end of configure attacher  ---------------------------------------------------
 
-ac_config_files="$ac_config_files Makefile agent/Makefile agent/src/Makefile agent/src/heapstats-engines/Makefile agent/attacher/Makefile agent/attacher/heapstats-attacher agent/src/iotracer/Makefile mbean/Makefile mbean/native/Makefile analyzer/cli/heapstats-cli"
+ac_config_files="$ac_config_files Makefile agent/Makefile agent/src/Makefile agent/src/heapstats-engines/Makefile agent/attacher/Makefile agent/attacher/heapstats-attacher agent/src/iotracer/Makefile mbean/Makefile mbean/native/Makefile analyzer/cli/heapstats-cli analyzer/fx/heapstats-analyzer"
 
 ac_config_files="$ac_config_files agent/heapstats.conf"
 
@@ -9595,6 +9595,7 @@ do
     "mbean/Makefile") CONFIG_FILES="$CONFIG_FILES mbean/Makefile" ;;
     "mbean/native/Makefile") CONFIG_FILES="$CONFIG_FILES mbean/native/Makefile" ;;
     "analyzer/cli/heapstats-cli") CONFIG_FILES="$CONFIG_FILES analyzer/cli/heapstats-cli" ;;
+    "analyzer/fx/heapstats-analyzer") CONFIG_FILES="$CONFIG_FILES analyzer/fx/heapstats-analyzer" ;;
     "agent/heapstats.conf") CONFIG_FILES="$CONFIG_FILES agent/heapstats.conf" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

@@ -3,7 +3,7 @@
  * \brief This file is used to override JVM inner function for AMD64.<br>
  *        The function defined this file, used with v-table hook.<br>
  *        So in this file, all function is written by only assembler and macro.
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,13 +58,19 @@
   mov collectedHeap@GOTPCREL(%rip), %rdi;   \
   mov (%rdi), %rdi;                         \
   mov oop_ofs(%rsp), %rsi;                  \
+  push %rbp;                                \
+  mov %rsp, %rbp;                           \
   call *(%r11);                             \
+  pop %rbp;                                 \
   test %al, %al;                            
 
 #define DO_JMP_TO_CALLBACK(header, ary_idx, oop_ofs) \
   mov oop_ofs(%rsp), %rdi;                                  \
   mov header##_enter_hook_##ary_idx##@GOTPCREL(%rip), %r11; \
-  call *(%r11);
+  push %rbp;                                                \
+  mov %rsp, %rbp;                                           \
+  call *(%r11);                                             \
+  pop %rbp;
 
 #define OVERRIDE_FUNC_DEFINE(header, ary_idx) \
 .global header##_override_func_##ary_idx ;                     \
