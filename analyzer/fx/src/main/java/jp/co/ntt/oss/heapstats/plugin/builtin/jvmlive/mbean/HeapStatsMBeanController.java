@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,7 +45,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LongStringConverter;
-import jp.co.ntt.oss.heapstats.WindowController;
+import jp.co.ntt.oss.heapstats.MainWindowController;
 import jp.co.ntt.oss.heapstats.jmx.JMXHelper;
 import jp.co.ntt.oss.heapstats.mbean.HeapStatsMBean;
 import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
@@ -254,7 +254,7 @@ public class HeapStatsMBeanController implements Initializable {
         dialog.setInitialDirectory(new File(HeapStatsUtils.getDefaultDirectory()));
         dialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV file (*.csv)", "*.csv"),
                                             new FileChooser.ExtensionFilter("All files", "*.*"));
-        File logFile = dialog.showSaveDialog(WindowController.getInstance().getOwner());
+        File logFile = dialog.showSaveDialog(MainWindowController.getInstance().getOwner());
         
         if(logFile != null){
             try {
@@ -274,7 +274,7 @@ public class HeapStatsMBeanController implements Initializable {
         dialog.setInitialDirectory(new File(HeapStatsUtils.getDefaultDirectory()));
         dialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("SnapShot file (*.dat)", "*.dat"),
                                             new FileChooser.ExtensionFilter("All files", "*.*"));
-        File snapshotFile = dialog.showSaveDialog(WindowController.getInstance().getOwner());
+        File snapshotFile = dialog.showSaveDialog(MainWindowController.getInstance().getOwner());
         
         if(snapshotFile != null){
             try {

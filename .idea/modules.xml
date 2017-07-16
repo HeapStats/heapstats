@@ -6,7 +6,9 @@
       <module fileurl="file://$PROJECT_DIR$/analyzer/fx/heapstats-analyzer.iml" filepath="$PROJECT_DIR$/analyzer/fx/heapstats-analyzer.iml" />
       <module fileurl="file://$PROJECT_DIR$/analyzer/cli/heapstats-cli.iml" filepath="$PROJECT_DIR$/analyzer/cli/heapstats-cli.iml" />
       <module fileurl="file://$PROJECT_DIR$/analyzer/core/heapstats-core.iml" filepath="$PROJECT_DIR$/analyzer/core/heapstats-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/analyzer/jmx-helper/heapstats-jmx-helper.iml" filepath="$PROJECT_DIR$/analyzer/jmx-helper/heapstats-jmx-helper.iml" />
       <module fileurl="file://$PROJECT_DIR$/mbean/java/heapstats-mbean.iml" filepath="$PROJECT_DIR$/mbean/java/heapstats-mbean.iml" />
+      <module fileurl="file://$PROJECT_DIR$/analyzer/plugin-api/heapstats-plugin-api.iml" filepath="$PROJECT_DIR$/analyzer/plugin-api/heapstats-plugin-api.iml" />
     </modules>
   </component>
 </project>

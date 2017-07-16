@@ -28,7 +28,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
-import jp.co.ntt.oss.heapstats.WindowController;
+import jp.co.ntt.oss.heapstats.MainWindowController;
 import jp.co.ntt.oss.heapstats.container.threadrecord.ThreadStat;
 import jp.co.ntt.oss.heapstats.plugin.PluginController;
 import jp.co.ntt.oss.heapstats.task.ThreadRecordParseTask;
@@ -154,7 +154,7 @@ public class ThreadRecorderController extends PluginController implements Initia
         dialog.setInitialDirectory(new File(HeapStatsUtils.getDefaultDirectory()));
         dialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Thread Recorder file (*.htr)", "*.htr"),
                                             new FileChooser.ExtensionFilter("All files", "*.*"));
-        File recorderFile = dialog.showOpenDialog(WindowController.getInstance().getOwner());
+        File recorderFile = dialog.showOpenDialog(MainWindowController.getInstance().getOwner());
         
         if(recorderFile != null){
             timelineView.getItems().clear();
