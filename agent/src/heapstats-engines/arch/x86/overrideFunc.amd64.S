@@ -58,24 +58,20 @@
   mov collectedHeap@GOTPCREL(%rip), %rdi;   \
   mov (%rdi), %rdi;                         \
   mov oop_ofs(%rsp), %rsi;                  \
-  push %rbp;                                \
-  mov %rsp, %rbp;                           \
   call *(%r11);                             \
-  pop %rbp;                                 \
   test %al, %al;                            
 
 #define DO_JMP_TO_CALLBACK(header, ary_idx, oop_ofs) \
   mov oop_ofs(%rsp), %rdi;                                  \
   mov header##_enter_hook_##ary_idx##@GOTPCREL(%rip), %r11; \
-  push %rbp;                                                \
-  mov %rsp, %rbp;                                           \
-  call *(%r11);                                             \
-  pop %rbp;
+  call *(%r11);
 
 #define OVERRIDE_FUNC_DEFINE(header, ary_idx) \
 .global header##_override_func_##ary_idx ;                     \
 .type header##_override_func_##ary_idx, @function;             \
 header##_override_func_##ary_idx: ;                            \
+  push %rbp;                                                   \
+  mov %rsp, %rbp;                                              \
   /* Save argument registers. */ ;                             \
   DO_SAVE_REG                                                  \
                                                                \
@@ -138,5 +134,11 @@ header##_override_func_##ary_idx: ;                            \
 .LORIGINAL_FUNC:
   pop %r11;
   DO_LOAD_REG
+
+  /* Restore stack pointer */
+  mov %rbp, %rsp;
+  /* Restore base pointer */
+  pop %rbp;
+
   jmp *%r11;
 
