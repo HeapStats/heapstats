@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,7 +37,7 @@ import jp.co.ntt.oss.heapstats.utils.HeapStatsUtils;
  */
 public class HeapStatsFXAnalyzer extends Application {
     
-    private WindowController windowController;
+    private MainWindowController mainWindowController;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -58,10 +58,11 @@ public class HeapStatsFXAnalyzer extends Application {
 
         Parent root = mainWindowLoader.load();
         Scene scene = new Scene(root);
-        windowController = (WindowController) mainWindowLoader.getController();
-        windowController.setOwner(stage);
-        windowController.setHostServices(getHostServices());
-        windowController.loadPlugin();
+        HeapStatsUtils.setWindowController(mainWindowLoader.getController());
+        mainWindowController = (MainWindowController) HeapStatsUtils.getWindowController();
+        mainWindowController.setOwner(stage);
+        mainWindowController.setHostServices(getHostServices());
+        mainWindowController.loadPlugin();
 
         stage.setScene(scene);
         stage.show();
@@ -69,7 +70,7 @@ public class HeapStatsFXAnalyzer extends Application {
 
     @Override
     public void stop() throws Exception {
-        windowController.getPluginList().values().forEach(c -> Optional.ofNullable(c.getOnCloseRequest()).ifPresent(r -> r.run()));
+        mainWindowController.getPluginList().values().forEach(c -> Optional.ofNullable(c.getOnCloseRequest()).ifPresent(r -> r.run()));
     }
 
     /**

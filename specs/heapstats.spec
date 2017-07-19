@@ -162,6 +162,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libexecdir}/heapstats/filterDefine.xsd
 %{_libexecdir}/heapstats/heapstats.properties
 %{_libexecdir}/heapstats/lib/jgraphx.jar
+%{_libexecdir}/heapstats/lib/heapstats-plugin-api.jar
 %endif
 
 %changelog

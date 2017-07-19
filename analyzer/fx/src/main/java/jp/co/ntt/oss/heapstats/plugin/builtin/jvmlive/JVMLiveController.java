@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -68,7 +68,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import jp.co.ntt.oss.heapstats.WindowController;
+import jp.co.ntt.oss.heapstats.MainWindowController;
 import jp.co.ntt.oss.heapstats.jmx.JMXHelper;
 import jp.co.ntt.oss.heapstats.lambda.ConsumerWrapper;
 import jp.co.ntt.oss.heapstats.plugin.PluginController;
@@ -239,7 +239,7 @@ public class JVMLiveController extends PluginController implements Initializable
         mbeanController.loadAllConfigs();
         Stage dialog = new Stage(StageStyle.UTILITY);
 
-        try(InputStream icon = WindowController.class.getResourceAsStream("heapstats-icon.png")){
+        try(InputStream icon = MainWindowController.class.getResourceAsStream("heapstats-icon.png")){
             dialog.getIcons().add(new Image(icon));
         }
         catch(IOException e){
@@ -305,7 +305,7 @@ public class JVMLiveController extends PluginController implements Initializable
                                             new FileChooser.ExtensionFilter("All files", "*.*"));
         
         Path hs_err_path = crashList.getSelectionModel().getSelectedItem().getHsErrFile().toPath();
-        Optional.ofNullable(dialog.showSaveDialog(WindowController.getInstance().getOwner()))
+        Optional.ofNullable(dialog.showSaveDialog(MainWindowController.getInstance().getOwner()))
                 .ifPresent(new ConsumerWrapper<>(t -> Files.copy(hs_err_path, t.toPath(), StandardCopyOption.REPLACE_EXISTING)));
     }
     
