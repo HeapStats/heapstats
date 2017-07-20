@@ -1,7 +1,7 @@
 /*!
  * \file callbackRegister.hpp
  * \brief Handling JVMTI callback functions.
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +25,8 @@
 #include <jvmti.h>
 #include <jni.h>
 
+#include <pthread.h>
+
 #include <list>
 
 /*!
@@ -38,6 +40,11 @@ class TJVMTIEventCallback {
    */
   static std::list<T> callbackList;
 
+  /*!
+   * \brief Read-Write lock for callback container.
+   */
+  static pthread_rwlock_t callbackLock;
+
  public:
   /*!
    * \brief Register JVMTI callback function.
@@ -45,7 +52,29 @@ class TJVMTIEventCallback {
    * \param callback [in] Callback function.
    */
   static void registerCallback(T callback) {
-    callbackList.push_back(callback);
+    pthread_rwlock_wrlock(&callbackLock);
+    {
+      callbackList.push_back(callback);
+    }
+    pthread_rwlock_unlock(&callbackLock);
+  };
+
+  /*!
+   * \brief Unregister JVMTI callback function.
+   * \param callback [in] Callback function to unregister.
+   */
+  static void unregisterCallback(T callback) {
+    pthread_rwlock_wrlock(&callbackLock);
+    {
+      for (auto itr = callbackList.cbegin();
+           itr != callbackList.cend(); itr++) {
+        if (*itr == callback) {
+          callbackList.erase(itr);
+          break;
+        }
+      }
+    }
+    pthread_rwlock_unlock(&callbackLock);
   };
 
   /*!
@@ -83,21 +112,36 @@ class TJVMTIEventCallback {
 template <typename T, jvmtiEvent event>
 std::list<T> TJVMTIEventCallback<T, event>::callbackList;
 
-#define ITERATE_CALLBACK_CHAIN(type, ...)                    \
-  for (std::list<type>::iterator itr = callbackList.begin(); \
-       itr != callbackList.end(); itr++) {                   \
-    (*itr)(__VA_ARGS__);                                     \
-  }
+/*!
+ * \brief Read-Write lock for callback container.
+ */
+template <typename T, jvmtiEvent event>
+pthread_rwlock_t TJVMTIEventCallback<T, event>::callbackLock =
+                                                     PTHREAD_RWLOCK_INITIALIZER;
+
+#define ITERATE_CALLBACK_CHAIN(type, ...)                      \
+  pthread_rwlock_rdlock(&callbackLock);                        \
+  {                                                            \
+    for (std::list<type>::iterator itr = callbackList.begin(); \
+         itr != callbackList.end(); itr++) {                   \
+      (*itr)(__VA_ARGS__);                                     \
+    }                                                          \
+  }                                                            \
+  pthread_rwlock_unlock(&callbackLock);
 
 #define DEFINE_MERGE_CALLBACK(callbackName)                   \
   static void mergeCallback(jvmtiEventCallbacks *callbacks) { \
-    if (callbackList.size() == 0) {                           \
-      callbacks->callbackName = NULL;                         \
-    } else if (callbackList.size() == 1) {                    \
-      callbacks->callbackName = *callbackList.begin();        \
-    } else {                                                  \
-      callbacks->callbackName = &callbackStub;                \
+    pthread_rwlock_rdlock(&callbackLock);                     \
+    {                                                         \
+      if (callbackList.size() == 0) {                         \
+        callbacks->callbackName = NULL;                       \
+      } else if (callbackList.size() == 1) {                  \
+        callbacks->callbackName = *callbackList.begin();      \
+      } else {                                                \
+        callbacks->callbackName = &callbackStub;              \
+      }                                                       \
     }                                                         \
+    pthread_rwlock_unlock(&callbackLock);                     \
   };
 
 /*!
