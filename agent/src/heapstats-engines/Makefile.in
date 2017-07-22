@@ -125,7 +125,7 @@ am__libheapstats_engine_avx_2_0_so_SOURCES_DIST = libmain.cpp util.cpp \
 	classContainer.cpp gcWatcher.cpp logMain.cpp jvmSockCmd.cpp \
 	signalManager.cpp logManager.cpp archiveMaker.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
-	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
+	deadlockDetector.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
 	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/x86/x86BitMapMarker.cpp \
@@ -154,7 +154,7 @@ am__objects_2 = libheapstats_engine_avx_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_avx_2_0_so-cmdArchiver.$(OBJEXT) \
 	libheapstats_engine_avx_2_0_so-fsUtil.$(OBJEXT) \
 	libheapstats_engine_avx_2_0_so-jniZipArchiver.$(OBJEXT) \
-	libheapstats_engine_avx_2_0_so-deadlockFinder.$(OBJEXT) \
+	libheapstats_engine_avx_2_0_so-deadlockDetector.$(OBJEXT) \
 	libheapstats_engine_avx_2_0_so-vmVariables.$(OBJEXT) \
 	libheapstats_engine_avx_2_0_so-vmFunctions.$(OBJEXT) \
 	libheapstats_engine_avx_2_0_so-configuration.$(OBJEXT) \
@@ -183,7 +183,7 @@ am__libheapstats_engine_neon_2_0_so_SOURCES_DIST = libmain.cpp \
 	classContainer.cpp gcWatcher.cpp logMain.cpp jvmSockCmd.cpp \
 	signalManager.cpp logManager.cpp archiveMaker.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
-	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
+	deadlockDetector.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
 	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/arm/armBitMapMarker.cpp \
@@ -211,7 +211,7 @@ am__objects_4 = libheapstats_engine_neon_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_neon_2_0_so-cmdArchiver.$(OBJEXT) \
 	libheapstats_engine_neon_2_0_so-fsUtil.$(OBJEXT) \
 	libheapstats_engine_neon_2_0_so-jniZipArchiver.$(OBJEXT) \
-	libheapstats_engine_neon_2_0_so-deadlockFinder.$(OBJEXT) \
+	libheapstats_engine_neon_2_0_so-deadlockDetector.$(OBJEXT) \
 	libheapstats_engine_neon_2_0_so-vmVariables.$(OBJEXT) \
 	libheapstats_engine_neon_2_0_so-vmFunctions.$(OBJEXT) \
 	libheapstats_engine_neon_2_0_so-configuration.$(OBJEXT) \
@@ -238,7 +238,7 @@ am__libheapstats_engine_none_2_0_so_SOURCES_DIST = libmain.cpp \
 	classContainer.cpp gcWatcher.cpp logMain.cpp jvmSockCmd.cpp \
 	signalManager.cpp logManager.cpp archiveMaker.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
-	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
+	deadlockDetector.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
 	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/arm/armBitMapMarker.cpp arch/x86/x86BitMapMarker.cpp
@@ -265,7 +265,7 @@ am__objects_6 = libheapstats_engine_none_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_none_2_0_so-cmdArchiver.$(OBJEXT) \
 	libheapstats_engine_none_2_0_so-fsUtil.$(OBJEXT) \
 	libheapstats_engine_none_2_0_so-jniZipArchiver.$(OBJEXT) \
-	libheapstats_engine_none_2_0_so-deadlockFinder.$(OBJEXT) \
+	libheapstats_engine_none_2_0_so-deadlockDetector.$(OBJEXT) \
 	libheapstats_engine_none_2_0_so-vmVariables.$(OBJEXT) \
 	libheapstats_engine_none_2_0_so-vmFunctions.$(OBJEXT) \
 	libheapstats_engine_none_2_0_so-configuration.$(OBJEXT) \
@@ -294,7 +294,7 @@ am__libheapstats_engine_sse2_2_0_so_SOURCES_DIST = libmain.cpp \
 	classContainer.cpp gcWatcher.cpp logMain.cpp jvmSockCmd.cpp \
 	signalManager.cpp logManager.cpp archiveMaker.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
-	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
+	deadlockDetector.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
 	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/x86/x86BitMapMarker.cpp \
@@ -322,7 +322,7 @@ am__objects_8 = libheapstats_engine_sse2_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_sse2_2_0_so-cmdArchiver.$(OBJEXT) \
 	libheapstats_engine_sse2_2_0_so-fsUtil.$(OBJEXT) \
 	libheapstats_engine_sse2_2_0_so-jniZipArchiver.$(OBJEXT) \
-	libheapstats_engine_sse2_2_0_so-deadlockFinder.$(OBJEXT) \
+	libheapstats_engine_sse2_2_0_so-deadlockDetector.$(OBJEXT) \
 	libheapstats_engine_sse2_2_0_so-vmVariables.$(OBJEXT) \
 	libheapstats_engine_sse2_2_0_so-vmFunctions.$(OBJEXT) \
 	libheapstats_engine_sse2_2_0_so-configuration.$(OBJEXT) \
@@ -349,7 +349,7 @@ am__libheapstats_engine_sse3_2_0_so_SOURCES_DIST = libmain.cpp \
 	classContainer.cpp gcWatcher.cpp logMain.cpp jvmSockCmd.cpp \
 	signalManager.cpp logManager.cpp archiveMaker.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
-	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
+	deadlockDetector.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
 	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/x86/x86BitMapMarker.cpp \
@@ -377,7 +377,7 @@ am__objects_10 = libheapstats_engine_sse3_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_sse3_2_0_so-cmdArchiver.$(OBJEXT) \
 	libheapstats_engine_sse3_2_0_so-fsUtil.$(OBJEXT) \
 	libheapstats_engine_sse3_2_0_so-jniZipArchiver.$(OBJEXT) \
-	libheapstats_engine_sse3_2_0_so-deadlockFinder.$(OBJEXT) \
+	libheapstats_engine_sse3_2_0_so-deadlockDetector.$(OBJEXT) \
 	libheapstats_engine_sse3_2_0_so-vmVariables.$(OBJEXT) \
 	libheapstats_engine_sse3_2_0_so-vmFunctions.$(OBJEXT) \
 	libheapstats_engine_sse3_2_0_so-configuration.$(OBJEXT) \
@@ -404,7 +404,7 @@ am__libheapstats_engine_sse4_2_0_so_SOURCES_DIST = libmain.cpp \
 	classContainer.cpp gcWatcher.cpp logMain.cpp jvmSockCmd.cpp \
 	signalManager.cpp logManager.cpp archiveMaker.cpp \
 	cmdArchiver.cpp fsUtil.cpp jniZipArchiver.cpp \
-	deadlockFinder.cpp vmVariables.cpp vmFunctions.cpp \
+	deadlockDetector.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
 	heapstatsMBean.cpp overrideFunc.S trapSender.cpp pcreRegex.cpp \
 	arch/x86/x86BitMapMarker.cpp \
@@ -432,7 +432,7 @@ am__objects_12 = libheapstats_engine_sse4_2_0_so-libmain.$(OBJEXT) \
 	libheapstats_engine_sse4_2_0_so-cmdArchiver.$(OBJEXT) \
 	libheapstats_engine_sse4_2_0_so-fsUtil.$(OBJEXT) \
 	libheapstats_engine_sse4_2_0_so-jniZipArchiver.$(OBJEXT) \
-	libheapstats_engine_sse4_2_0_so-deadlockFinder.$(OBJEXT) \
+	libheapstats_engine_sse4_2_0_so-deadlockDetector.$(OBJEXT) \
 	libheapstats_engine_sse4_2_0_so-vmVariables.$(OBJEXT) \
 	libheapstats_engine_sse4_2_0_so-vmFunctions.$(OBJEXT) \
 	libheapstats_engine_sse4_2_0_so-configuration.$(OBJEXT) \
@@ -662,7 +662,7 @@ BASE_SOURCE = libmain.cpp util.cpp symbolFinder.cpp \
 	snapShotProcessor.cpp snapShotContainer.cpp classContainer.cpp \
 	gcWatcher.cpp logMain.cpp jvmSockCmd.cpp signalManager.cpp \
 	logManager.cpp archiveMaker.cpp cmdArchiver.cpp fsUtil.cpp \
-	jniZipArchiver.cpp deadlockFinder.cpp vmVariables.cpp \
+	jniZipArchiver.cpp deadlockDetector.cpp vmVariables.cpp \
 	vmFunctions.cpp configuration.cpp overrider.cpp \
 	threadRecorder.cpp heapstatsMBean.cpp overrideFunc.S \
 	trapSender.cpp $(am__append_1)
@@ -871,7 +871,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-classContainer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-cmdArchiver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-configuration.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockFinder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockDetector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-fsUtil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-gcWatcher.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_0_so-heapstatsMBean.Po@am__quote@
@@ -903,7 +903,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-classContainer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-cmdArchiver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-configuration.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockFinder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockDetector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-fsUtil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-gcWatcher.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_0_so-heapstatsMBean.Po@am__quote@
@@ -935,7 +935,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-classContainer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-cmdArchiver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-configuration.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockFinder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockDetector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-fsUtil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-gcWatcher.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_0_so-heapstatsMBean.Po@am__quote@
@@ -967,7 +967,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-classContainer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-cmdArchiver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-configuration.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockFinder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockDetector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-fsUtil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-gcWatcher.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_0_so-heapstatsMBean.Po@am__quote@
@@ -999,7 +999,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-classContainer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-cmdArchiver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-configuration.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockFinder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockDetector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-fsUtil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-gcWatcher.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse3_2_0_so-heapstatsMBean.Po@am__quote@
@@ -1031,7 +1031,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-classContainer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-cmdArchiver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-configuration.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockFinder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockDetector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-fsUtil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-gcWatcher.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_0_so-heapstatsMBean.Po@am__quote@
@@ -1495,19 +1495,19 @@ libheapstats_engine_avx_2_0_so-jniZipArchiver.obj: jniZipArchiver.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_avx_2_0_so-jniZipArchiver.obj `if test -f 'jniZipArchiver.cpp'; then $(CYGPATH_W) 'jniZipArchiver.cpp'; else $(CYGPATH_W) '$(srcdir)/jniZipArchiver.cpp'; fi`
 
-libheapstats_engine_avx_2_0_so-deadlockFinder.o: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_avx_2_0_so-deadlockFinder.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_avx_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_avx_2_0_so-deadlockFinder.o' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_avx_2_0_so-deadlockDetector.o: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_avx_2_0_so-deadlockDetector.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_avx_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_avx_2_0_so-deadlockDetector.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_avx_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_avx_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
 
-libheapstats_engine_avx_2_0_so-deadlockFinder.obj: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_avx_2_0_so-deadlockFinder.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_avx_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_avx_2_0_so-deadlockFinder.obj' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_avx_2_0_so-deadlockDetector.obj: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_avx_2_0_so-deadlockDetector.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_avx_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_avx_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_avx_2_0_so-deadlockDetector.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_avx_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_avx_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
 
 libheapstats_engine_avx_2_0_so-vmVariables.o: vmVariables.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_avx_2_0_so-vmVariables.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_avx_2_0_so-vmVariables.Tpo -c -o libheapstats_engine_avx_2_0_so-vmVariables.o `test -f 'vmVariables.cpp' || echo '$(srcdir)/'`vmVariables.cpp
@@ -1971,19 +1971,19 @@ libheapstats_engine_neon_2_0_so-jniZipArchiver.obj: jniZipArchiver.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_neon_2_0_so-jniZipArchiver.obj `if test -f 'jniZipArchiver.cpp'; then $(CYGPATH_W) 'jniZipArchiver.cpp'; else $(CYGPATH_W) '$(srcdir)/jniZipArchiver.cpp'; fi`
 
-libheapstats_engine_neon_2_0_so-deadlockFinder.o: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_neon_2_0_so-deadlockFinder.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_neon_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_neon_2_0_so-deadlockFinder.o' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_neon_2_0_so-deadlockDetector.o: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_neon_2_0_so-deadlockDetector.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_neon_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_neon_2_0_so-deadlockDetector.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_neon_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_neon_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
 
-libheapstats_engine_neon_2_0_so-deadlockFinder.obj: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_neon_2_0_so-deadlockFinder.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_neon_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_neon_2_0_so-deadlockFinder.obj' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_neon_2_0_so-deadlockDetector.obj: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_neon_2_0_so-deadlockDetector.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_neon_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_neon_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_neon_2_0_so-deadlockDetector.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_neon_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_neon_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
 
 libheapstats_engine_neon_2_0_so-vmVariables.o: vmVariables.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_neon_2_0_so-vmVariables.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_neon_2_0_so-vmVariables.Tpo -c -o libheapstats_engine_neon_2_0_so-vmVariables.o `test -f 'vmVariables.cpp' || echo '$(srcdir)/'`vmVariables.cpp
@@ -2433,19 +2433,19 @@ libheapstats_engine_none_2_0_so-jniZipArchiver.obj: jniZipArchiver.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_none_2_0_so-jniZipArchiver.obj `if test -f 'jniZipArchiver.cpp'; then $(CYGPATH_W) 'jniZipArchiver.cpp'; else $(CYGPATH_W) '$(srcdir)/jniZipArchiver.cpp'; fi`
 
-libheapstats_engine_none_2_0_so-deadlockFinder.o: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_none_2_0_so-deadlockFinder.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_none_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_none_2_0_so-deadlockFinder.o' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_none_2_0_so-deadlockDetector.o: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_none_2_0_so-deadlockDetector.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_none_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_none_2_0_so-deadlockDetector.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_none_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_none_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
 
-libheapstats_engine_none_2_0_so-deadlockFinder.obj: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_none_2_0_so-deadlockFinder.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_none_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_none_2_0_so-deadlockFinder.obj' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_none_2_0_so-deadlockDetector.obj: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_none_2_0_so-deadlockDetector.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_none_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_none_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_none_2_0_so-deadlockDetector.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_none_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_none_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
 
 libheapstats_engine_none_2_0_so-vmVariables.o: vmVariables.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_none_2_0_so-vmVariables.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_none_2_0_so-vmVariables.Tpo -c -o libheapstats_engine_none_2_0_so-vmVariables.o `test -f 'vmVariables.cpp' || echo '$(srcdir)/'`vmVariables.cpp
@@ -2895,19 +2895,19 @@ libheapstats_engine_sse2_2_0_so-jniZipArchiver.obj: jniZipArchiver.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse2_2_0_so-jniZipArchiver.obj `if test -f 'jniZipArchiver.cpp'; then $(CYGPATH_W) 'jniZipArchiver.cpp'; else $(CYGPATH_W) '$(srcdir)/jniZipArchiver.cpp'; fi`
 
-libheapstats_engine_sse2_2_0_so-deadlockFinder.o: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse2_2_0_so-deadlockFinder.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_sse2_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_sse2_2_0_so-deadlockFinder.o' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_sse2_2_0_so-deadlockDetector.o: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse2_2_0_so-deadlockDetector.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_sse2_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_sse2_2_0_so-deadlockDetector.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse2_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse2_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
 
-libheapstats_engine_sse2_2_0_so-deadlockFinder.obj: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse2_2_0_so-deadlockFinder.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_sse2_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_sse2_2_0_so-deadlockFinder.obj' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_sse2_2_0_so-deadlockDetector.obj: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse2_2_0_so-deadlockDetector.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_sse2_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_sse2_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_sse2_2_0_so-deadlockDetector.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse2_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse2_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
 
 libheapstats_engine_sse2_2_0_so-vmVariables.o: vmVariables.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse2_2_0_so-vmVariables.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse2_2_0_so-vmVariables.Tpo -c -o libheapstats_engine_sse2_2_0_so-vmVariables.o `test -f 'vmVariables.cpp' || echo '$(srcdir)/'`vmVariables.cpp
@@ -3357,19 +3357,19 @@ libheapstats_engine_sse3_2_0_so-jniZipArchiver.obj: jniZipArchiver.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse3_2_0_so-jniZipArchiver.obj `if test -f 'jniZipArchiver.cpp'; then $(CYGPATH_W) 'jniZipArchiver.cpp'; else $(CYGPATH_W) '$(srcdir)/jniZipArchiver.cpp'; fi`
 
-libheapstats_engine_sse3_2_0_so-deadlockFinder.o: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse3_2_0_so-deadlockFinder.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_sse3_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_sse3_2_0_so-deadlockFinder.o' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_sse3_2_0_so-deadlockDetector.o: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse3_2_0_so-deadlockDetector.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_sse3_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_sse3_2_0_so-deadlockDetector.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse3_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse3_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
 
-libheapstats_engine_sse3_2_0_so-deadlockFinder.obj: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse3_2_0_so-deadlockFinder.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_sse3_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_sse3_2_0_so-deadlockFinder.obj' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_sse3_2_0_so-deadlockDetector.obj: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse3_2_0_so-deadlockDetector.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_sse3_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_sse3_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_sse3_2_0_so-deadlockDetector.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse3_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse3_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
 
 libheapstats_engine_sse3_2_0_so-vmVariables.o: vmVariables.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse3_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse3_2_0_so-vmVariables.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse3_2_0_so-vmVariables.Tpo -c -o libheapstats_engine_sse3_2_0_so-vmVariables.o `test -f 'vmVariables.cpp' || echo '$(srcdir)/'`vmVariables.cpp
@@ -3819,19 +3819,19 @@ libheapstats_engine_sse4_2_0_so-jniZipArchiver.obj: jniZipArchiver.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse4_2_0_so-jniZipArchiver.obj `if test -f 'jniZipArchiver.cpp'; then $(CYGPATH_W) 'jniZipArchiver.cpp'; else $(CYGPATH_W) '$(srcdir)/jniZipArchiver.cpp'; fi`
 
-libheapstats_engine_sse4_2_0_so-deadlockFinder.o: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse4_2_0_so-deadlockFinder.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_sse4_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_sse4_2_0_so-deadlockFinder.o' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_sse4_2_0_so-deadlockDetector.o: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse4_2_0_so-deadlockDetector.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_sse4_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_sse4_2_0_so-deadlockDetector.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse4_2_0_so-deadlockFinder.o `test -f 'deadlockFinder.cpp' || echo '$(srcdir)/'`deadlockFinder.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse4_2_0_so-deadlockDetector.o `test -f 'deadlockDetector.cpp' || echo '$(srcdir)/'`deadlockDetector.cpp
 
-libheapstats_engine_sse4_2_0_so-deadlockFinder.obj: deadlockFinder.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse4_2_0_so-deadlockFinder.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockFinder.Tpo -c -o libheapstats_engine_sse4_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockFinder.Tpo $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockFinder.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockFinder.cpp' object='libheapstats_engine_sse4_2_0_so-deadlockFinder.obj' libtool=no @AMDEPBACKSLASH@
+libheapstats_engine_sse4_2_0_so-deadlockDetector.obj: deadlockDetector.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse4_2_0_so-deadlockDetector.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockDetector.Tpo -c -o libheapstats_engine_sse4_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockDetector.Tpo $(DEPDIR)/libheapstats_engine_sse4_2_0_so-deadlockDetector.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='deadlockDetector.cpp' object='libheapstats_engine_sse4_2_0_so-deadlockDetector.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse4_2_0_so-deadlockFinder.obj `if test -f 'deadlockFinder.cpp'; then $(CYGPATH_W) 'deadlockFinder.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockFinder.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse4_2_0_so-deadlockDetector.obj `if test -f 'deadlockDetector.cpp'; then $(CYGPATH_W) 'deadlockDetector.cpp'; else $(CYGPATH_W) '$(srcdir)/deadlockDetector.cpp'; fi`
 
 libheapstats_engine_sse4_2_0_so-vmVariables.o: vmVariables.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_0_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse4_2_0_so-vmVariables.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse4_2_0_so-vmVariables.Tpo -c -o libheapstats_engine_sse4_2_0_so-vmVariables.o `test -f 'vmVariables.cpp' || echo '$(srcdir)/'`vmVariables.cpp

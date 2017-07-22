@@ -1,3 +1,7 @@
+2017-08-02 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3293: [REFACTORING] Realtime deadlock detector implementation
+
 2017-07-24 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3429: [REGRESSION] Cannot build HeapStats Agent on RHEL

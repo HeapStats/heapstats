@@ -43,9 +43,6 @@ extern TTimer *intervalSigTimer;
 extern TTimer *logTimer;
 extern TTimer *timer;
 
-#include "deadlockFinder.hpp"
-extern TDeadlockFinder *lockFinder;
-
 #include "symbolFinder.hpp"
 extern TSymbolFinder *symFinder;
 
