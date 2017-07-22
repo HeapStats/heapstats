@@ -51,11 +51,12 @@ namespace dldetector {
 
   /*!
    * \brief Deadlock detector initializer.
-   * \param jvmti  [in]  JVMTI environment
+   * \param jvmti    [in]  JVMTI environment
+   * \param isOnLoad [in]  OnLoad phase or not (Live phase).
    * \return Process result.
    * \warning This function MUST be called only once.
    */
-  bool initialize(jvmtiEnv *jvmti);
+  bool initialize(jvmtiEnv *jvmti, bool isOnLoad);
 
   /*!
    * \brief Deadlock detector finalizer.

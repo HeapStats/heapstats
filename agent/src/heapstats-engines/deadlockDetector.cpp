@@ -153,6 +153,21 @@ namespace dldetector {
    */
   void JNICALL OnMonitorContendedEnter(
                  jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jobject object) {
+    /* Check owned monitors */
+    jint monitor_cnt;
+    jobject *owned_monitors;
+    if (isError(jvmti, jvmti->GetOwnedMonitorInfo(thread,
+                                                  &monitor_cnt,
+                                                  &owned_monitors))) {
+      logger->printWarnMsg("Could not get owned monitor info (%p)\n",
+                           *(void **)thread);
+      return;
+    }
+    jvmti->Deallocate((unsigned char *)owned_monitors);
+    if (monitor_cnt == 0) { // This thread does not have a monitor.
+      return;
+    }
+
     /* Find owner thread of the lock */
     jvmtiMonitorUsage monitor_usage;
     if (isError(jvmti, jvmti->GetObjectMonitorUsage(object, &monitor_usage))) {
@@ -192,11 +207,12 @@ namespace dldetector {
 
   /*!
    * \brief Deadlock detector initializer.
-   * \param jvmti [in]  JVMTI environment
+   * \param jvmti    [in]  JVMTI environment
+   * \parma isOnLoad [in]  OnLoad phase or not (Live phase).
    * \return Process result.
    * \warning This function MUST be called only once.
    */
-  bool initialize(jvmtiEnv *jvmti) {
+  bool initialize(jvmtiEnv *jvmti, bool isOnLoad) {
     jmm_FindMonitorDeadlockedThreads =
              (Tjmm_FindMonitorDeadlockedThreads)symFinder->findSymbol(
                                                         SYMBOL_DEADLOCK_FINDER);
@@ -208,6 +224,15 @@ namespace dldetector {
 
     jvmtiCapabilities capabilities = {0};
     capabilities.can_get_monitor_info = 1;
+    if (isOnLoad) {
+      /*
+       * can_get_owned_monitor_info must be set at OnLoad phase.
+       *
+       * See also:
+       *   hotspot/src/share/vm/prims/jvmtiManageCapabilities.cpp
+       */
+      capabilities.can_get_owned_monitor_info = 1;
+    }
     TMonitorContendedEnterCallback::mergeCapabilities(&capabilities);
     if (isError(jvmti, jvmti->AddCapabilities(&capabilities))) {
       logger->printCritMsg(

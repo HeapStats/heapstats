@@ -206,7 +206,7 @@ void ReloadConfigProc(jvmtiEnv *jvmti, JNIEnv *env) {
       /* Start deadlock detector. */
       if (conf->CheckDeadlock()->get()) {
         jvmtiCapabilities capabilities = {0};
-        dldetector::initialize(jvmti);
+        dldetector::initialize(jvmti, false);
         if (isError(jvmti, jvmti->AddCapabilities(&capabilities))) {
           logger->printCritMsg(
                       "Couldn't set event capabilities for deadlock detector.");
@@ -494,7 +494,7 @@ jint InitEventSetting(jvmtiEnv *jvmti, bool isOnLoad) {
 
   /* Setup MonitorContendedEnter event. */
   if (conf->CheckDeadlock()->get()) {
-    if (!dldetector::initialize(jvmti)) {
+    if (!dldetector::initialize(jvmti, isOnLoad)) {
       return DLDETECTOR_SETUP_FAILED;
     }
   }
