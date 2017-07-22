@@ -6,7 +6,7 @@ BASE_SOURCE     = libmain.cpp util.cpp symbolFinder.cpp vmStructScanner.cpp   \
                   snapShotContainer.cpp classContainer.cpp gcWatcher.cpp      \
                   logMain.cpp jvmSockCmd.cpp signalManager.cpp logManager.cpp \
                   archiveMaker.cpp cmdArchiver.cpp fsUtil.cpp                 \
-                  jniZipArchiver.cpp deadlockFinder.cpp vmVariables.cpp       \
+                  jniZipArchiver.cpp deadlockDetector.cpp vmVariables.cpp     \
                   vmFunctions.cpp configuration.cpp overrider.cpp             \
                   threadRecorder.cpp heapstatsMBean.cpp overrideFunc.S        \
                   trapSender.cpp
