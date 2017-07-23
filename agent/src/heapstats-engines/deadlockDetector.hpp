@@ -27,15 +27,6 @@
 #include <jni.h>
 
 
-#define SYMBOL_DEADLOCK_FINDER "jmm_FindMonitorDeadlockedThreads"
-
-
-/*!
- * \brief Type of jmm_FindMonitorDeadlockedThreads()
- */
-typedef jobjectArray (*Tjmm_FindMonitorDeadlockedThreads)(JNIEnv *env);
-
-
 namespace dldetector {
 
   /*!
@@ -48,6 +39,17 @@ namespace dldetector {
    */
   void JNICALL OnMonitorContendedEnter(jvmtiEnv *jvmti, JNIEnv *env,
                                        jthread thread, jobject object);
+
+  /*!
+   * \brief Event handler of JVMTI MonitorContendedEntered for finding deadlock.
+   * \param jvmti  [in] JVMTI environment.
+   * \param env    [in] JNI environment of the event (current) thread.
+   * \param thread [in] JNI local reference to the thread attempting to enter
+   *                    the monitor.
+   * \param object [in] JNI local reference to the monitor.
+   */
+  void JNICALL OnMonitorContendedEntered(jvmtiEnv *jvmti, JNIEnv *env,
+                                         jthread thread, jobject object);
 
   /*!
    * \brief Deadlock detector initializer.
