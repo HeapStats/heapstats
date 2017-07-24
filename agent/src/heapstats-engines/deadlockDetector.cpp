@@ -23,6 +23,7 @@
 #include <jvmti.h>
 #include <jni.h>
 
+#include <pthread.h>
 #include <sched.h>
 
 #ifdef HAVE_ATOMIC
@@ -58,18 +59,26 @@ static std::map<jint, jint> monitor_owners;
  */
 static std::map<jint, jint> waiter_list;
 
+/*!
+ * \brief Mutex for maps
+ */
+static pthread_mutex_t mutex = PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
+
 
 namespace dldetector {
 
   /*!
    * \brief Send SNMP Trap which contains deadlock information.
    * \param nowTime    [in]  The time of deadlock occurred.
+   * \param numThreads [in]  Number of threads which are related to deadlock.
    * \param name       [in]  Thread name of deadlock occurred.
    */
-  static void sendSNMPTrap(TMSecTime nowTime, const char *name) {
+  static void sendSNMPTrap(TMSecTime nowTime,
+                           int numThreads, const char *name) {
     /* OIDs */
     char trapOID[50] = OID_DEADLOCKALERT;
     oid OID_ALERT_DATE[] = {SNMP_OID_HEAPALERT, 1};
+    oid OID_DEAD_COUNT[] = {SNMP_OID_DEADLOCKALERT, 1};
     oid OID_DEAD_NAME[] = {SNMP_OID_DEADLOCKALERT, 2};
 
     char buf[BUFFER_SZ];
@@ -82,6 +91,11 @@ namespace dldetector {
     snprintf(buf, BUFFER_SZ - 1, "%llu", nowTime);
     sender.addValue(OID_ALERT_DATE, OID_LENGTH(OID_ALERT_DATE), buf,
                     SNMP_VAR_TYPE_COUNTER64);
+
+    /* Set thread count. */
+    snprintf(buf, BUFFER_SZ - 1, "%d", numThreads);
+    sender.addValue(OID_DEAD_COUNT, OID_LENGTH(OID_DEAD_COUNT), buf,
+                    SNMP_VAR_TYPE_COUNTER32);
 
     /* Set thread name. */
     sender.addValue(OID_DEAD_NAME, OID_LENGTH(OID_DEAD_NAME), name,
@@ -97,13 +111,15 @@ namespace dldetector {
 
   /*!
    * \brief Notify deadlock occurrence via stdout/err and SNMP Trap.
-   * \param jvmti           [in]  JVMTI environment.
-   * \oaram env             [in]  JNI environment.
-   * \param thread          [in]  jthread object which deadlock triggered.
-   * \param monitor         [in]  Monitor object.
+   * \param jvmti      [in]  JVMTI environment.
+   * \oaram env        [in]  JNI environment.
+   * \param thread     [in]  jthread object which deadlock triggered.
+   * \param monitor    [in]  Monitor object.
+   * \param numThreads [in]  Number of threads which are related to deadlock.
    */
   static void notifyDeadlockOccurrence(jvmtiEnv *jvmti, JNIEnv *env,
-                                       jthread thread, jobject monitor) {
+                                       jthread thread, jobject monitor,
+                                       int numThreads) {
     TProcessMark mark(processing);
 
     TMSecTime nowTime = (TMSecTime)getNowTimeSec();
@@ -111,11 +127,12 @@ namespace dldetector {
     jvmtiThreadInfo threadInfo = {0};
     jvmti->GetThreadInfo(thread, &threadInfo);
 
-    logger->printCritMsg("ALERT(DEADLOCK): Deadlock occurred! thread: \"%s\"",
-                         threadInfo.name);
+    logger->printCritMsg(
+                "ALERT(DEADLOCK): Deadlock occurred! count: %d, thread: \"%s\"",
+                numThreads, threadInfo.name);
 
     if (conf->SnmpSend()->get()) {
-      sendSNMPTrap(nowTime, threadInfo.name);
+      sendSNMPTrap(nowTime, numThreads, threadInfo.name);
     }
 
     jvmti->Deallocate((unsigned char *)threadInfo.name);
@@ -159,42 +176,61 @@ namespace dldetector {
       return;
     }
 
-    /* Store all owned monitors to owner list */
     jint monitor_hash;
     jint thread_hash;
     jvmti->GetObjectHashCode(thread, &thread_hash);
-    for (int idx = 0; idx < monitor_cnt; idx++) {
-      jvmti->GetObjectHashCode(owned_monitors[idx], &monitor_hash);
-      monitor_owners.emplace(monitor_hash, thread_hash);
-    }
-    jvmti->Deallocate((unsigned char *)owned_monitors);
-
-    /* Add to waiters list */
     jvmti->GetObjectHashCode(object, &monitor_hash);
-    waiter_list.emplace(thread_hash, monitor_hash);
 
-    /* Check deadlock */
-    while (true) {
-      auto owner_itr = monitor_owners.find(monitor_hash);
-      if (owner_itr == monitor_owners.end()) {
-        // No deadlock
-        return;
+    ENTER_PTHREAD_SECTION(&mutex);
+    {
+      /* Store all owned monitors to owner list */
+      for (int idx = 0; idx < monitor_cnt; idx++) {
+        jint current_monitor_hash;
+        jvmti->GetObjectHashCode(owned_monitors[idx], &current_monitor_hash);
+        if (current_monitor_hash == monitor_hash) {
+          continue;
+        }
+        monitor_owners.emplace(current_monitor_hash, thread_hash);
       }
+      jvmti->Deallocate((unsigned char *)owned_monitors);
 
-      if (owner_itr->second == thread_hash) {
-        // Deadlock!!
-        notifyDeadlockOccurrence(jvmti, env, thread, object);
+      /* Add to waiters list */
+      jvmti->GetObjectHashCode(object, &monitor_hash);
+      waiter_list.emplace(thread_hash, monitor_hash);
+
+      /* Check deadlock */
+      int numThreads = 1;
+      while (true) {
+        numThreads++;
+
+        auto owner_itr = monitor_owners.find(monitor_hash);
+        if (owner_itr == monitor_owners.end()) {
+          // No deadlock
+          break;
+        }
+
+        auto waiter_itr = waiter_list.find(owner_itr->second);
+        if (waiter_itr == waiter_list.end()) {
+          // No deadlock
+          break;
+        }
+
+        owner_itr = monitor_owners.find(waiter_itr->second);
+        if (owner_itr == monitor_owners.end()) {
+          // No deadlock
+          break;
+        }
+
+        if (owner_itr->second == thread_hash) {
+          // Deadlock!!
+          notifyDeadlockOccurrence(jvmti, env, thread, object, numThreads);
+          break;
+        }
+
+        monitor_hash = waiter_itr->second;
       }
-
-      auto waiter_itr = waiter_list.find(owner_itr->second);
-      if (waiter_itr != waiter_list.end()) {
-        // No deadlock
-        return;
-      }
-
-      monitor_hash = waiter_itr->second;
     }
-
+    EXIT_PTHREAD_SECTION(&mutex);
   }
 
 
@@ -223,18 +259,22 @@ namespace dldetector {
       return;
     }
 
-    /* Remove all owned monitors from owner list */
-    for (int idx = 0; idx < monitor_cnt; idx++) {
-      jint monitor_hash;
-      jvmti->GetObjectHashCode(owned_monitors[idx], &monitor_hash);
-      monitor_owners.erase(monitor_hash);
-    }
-    jvmti->Deallocate((unsigned char *)owned_monitors);
+    ENTER_PTHREAD_SECTION(&mutex);
+    {
+      /* Remove all owned monitors from owner list */
+      for (int idx = 0; idx < monitor_cnt; idx++) {
+        jint monitor_hash;
+        jvmti->GetObjectHashCode(owned_monitors[idx], &monitor_hash);
+        monitor_owners.erase(monitor_hash);
+      }
+      jvmti->Deallocate((unsigned char *)owned_monitors);
 
-    /* Remove thread from waiters list */
-    jint thread_hash;
-    jvmti->GetObjectHashCode(thread, &thread_hash);
-    waiter_list.erase(thread_hash);
+      /* Remove thread from waiters list */
+      jint thread_hash;
+      jvmti->GetObjectHashCode(thread, &thread_hash);
+      waiter_list.erase(thread_hash);
+    }
+    EXIT_PTHREAD_SECTION(&mutex);
   }
 
 
@@ -264,6 +304,9 @@ namespace dldetector {
       return false;
     }
 
+    monitor_owners.clear();
+    waiter_list.clear();
+
     TMonitorContendedEnterCallback::registerCallback(&OnMonitorContendedEnter);
     TMonitorContendedEnterCallback::switchEventNotification(jvmti,
                                                             JVMTI_ENABLE);
@@ -292,6 +335,9 @@ namespace dldetector {
     while (processing > 0) {
       sched_yield();
     }
+
+    monitor_owners.clear();
+    waiter_list.clear();
   }
 
 }
