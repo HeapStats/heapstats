@@ -66,8 +66,15 @@ class TJVMTIEventCallback {
   static void unregisterCallback(T callback) {
     pthread_rwlock_wrlock(&callbackLock);
     {
-      for (auto itr = callbackList.cbegin();
-           itr != callbackList.cend(); itr++) {
+#ifdef USE_N2350
+      // C++11 support
+      auto list_begin = callbackList.cbegin();
+      auto list_end = callbackList.cend();
+#else
+      auto list_begin = callbackList.begin();
+      auto list_end = callbackList.end();
+#endif
+      for (auto itr = list_begin; itr != list_end; itr++) {
         if (*itr == callback) {
           callbackList.erase(itr);
           break;
