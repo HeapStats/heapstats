@@ -304,6 +304,10 @@ namespace dldetector {
       return false;
     }
 
+    /*
+     * All JVMTI events are not fired at this point.
+     * So we need not to lock this operation.
+     */
     monitor_owners.clear();
     waiter_list.clear();
 
@@ -336,8 +340,12 @@ namespace dldetector {
       sched_yield();
     }
 
-    monitor_owners.clear();
-    waiter_list.clear();
+    ENTER_PTHREAD_SECTION(&mutex);
+    {
+      monitor_owners.clear();
+      waiter_list.clear();
+    }
+    EXIT_PTHREAD_SECTION(&mutex);
   }
 
 }
