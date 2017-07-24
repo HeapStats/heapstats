@@ -66,7 +66,7 @@ class TJVMTIEventCallback {
   static void unregisterCallback(T callback) {
     pthread_rwlock_wrlock(&callbackLock);
     {
-#if __cplusplus >= 201103L
+#ifdef USE_N2350
       // C++11 support
       auto list_begin = callbackList.cbegin();
       auto list_end = callbackList.cend();

@@ -89,7 +89,7 @@ class TJNICallbackRegister {
     pthread_rwlock_wrlock(&callbackLock);
     {
       if (prologue != NULL) {
-#if __cplusplus >= 201103L
+#ifdef USE_N2350
         // C++11 support
         auto prologue_begin = prologueCallbackList.cbegin();
         auto prologue_end = prologueCallbackList.cend();
@@ -106,7 +106,7 @@ class TJNICallbackRegister {
       }
 
       if (epilogue != NULL) {
-#if __cplusplus >= 201103L
+#ifdef USE_N2350
         // C++11 support
         auto epilogue_begin = prologueCallbackList.cbegin();
         auto epilogue_end = prologueCallbackList.cend();
