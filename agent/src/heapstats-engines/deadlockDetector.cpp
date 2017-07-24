@@ -183,6 +183,8 @@ namespace dldetector {
 
     ENTER_PTHREAD_SECTION(&mutex);
     {
+      bool canSkip = true;
+
       /* Store all owned monitors to owner list */
       for (int idx = 0; idx < monitor_cnt; idx++) {
         jint current_monitor_hash;
@@ -191,43 +193,43 @@ namespace dldetector {
           continue;
         }
         monitor_owners.emplace(current_monitor_hash, thread_hash);
+        canSkip = false;
       }
       jvmti->Deallocate((unsigned char *)owned_monitors);
 
-      /* Add to waiters list */
-      jvmti->GetObjectHashCode(object, &monitor_hash);
-      waiter_list.emplace(thread_hash, monitor_hash);
+      if (!canSkip) {
+        /* Add to waiters list */
+        jvmti->GetObjectHashCode(object, &monitor_hash);
+        waiter_list.emplace(thread_hash, monitor_hash);
 
-      /* Check deadlock */
-      int numThreads = 1;
-      while (true) {
-        numThreads++;
+        /* Check deadlock */
+        int numThreads = 1;
+        while (true) {
+          numThreads++;
 
-        auto owner_itr = monitor_owners.find(monitor_hash);
-        if (owner_itr == monitor_owners.end()) {
-          // No deadlock
-          break;
+          auto owner_itr = monitor_owners.find(monitor_hash);
+          if (owner_itr == monitor_owners.end()) {
+            break;  // No deadlock
+          }
+
+          auto waiter_itr = waiter_list.find(owner_itr->second);
+          if (waiter_itr == waiter_list.end()) {
+            break; // No deadlock
+          }
+
+          owner_itr = monitor_owners.find(waiter_itr->second);
+          if (owner_itr == monitor_owners.end()) {
+            break; // No deadlock
+          }
+
+          if (owner_itr->second == thread_hash) {
+            // Deadlock!!
+            notifyDeadlockOccurrence(jvmti, env, thread, object, numThreads);
+            break;
+          }
+
+          monitor_hash = waiter_itr->second;
         }
-
-        auto waiter_itr = waiter_list.find(owner_itr->second);
-        if (waiter_itr == waiter_list.end()) {
-          // No deadlock
-          break;
-        }
-
-        owner_itr = monitor_owners.find(waiter_itr->second);
-        if (owner_itr == monitor_owners.end()) {
-          // No deadlock
-          break;
-        }
-
-        if (owner_itr->second == thread_hash) {
-          // Deadlock!!
-          notifyDeadlockOccurrence(jvmti, env, thread, object, numThreads);
-          break;
-        }
-
-        monitor_hash = waiter_itr->second;
       }
     }
     EXIT_PTHREAD_SECTION(&mutex);
@@ -254,7 +256,7 @@ namespace dldetector {
                            *(void **)thread);
       return;
     }
-    if (monitor_cnt == 0) { // This thread does not have a monitor.
+    if (monitor_cnt <= 1) { // This thread does not have other monitor(s).
       jvmti->Deallocate((unsigned char *)owned_monitors);
       return;
     }
