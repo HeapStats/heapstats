@@ -1,3 +1,7 @@
+2017-07-24 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3429: [REGRESSION] Cannot build HeapStats Agent on RHEL
+
 2017-07-22 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3424: HeapStats Agent might crash when thread recorder is disabled via realoading configuration
