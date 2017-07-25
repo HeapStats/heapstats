@@ -20,9 +20,15 @@
 
 public class Test implements Runnable{
 
+  private final Object lock;
+
+  public Test(Object lock){
+    this.lock = lock;
+  }
+
   public void run(){
     try{
-      synchronized(this){
+      synchronized(lock){
         Thread.sleep(3000);
       }
     }
@@ -32,12 +38,23 @@ public class Test implements Runnable{
   }
 
   public static void main(String[] args) throws Exception{
-    Thread th1 = new Thread(new Test());
-    Thread th2 = new Thread(new Test());
+    Object lock1 = new Object();
+    Object lock2 = new Object();
+
+    Thread th1 = new Thread(new Test(lock1));
+    Thread th2 = new Thread(new Test(lock1));
     th1.start();
     th2.start();
 
+    Thread th3 = new Thread(new Test(lock2));
+    Thread th4 = new Thread(new Test(lock2));
+
+    th3.start();
+    th4.start();
+
     th1.join();
     th2.join();
+    th3.join();
+    th4.join();
   }
 }
