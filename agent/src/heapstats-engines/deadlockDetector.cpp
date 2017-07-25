@@ -183,6 +183,7 @@ namespace dldetector {
 
     ENTER_PTHREAD_SECTION(&mutex);
     {
+      /* Avoid JDK-8185164 */
       bool canSkip = true;
 
       /* Store all owned monitors to owner list */
