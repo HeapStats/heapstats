@@ -193,7 +193,7 @@ namespace dldetector {
         if (current_monitor_hash == monitor_hash) {
           continue;
         }
-        monitor_owners.emplace(current_monitor_hash, thread_hash);
+        monitor_owners[current_monitor_hash] = thread_hash;
         canSkip = false;
       }
       jvmti->Deallocate((unsigned char *)owned_monitors);
@@ -201,7 +201,7 @@ namespace dldetector {
       if (!canSkip) {
         /* Add to waiters list */
         jvmti->GetObjectHashCode(object, &monitor_hash);
-        waiter_list.emplace(thread_hash, monitor_hash);
+        waiter_list[thread_hash] = monitor_hash;
 
         /* Check deadlock */
         int numThreads = 1;
