@@ -462,7 +462,7 @@ void TConfiguration::printSetting(void) {
                        triggerOnDump->get() ? "true" : "false");
 
   /* Output status of deadlock check. */
-  logger->printInfoMsg("Deadlock check (experimental feature) = %s",
+  logger->printInfoMsg("Deadlock check = %s",
                        checkDeadlock->get() ? "true" : "false");
 
   /* Output status of logging triggers. */
