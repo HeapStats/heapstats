@@ -1,3 +1,7 @@
+2017-08-02 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3430: Fix potential error when conflict between VMDeath and class loading
+
 2017-08-02 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3293: [REFACTORING] Realtime deadlock detector implementation
