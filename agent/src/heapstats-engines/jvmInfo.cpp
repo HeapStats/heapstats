@@ -136,66 +136,49 @@ bool TJvmInfo::setHSVersion(jvmtiEnv *jvmti) {
   } else {
     logger->printDebugMsg("HotSpot version: %s", versionStr);
 
+    /*
+     * Version-String Scheme has changed since JDK 9 (See JEP223).
+     * afterJDK9 means JDK 9+ (1) or not (0)?
+     * major means hotspot version until JDK8, jdk major version since JDK 9.
+     * minor means jdk minor version.
+     * build means build version.
+     * security means security version which has introduced since JDK 9.
+     *
+     * NOT support EA because the binaries do not keep public for long.
+     * See also: https://bugs.openjdk.java.net/browse/JDK-8061493
+     */
+    unsigned char afterJDK9 = 0;
     unsigned char major = 0;
     unsigned char minor = 0;
-    unsigned char micro = 0;
     unsigned char build = 0;
+    unsigned char security = 0;
     int result = 0;
 
-    /* Parse version string. */
+    /* Parse version string of JDK 8 and older. */
     result = sscanf(versionStr, "%hhu.%hhu-b%hhu", &major, &minor, &build);
-    /*
-     * We expect to get 3 values (major, minor, build) from sscanf() at first.
-     */
     if (result != 3) {
-      /* After JDK-8030011: Update Hotspot version string output */
-      result = sscanf(versionStr, "%hhu.%hhu.%hhu", &major, &minor, &micro);
-      char *build_str = strrchr(versionStr, 'b');
-      if (likely(build_str != NULL)) {
-        result += sscanf(build_str, "b%hhu", &build);
-      }
-
       /*
-       * We expect to get 4 values (major, minor, micro, build) from sscanf().
-       * This versioning equals to JDK version.
+       * Parse version string of JDK 9+ GA.
+       * GA release does not include minor and security.
        */
-      if (unlikely(result != 4)) {
-        /*
-         * Support JDK 9 EA
-         * See https://bugs.openjdk.java.net/browse/JDK-8061493
-         */
-#if USE_PCRE
-        TPCRERegex versionRegex("^(\\d+)-ea\\+(\\d+)$", 9);
-#else
-        TCPPRegex versionRegex("^(\\d+)-ea\\+(\\d+)$");
-#endif
-        if (versionRegex.find(versionStr)) {
-          char *minorStr = versionRegex.group(1);
-          char *buildStr = versionRegex.group(2);
+      result = sscanf(versionStr, "%hhu+%hhu", &major, &build);
 
-          major = 1;
-          minor = (unsigned char)atoi(minorStr);
-          micro = 0;
-          build = (unsigned char)atoi(buildStr);
-
-          free(minorStr);
-          free(buildStr);
-        } else {
+      if (likely(result != 2)) {
+        /* Parse version string of JDK 9 GA (Minor #1) and later */
+        printf("GA2");
+        result = sscanf(versionStr, "%hhu.%hhu.%hhu+%hhu", &major, &minor,
+            &security, &build);
+        if (unlikely(result != 4)) {
           logger->printCritMsg("Unsupported JVM version: %s", versionStr);
           jvmti->Deallocate((unsigned char *)versionStr);
           return false;
         }
       }
-
-      /*
-       * Latest HS version is "25".
-       * So I add 25 to major.
-       */
-      major += 25;
+      afterJDK9 = 1;
     }
 
     jvmti->Deallocate((unsigned char *)versionStr);
-    _hsVersion = MAKE_HS_VERSION(major, minor, micro, build);
+    _hsVersion = MAKE_HS_VERSION(afterJDK9, major, minor, security, build);
   }
 
   return true;
