@@ -552,10 +552,6 @@ jint CommonInitialization(JavaVM *vm, jvmtiEnv **jvmti, char *options) {
     return GET_LOW_LEVEL_INFO_FAILED;
   }
 
-  if (!jvmInfo->setHSVersion(*jvmti)) {
-    return GET_LOW_LEVEL_INFO_FAILED;
-  }
-
   /* Initialize configuration */
   conf = new TConfiguration(jvmInfo);
 
@@ -573,6 +569,11 @@ jint CommonInitialization(JavaVM *vm, jvmtiEnv **jvmti, char *options) {
 
   logger->setLogLevel(conf->LogLevel()->get());
   logger->setLogFile(conf->LogFile()->get());
+
+  /* Parse JDK Version */
+  if (!jvmInfo->setHSVersion(*jvmti)) {
+    return GET_LOW_LEVEL_INFO_FAILED;
+  }
 
   /* Show package information. */
   logger->printInfoMsg(PACKAGE_STRING);

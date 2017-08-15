@@ -1,3 +1,7 @@
+2017-08-15 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3437: Add support for JDK 9 Version-String Scheme (JEP 223)
+
 2017-08-02 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3430: Fix potential error when conflict between VMDeath and class loading
