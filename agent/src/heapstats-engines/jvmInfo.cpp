@@ -144,7 +144,7 @@ bool TJvmInfo::setHSVersion(jvmtiEnv *jvmti) {
      * build means build version in every JDK.
      * security means security version which has introduced since JDK 9.
      *
-     * NOT support EA because the binaries do not keep public for long.
+     * NOT support Early Access because the binaries do not archive.
      * See also: https://bugs.openjdk.java.net/browse/JDK-8061493
      */
     unsigned char afterJDK9 = 0;
