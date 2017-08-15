@@ -137,11 +137,11 @@ bool TJvmInfo::setHSVersion(jvmtiEnv *jvmti) {
     logger->printDebugMsg("HotSpot version: %s", versionStr);
 
     /*
-     * Version-String Scheme has changed since JDK 9 (See JEP223).
-     * afterJDK9 means JDK 9+ (1) or not (0)?
-     * major means hotspot version until JDK8, jdk major version since JDK 9.
-     * minor means jdk minor version.
-     * build means build version.
+     * Version-String Scheme has changed since JDK 9 (JEP223).
+     * afterJDK9 means whether this version is after JDK 9(1) or not(0).
+     * major means hotspot version until JDK 8, jdk major version since JDK 9.
+     * minor means jdk minor version in every JDK.
+     * build means build version in every JDK.
      * security means security version which has introduced since JDK 9.
      *
      * NOT support EA because the binaries do not keep public for long.
@@ -165,7 +165,6 @@ bool TJvmInfo::setHSVersion(jvmtiEnv *jvmti) {
 
       if (likely(result != 2)) {
         /* Parse version string of JDK 9 GA (Minor #1) and later */
-        printf("GA2");
         result = sscanf(versionStr, "%hhu.%hhu.%hhu+%hhu", &major, &minor,
             &security, &build);
         if (unlikely(result != 4)) {
