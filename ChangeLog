@@ -1,3 +1,7 @@
+2017-09-15 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3450: Remove dependency to heapstats-mbean from heapstats-plugin-api
+
 2017-08-15 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3437: Add support for JDK 9 Version-String Scheme (JEP 223)
