@@ -82,11 +82,6 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>heapstats-mbean</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>heapstats-core</artifactId>
             <version>${project.version}</version>
         </dependency>
