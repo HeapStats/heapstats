@@ -1,7 +1,7 @@
 /*!
  * \file gcWatcher.cpp
  * \brief This file is used to take snapshot when finish garbage collection.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,6 +55,8 @@ TGCWatcher::~TGCWatcher(void) { /* Do nothing. */ }
  * \param jni   [in] JNI environment object.
  * \param data  [in] Pointer of user data.
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-label"
 void JNICALL TGCWatcher::entryPoint(jvmtiEnv *jvmti, JNIEnv *jni, void *data) {
   /* Get self. */
   TGCWatcher *controller = (TGCWatcher *)data;
@@ -92,6 +94,7 @@ RACE_COND_DEBUG_POINT:
   /* Change running state. */
   controller->_isRunning = false;
 }
+#pragma GCC diagnostic pop
 
 /*!
  * \brief Make and begin Jthread.
