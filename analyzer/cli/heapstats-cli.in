@@ -1,10 +1,19 @@
-#!/bin/sh
+#!/bin/bash
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 libexecdir=@libexecdir@
 
 CLI_JAR="$libexecdir/heapstats-cli.jar"
+# Check CLI.
+if test ! -f "$CLI_JAR" ; then
+  echo "CLI not found at $libexecdir, try to find heapstats-cli.jar instead"
+  CLI_JAR=$(find . -name "heapstats-cli.jar" | head -n 1)
+  if test ! -f "$CLI_JAR" ; then
+    echo "CLI not found"
+    exit 2
+  fi
+fi
 
 if test -x $JAVA_HOME/bin/java; then
   $JAVA_HOME/bin/java $JAVA_OPTS -jar $CLI_JAR $@
