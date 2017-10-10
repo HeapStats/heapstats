@@ -1,3 +1,7 @@
+2017-10-10 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3464: Fix launcher and attacher to use on Ubuntu
+
 2017-09-26 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3454: mvn reports exception w/ Java 9
