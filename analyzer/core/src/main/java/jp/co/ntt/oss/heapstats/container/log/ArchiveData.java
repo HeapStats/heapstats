@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,27 +18,16 @@
 
 package jp.co.ntt.oss.heapstats.container.log;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.io.*;
+import java.lang.ref.PhantomReference;
+import java.lang.ref.ReferenceQueue;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -82,7 +71,66 @@ public class ArchiveData {
     private List<String> sockOwner;
     
     private boolean parsed;
-    
+
+    private static ReferenceQueue<ArchiveData> refQueue;
+
+    private static class PhantomRefWrapper extends PhantomReference<ArchiveData> {
+
+        private final Path deleteTarget;
+
+        public PhantomRefWrapper(ArchiveData ref) {
+            super(ref, refQueue);
+            Objects.requireNonNull(ref.extractPath, "extractPath must not be null.");
+            this.deleteTarget = ref.extractPath.toPath();
+        }
+
+        public void clean() {
+            try {
+                Files.walkFileTree(deleteTarget, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+                        if (e == null) {
+                            Files.delete(dir);
+                            return FileVisitResult.CONTINUE;
+                        } else {
+                            throw e;
+                        }
+                    }
+                });
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+    }
+
+    private static Set<PhantomRefWrapper> refSet;
+
+    private static void cleaner() {
+        while (true) {
+            try {
+                PhantomRefWrapper ref = (PhantomRefWrapper) refQueue.remove();
+                ref.clean();
+                refSet.remove(ref);
+            } catch (InterruptedException e) {
+                // Do nothing.
+            }
+        }
+    }
+
+    static {
+        refQueue = new ReferenceQueue<>();
+        refSet = Collections.synchronizedSet(new HashSet<>());
+        Thread th = new Thread(ArchiveData::cleaner, "ArchiveData cleaner");
+        th.setDaemon(true);
+        th.start();
+    }
+
     /**
      * Constructor of ArchiveData.
      * 
@@ -93,6 +141,7 @@ public class ArchiveData {
         this(log, null);
         extractPath = Files.createTempDirectory("heapstats_archive").toFile();
         extractPath.deleteOnExit();
+        refSet.add(new PhantomRefWrapper(this));
     }
     
     /**
@@ -106,6 +155,10 @@ public class ArchiveData {
         archivePath = log.getArchivePath();
         extractPath = location;
         parsed = false;
+
+        if (extractPath != null) {
+            refSet.add(new PhantomRefWrapper(this));
+        }
     }
     
     /**
@@ -339,18 +392,6 @@ public class ArchiveData {
         }
         
         parsed = true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        try {
-            extractPath.delete();
-        } finally {
-            super.finalize();
-        }
     }
 
     /**
