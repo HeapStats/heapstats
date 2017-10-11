@@ -1,7 +1,7 @@
 /*!
  * \file jvmSockCmd.cpp
  * \brief This file is used by thread dump.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -305,6 +305,8 @@ int TJVMSockCmd::openJvmSock(char* path) {
  * \param pathLen [in]  Max length of param "path".
  * \return Search result.
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation"
 bool TJVMSockCmd::findJvmSock(char* path, int pathLen) {
   /* Sanity check. */
   if (unlikely(path == NULL || pathLen <= 0)) {
@@ -357,6 +359,7 @@ bool TJVMSockCmd::findJvmSock(char* path, int pathLen) {
 
   return true;
 }
+#pragma GCC diagnostic pop
 
 /*!
  * \brief Create attach file.
@@ -364,6 +367,8 @@ bool TJVMSockCmd::findJvmSock(char* path, int pathLen) {
  * \param pathLen [in]  Max length of param "path".
  * \return Process result.
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation"
 bool TJVMSockCmd::createAttachFile(char* path, int pathLen) {
   /* Sanity check. */
   if (unlikely(path == NULL || pathLen <= 0)) {
@@ -425,3 +430,5 @@ bool TJVMSockCmd::createAttachFile(char* path, int pathLen) {
 
   return true;
 }
+#pragma GCC diagnostic pop
+
