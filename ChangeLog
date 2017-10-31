@@ -1,3 +1,7 @@
+2017-11-01 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3458: Temp directory for ArchiveData is not removed when exiting
+
 2017-10-31 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3456: Build warnings w/ GCC 7.2.1
