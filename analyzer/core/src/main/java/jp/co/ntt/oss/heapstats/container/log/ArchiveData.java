@@ -111,8 +111,12 @@ public class ArchiveData {
 
     private static Set<PhantomRefWrapper> refSet;
 
+    private static Thread cleanerThread;
+
+    private static volatile boolean isCleanerTerminated;
+
     private static void cleaner() {
-        while (true) {
+        while (!isCleanerTerminated) {
             try {
                 PhantomRefWrapper ref = (PhantomRefWrapper) refQueue.remove();
                 ref.clean();
@@ -121,14 +125,29 @@ public class ArchiveData {
                 // Do nothing.
             }
         }
+
+        refSet.forEach(PhantomRefWrapper::clean);
+    }
+
+    public static void sendCleanerTerminateRequest() {
+        isCleanerTerminated = true;
+        cleanerThread.interrupt();
+
+        try {
+            cleanerThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     static {
         refQueue = new ReferenceQueue<>();
         refSet = Collections.synchronizedSet(new HashSet<>());
-        Thread th = new Thread(ArchiveData::cleaner, "ArchiveData cleaner");
-        th.setDaemon(true);
-        th.start();
+        cleanerThread = new Thread(ArchiveData::cleaner, "ArchiveData cleaner");
+        cleanerThread.setDaemon(true);
+        cleanerThread.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(ArchiveData::sendCleanerTerminateRequest));
     }
 
     /**
@@ -140,7 +159,6 @@ public class ArchiveData {
     public ArchiveData(LogData log) throws IOException{
         this(log, null);
         extractPath = Files.createTempDirectory("heapstats_archive").toFile();
-        extractPath.deleteOnExit();
         refSet.add(new PhantomRefWrapper(this));
     }
     
