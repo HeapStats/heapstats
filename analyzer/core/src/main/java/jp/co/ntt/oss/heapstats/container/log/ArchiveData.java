@@ -104,7 +104,6 @@ public class ArchiveData {
                     }
                 });
             } catch (IOException e) {
-                e.printStackTrace();
                 throw new UncheckedIOException(e);
             }
         }
