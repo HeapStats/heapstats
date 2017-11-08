@@ -105,6 +105,8 @@ inline bool TakeLogInfo(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
  *                   This value is always Interval.
  */
 void intervalLogProc(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause) {
+  TProcessMark mark(processing);
+
   /* Call collect log by interval. */
   if (unlikely(!TakeLogInfo(jvmti, env, cause,
                             (TMSecTime)getNowTimeSec(), ""))) {
