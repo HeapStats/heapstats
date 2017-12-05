@@ -1,7 +1,7 @@
 /*!
  * \file vmFunctions.hpp
  * \brief This file includes functions in HotSpot VM.
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -113,12 +113,27 @@
 #define USERHANDLER_SYMBOL "_ZL11UserHandleriPvS_"
 #define USERHANDLER_SYMBOL_JDK6 "_Z11UserHandleriPvS_"
 
+
 /*!
  * \brief Symbol of SR_handler()
  */
-#define SR_HANDLER_SYMBOL          "_ZL10SR_handleriP7siginfoP8ucontext"
-#define SR_HANDLER_SYMBOL_FALLBACK "_ZL10SR_handleriP9siginfo_tP8ucontext"
-#define SR_HANDLER_SYMBOL_JDK6     "_Z10SR_handleriP7siginfoP8ucontext"
+#define SR_HANDLER_SYMBOL           "_ZL10SR_handleriP7siginfoP8ucontext"
+/* 
+ * Adapt to rename siginfo to siginfo_t
+ *   https://sourceware.org/git/?p=glibc.git;a=commit;h=87df4a4b09abdb1b1af41c9c398b86ecdedcb635
+ */
+#define SR_HANDLER_SYMBOL_FALLBACK  "_ZL10SR_handleriP9siginfo_tP8ucontext"
+/* 
+ * Adapt to old C++ compiler
+ * (Sun/Oracle JDK 6 FCS, etc)
+ */
+#define SR_HANDLER_SYMBOL_JDK6      "_Z10SR_handleriP7siginfoP8ucontext"
+/*
+ * Adapt to rename ucontext to ucontext_t
+ *   https://sourceware.org/bugzilla/show_bug.cgi?id=21457
+ */
+#define SR_HANDLER_SYMBOL_FALLBACK2 "_ZL10SR_handleriP9siginfo_tP10ucontext_t"
+
 
 /*!
  * \brief Symbol of ObjectSynchronizer::get_lock_owner().
