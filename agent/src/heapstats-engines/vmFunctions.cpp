@@ -188,8 +188,12 @@ bool TVMFunctions::getFunctionsFromSymbol(void) {
       sr_handler = (TSR_Handler) this->symFinder->findSymbol(
                                                         SR_HANDLER_SYMBOL_JDK6);
       if (sr_handler == NULL) {
-        logger->printWarnMsg("SR_handler() not found.");
-        return false;
+        sr_handler = (TSR_Handler) this->symFinder->findSymbol(
+                                                   SR_HANDLER_SYMBOL_FALLBACK2);
+        if (sr_handler == NULL) {
+          logger->printWarnMsg("SR_handler() not found.");
+          return false;
+        }
       }
     }
   }
