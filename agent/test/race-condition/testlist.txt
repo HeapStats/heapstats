@@ -3,3 +3,5 @@ MemoryExhausted/*
 ThreadExhausted/*
 SnapShotProcessor/*
 GCWatcher/*
+MonitorContendedEnter/*
+MonitorContendedEntered/*

@@ -135,6 +135,7 @@ jvmtiIterationControl JNICALL HeapObjectCallBack(jlong clsTag, jlong size,
  */
 void JNICALL
     OnClassPrepare(jvmtiEnv *jvmti, JNIEnv *env, jthread thread, jclass klass) {
+  TProcessMark mark(processing);
 
   /*
    * Wait if VM is at a safepoint which includes safepoint synchronizing,
@@ -246,6 +247,8 @@ void onInnerGarbageCollectionInterrupt(void) {
  * \param jvmti [in] JVMTI environment object.
  */
 void JNICALL OnGarbageCollectionStart(jvmtiEnv *jvmti) {
+  TProcessMark mark(processing);
+
   snapshotByGC = TSnapShotContainer::getInstance();
 
   /* Enable inner GC event. */
@@ -257,6 +260,8 @@ void JNICALL OnGarbageCollectionStart(jvmtiEnv *jvmti) {
  * \param jvmti [in] JVMTI environment object.
  */
 void JNICALL OnGarbageCollectionFinish(jvmtiEnv *jvmti) {
+  TProcessMark mark(processing);
+
   /* Disable inner GC event. */
   setupHookForInnerGCEvent(false, NULL);
 
@@ -477,6 +482,8 @@ void HeapKlassAdjustCallback(void *oldOop, void *newOop) {
  * \param jvmti [in] JVMTI environment object.
  */
 void JNICALL OnCMSGCStart(jvmtiEnv *jvmti) {
+  TProcessMark mark(processing);
+
   /* Get CMS state. */
   bool needShapShot = false;
   int cmsState = checkCMSState(gcStart, &needShapShot);
@@ -512,6 +519,8 @@ void JNICALL OnCMSGCStart(jvmtiEnv *jvmti) {
  * \param jvmti [in] JVMTI environment object.
  */
 void JNICALL OnCMSGCFinish(jvmtiEnv *jvmti) {
+  TProcessMark mark(processing);
+
   /* Disable inner GC event. */
   setupHookForInnerGCEvent(false, NULL);
 
@@ -536,6 +545,8 @@ void JNICALL OnCMSGCFinish(jvmtiEnv *jvmti) {
  * \param jvmti [in] JVMTI environment object.
  */
 void JNICALL OnDataDumpRequestForSnapShot(jvmtiEnv *jvmti) {
+  TProcessMark mark(processing);
+
   /* Avoid the plural simultaneous take snapshot by dump-request.        */
   /* E.g. keeping pushed dump key.                                       */
   /* Because classContainer register a redundancy class in TakeSnapShot. */

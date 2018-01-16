@@ -28,10 +28,10 @@
 #include <stddef.h>
 
 /*!
- *  * \brief Make HotSpot version
- *   */
-#define MAKE_HS_VERSION(major, minor, micro, build) \
-  (((major) << 24) | ((minor) << 16) | ((micro) << 8) | (build))
+ * \brief Make HotSpot version
+ */
+#define MAKE_HS_VERSION(afterJDK9, major, minor, micro, build) \
+  (((afterJDK9) << 30) | ((major) << 24) | ((minor) << 16) | ((micro) << 8) | (build))
 
 /*!
  * \brief JVM performance header info.
@@ -310,7 +310,7 @@ class TJvmInfo {
    */
   inline bool isAfterCR7046558(void) {
     // hs22.0-b03
-    return (this->_hsVersion >= MAKE_HS_VERSION(22, 0, 0, 3));
+    return (this->_hsVersion >= MAKE_HS_VERSION(0, 22, 0, 0, 3));
   }
 
   /*!
@@ -320,7 +320,7 @@ class TJvmInfo {
    */
   inline bool isAfterCR7017732(void) {
     // hs21.0-b06
-    return (this->_hsVersion >= MAKE_HS_VERSION(21, 0, 0, 6));
+    return (this->_hsVersion >= MAKE_HS_VERSION(0, 21, 0, 0, 6));
   }
 
   /*!
@@ -332,7 +332,7 @@ class TJvmInfo {
    */
   inline bool isAfterCR6964458(void) {
     // hs25.0-b01
-    return (this->_hsVersion >= MAKE_HS_VERSION(25, 0, 0, 1));
+    return (this->_hsVersion >= MAKE_HS_VERSION(0, 25, 0, 0, 1));
   }
 
   /*!
@@ -343,7 +343,7 @@ class TJvmInfo {
    */
   inline bool isAfterCR8000213(void) {
     // hs25.0-b04
-    return (this->_hsVersion >= MAKE_HS_VERSION(25, 0, 0, 4));
+    return (this->_hsVersion >= MAKE_HS_VERSION(0, 25, 0, 0, 4));
   }
 
   /*!
@@ -353,7 +353,7 @@ class TJvmInfo {
    */
   inline bool isAfterCR8027746(void) {
     // hs25.20-b02
-    return (this->_hsVersion >= MAKE_HS_VERSION(25, 20, 0, 2));
+    return (this->_hsVersion >= MAKE_HS_VERSION(0, 25, 20, 0, 2));
   }
 
   /*!
@@ -364,7 +364,7 @@ class TJvmInfo {
    */
   inline bool isAfterCR8049421(void) {
     // hs25.40-b05
-    return (this->_hsVersion >= MAKE_HS_VERSION(25, 40, 0, 5));
+    return (this->_hsVersion >= MAKE_HS_VERSION(0, 25, 40, 0, 5));
   }
 
   /*!
@@ -373,7 +373,7 @@ class TJvmInfo {
    */
   inline bool isAfterCR8004883(void) {
     // hs25.0-b14
-    return (this->_hsVersion >= MAKE_HS_VERSION(25, 0, 0, 14));
+    return (this->_hsVersion >= MAKE_HS_VERSION(0, 25, 0, 0, 14));
   }
 
   /*!
@@ -384,7 +384,7 @@ class TJvmInfo {
    */
   inline bool isAfterCR8003424(void) {
     // hs25.0-b46
-    return (this->_hsVersion >= MAKE_HS_VERSION(25, 0, 0, 46));
+    return (this->_hsVersion >= MAKE_HS_VERSION(0, 25, 0, 0, 46));
   }
 
   /*!
@@ -394,14 +394,14 @@ class TJvmInfo {
    */
   inline bool isAfterCR8015107(void) {
     // hs25.0-b51
-    return (this->_hsVersion >= MAKE_HS_VERSION(25, 0, 0, 51));
+    return (this->_hsVersion >= MAKE_HS_VERSION(0, 25, 0, 0, 51));
   }
 
   /*!
    * \brief Running on JDK 9 or not.
    */
   inline bool isAfterJDK9(void) {
-    return (this->_hsVersion >= MAKE_HS_VERSION(26, 0, 0, 0));
+    return (this->_hsVersion >= MAKE_HS_VERSION(1, 9, 0, 0, 0));
   }
 
   /*!

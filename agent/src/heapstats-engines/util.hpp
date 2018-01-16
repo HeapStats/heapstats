@@ -166,6 +166,10 @@
  * \brief SNMP setup failed.
  */
 #define SNMP_SETUP_FAILED 0x08
+/*!
+ * \brief Deadlock detector setup failed.
+ */
+#define DLDETECTOR_SETUP_FAILED 0x09
 
 /*!
  * \brief This macro is notification catch signal to signal watcher thread.

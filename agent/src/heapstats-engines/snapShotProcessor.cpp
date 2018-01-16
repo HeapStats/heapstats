@@ -57,6 +57,8 @@ TSnapShotProcessor::~TSnapShotProcessor(void) { /* Do Nothing. */ }
  * \param jni   [in] JNI environment information.
  * \param data  [in] Monitor-object for class-container.
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-label"
 void JNICALL
     TSnapShotProcessor::entryPoint(jvmtiEnv *jvmti, JNIEnv *jni, void *data) {
   /* Ranking pointer. */
@@ -131,6 +133,7 @@ RACE_COND_DEBUG_POINT:
   /* Change running state. */
   controller->_isRunning = false;
 }
+#pragma GCC diagnostic pop
 
 /*!
  * \brief Start parallel work by JThread.

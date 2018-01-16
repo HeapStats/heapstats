@@ -605,17 +605,12 @@ void TThreadRecorder::UnregisterIOTracer(JNIEnv *env) {
  * \param buf_sz [in] Size of ring buffer.
  */
 void TThreadRecorder::initialize(jvmtiEnv *jvmti, JNIEnv *env, size_t buf_sz) {
-  static bool isRegistered = false;
-
   if (likely(inst == NULL)) {
     inst = new TThreadRecorder(buf_sz);
 
-    if (!isRegistered) {
-      isRegistered = true;
-      registerHookPoint(jvmti, env);
-      registerJNIHookPoint(env);
-      registerIOTracer(jvmti, env);
-    }
+    registerHookPoint(jvmti, env);
+    registerJNIHookPoint(env);
+    registerIOTracer(jvmti, env);
 
     inst->registerAllThreads(jvmti);
   }
@@ -679,20 +674,39 @@ void TThreadRecorder::dump(const char *fname) {
  */
 void TThreadRecorder::finalize(jvmtiEnv *jvmti, JNIEnv *env,
                                const char *fname) {
-  /* Stop to hook JVMTI event */
+  /* Stop JVMTI events which are used by ThreadRecorder only. */
   TThreadStartCallback::switchEventNotification(jvmti, JVMTI_DISABLE);
   TThreadEndCallback::switchEventNotification(jvmti, JVMTI_DISABLE);
-  TMonitorContendedEnterCallback::switchEventNotification(jvmti, JVMTI_DISABLE);
   TMonitorContendedEnteredCallback::switchEventNotification(jvmti,
                                                             JVMTI_DISABLE);
   TMonitorWaitCallback::switchEventNotification(jvmti, JVMTI_DISABLE);
   TMonitorWaitedCallback::switchEventNotification(jvmti, JVMTI_DISABLE);
 
-  /* Stop to hook JNI function */
+  /* Stop JNI function hooks. */
   TJVMSleepCallback::switchCallback(env, false);
   TUnsafeParkCallback::switchCallback(env, false);
 
-  /* Stop to hook IoTrace */
+  /* Unregister JVMTI event callbacks which are used by ThreadRecorder. */
+  TThreadStartCallback::unregisterCallback(&OnThreadStart);
+  TThreadEndCallback::unregisterCallback(&OnThreadEnd);
+  TMonitorContendedEnterCallback::unregisterCallback(
+      &OnMonitorContendedEnterForThreadRecording);
+  TMonitorContendedEnteredCallback::unregisterCallback(
+      &OnMonitorContendedEnteredForThreadRecording);
+  TMonitorWaitCallback::unregisterCallback(&OnMonitorWait);
+  TMonitorWaitedCallback::unregisterCallback(&OnMonitorWaited);
+  TDataDumpRequestCallback::unregisterCallback(
+      &OnDataDumpRequestForDumpThreadRecordData);
+
+  /* Refresh JVMTI event callbacks */
+  registerJVMTICallbacks(jvmti);
+
+  /* Unregister JNI function hooks which are used by ThreadRecorder. */
+  TJVMSleepCallback::unregisterCallback(&JVM_SleepPrologue, &JVM_SleepEpilogue);
+  TUnsafeParkCallback::unregisterCallback(&UnsafeParkPrologue,
+                                          &UnsafeParkEpilogue);
+
+  /* Stop IoTrace hook */
   UnregisterIOTracer(env);
 
   /* Wait until all tasks are finished. */

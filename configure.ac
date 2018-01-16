@@ -114,6 +114,26 @@ AM_CONDITIONAL(USE_PCRE, test -n "${ac_cv_header_pcre_h}")
 
 AC_CHECK_HEADERS([sys/auxv.h], [], [])  # Supplemental headers
 
+# Check Container insert/erase and iterator constness (N2350)
+AC_MSG_CHECKING([for N2350])
+
+AC_RUN_IFELSE(
+  [AC_LANG_PROGRAM(
+    [[
+      #include <list>
+    ]], [[
+      std::list<int> test;
+      test.push_back(0);
+      test.erase(test.cbegin());
+    ]]
+  )], [
+    AC_MSG_RESULT([yes])
+    AC_DEFINE(USE_N2350, 1)
+  ], [
+    AC_MSG_RESULT([no])
+  ]
+)
+
 # Check for atomic operation
 AC_CHECK_HEADERS([atomic], [],
 [

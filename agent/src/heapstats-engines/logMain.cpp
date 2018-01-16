@@ -71,11 +71,6 @@ volatile sig_atomic_t flagLogSignal;
 volatile sig_atomic_t flagAllLogSignal;
 
 /*!
- * \brief Flag of abortion by deadlock occurred.
- */
-bool abortionByDeadlock = false;
-
-/*!
  * \brief processing flag
  */
 static std::atomic_int processing(0);
@@ -110,6 +105,8 @@ inline bool TakeLogInfo(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
  *                   This value is always Interval.
  */
 void intervalLogProc(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause) {
+  TProcessMark mark(processing);
+
   /* Call collect log by interval. */
   if (unlikely(!TakeLogInfo(jvmti, env, cause,
                             (TMSecTime)getNowTimeSec(), ""))) {
@@ -167,32 +164,6 @@ void intervalSigProcForLog(jvmtiEnv *jvmti, JNIEnv *env) {
     if (unlikely(!TakeLogInfo(jvmti, env, AnotherSignal, nowTime, ""))) {
       logger->printWarnMsg("Failure collect log by all log signal.");
     }
-  }
-}
-
-/*!
- * \brief Callback for deadlock trap and log.
- * \param jvmti [in] JVMTI environment object.
- * \param env   [in] JNI environment object.
- * \param cause [in] Cause of taking a snapshot.<br>
- *                   This value is always OccurredDeadlock.
- */
-void onOccurredDeadLock(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause) {
-  TProcessMark mark(processing);
-
-  /* Get now date and time. */
-  TMSecTime occurTime = TDeadlockFinder::getInstance()->getDeadlockTime();
-
-  /* Collect log. */
-  if (unlikely(!TakeLogInfo(jvmti, env, cause, occurTime, ""))) {
-    logger->printWarnMsg("Failure collect log on occurred deadlock.");
-  }
-
-  /* If enable to abort JVM by force on occurred deadlock. */
-  if (unlikely(conf->KillOnError()->get())) {
-    /* Set flag for avoid to deadlock which wait self thread termination. */
-    abortionByDeadlock = true;
-    forcedAbortJVM(jvmti, env, "deadlock occurred");
   }
 }
 
@@ -304,12 +275,6 @@ jint setEventEnableForLog(jvmtiEnv *jvmti, bool enable) {
     TResourceExhaustedCallback::switchEventNotification(jvmti, mode);
   }
 
-  /* If collect log when occurred deadlock. */
-  if (conf->CheckDeadlock()->get()) {
-    /* Enable monitor contended event. */
-    TMonitorContendedEnterCallback::switchEventNotification(jvmti, mode);
-  }
-
   return SUCCESS;
 }
 
@@ -334,15 +299,6 @@ void setThreadEnableForLog(jvmtiEnv *jvmti, JNIEnv *env, bool enable) {
     /* Reset signal flag even if non-processed signal is exist. */
     flagLogSignal = 0;
     flagAllLogSignal = 0;
-
-    if (conf->CheckDeadlock()->get() && !abortionByDeadlock) {
-      /* Switch deadlock finder state. */
-      if (enable) {
-        TDeadlockFinder::getInstance()->start(jvmti, env);
-      } else {
-        TDeadlockFinder::getInstance()->stop();
-      }
-    }
   } catch (const char *errMsg) {
     logger->printWarnMsg(errMsg);
   }
@@ -446,14 +402,6 @@ void onVMDeathForLog(jvmtiEnv *jvmti, JNIEnv *env) {
 jint onAgentInitForLog(void) {
   /* Create thread instances that controlled log trigger. */
   try {
-    if (conf->CheckDeadlock()->get()) {
-      if (unlikely(!TDeadlockFinder::globalInitialize(&onOccurredDeadLock))) {
-        logger->printWarnMsg("Failed to initialize deadlock finder.");
-        conf->CheckDeadlock()->set(false);
-        conf->TriggerOnLogLock()->set(false);
-      }
-    }
-
     logTimer = new TTimer(&intervalLogProc, "HeapStats Log Timer");
   } catch (const char *errMsg) {
     logger->printCritMsg(errMsg);
@@ -480,11 +428,6 @@ void onAgentFinalForLog(JNIEnv *env) {
   /* Destroy timer object. */
   delete logTimer;
   logTimer = NULL;
-
-  /* Destroy deadlock finder object. */
-  if (conf->CheckDeadlock()->get()) {
-    TDeadlockFinder::globalFinalize();
-  }
 
   /* Destroy log manager. */
   delete logManager;

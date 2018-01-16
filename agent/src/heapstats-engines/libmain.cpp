@@ -30,7 +30,7 @@
 #include "elapsedTimer.hpp"
 #include "snapShotMain.hpp"
 #include "logMain.hpp"
-#include "deadlockFinder.hpp"
+#include "deadlockDetector.hpp"
 #include "callbackRegister.hpp"
 #include "threadRecorder.hpp"
 #include "heapstatsMBean.hpp"
@@ -162,6 +162,11 @@ void ReloadConfigProc(jvmtiEnv *jvmti, JNIEnv *env) {
       /* Suspend threads. */
       SetThreadEnable(jvmti, env, false);
 
+      /* Suspend deadlock detector. */
+      if (conf->CheckDeadlock()->get()) {
+        dldetector::finalize(jvmti);
+      }
+
       /* Suspend thread status logging. */
       if (conf->ThreadRecordEnable()->get()) {
         TThreadRecorder::finalize(jvmti, env,
@@ -198,7 +203,17 @@ void ReloadConfigProc(jvmtiEnv *jvmti, JNIEnv *env) {
       /* Restart threads. */
       SetThreadEnable(jvmti, env, true);
 
-      /* Suspend thread status logging. */
+      /* Start deadlock detector. */
+      if (conf->CheckDeadlock()->get()) {
+        jvmtiCapabilities capabilities = {0};
+        dldetector::initialize(jvmti, false);
+        if (isError(jvmti, jvmti->AddCapabilities(&capabilities))) {
+          logger->printCritMsg(
+                      "Couldn't set event capabilities for deadlock detector.");
+        }
+      }
+
+      /* Start thread status logging. */
       if (conf->ThreadRecordEnable()->get()) {
         TThreadRecorder::initialize(
             jvmti, env, conf->ThreadRecordBufferSize()->get() * 1024 * 1024);
@@ -386,6 +401,10 @@ void JNICALL OnVMDeath(jvmtiEnv *jvmti, JNIEnv *env) {
     /* Stop and disable each thread. */
     SetThreadEnable(jvmti, env, false);
 
+    if (conf->CheckDeadlock()->get()) {
+      dldetector::finalize(jvmti);
+    }
+
     if (conf->ThreadRecordEnable()->get()) {
       TThreadRecorder::finalize(jvmti, env,
                                 conf->ThreadRecordFileName()->get());
@@ -431,9 +450,6 @@ jint InitEventSetting(jvmtiEnv *jvmti, bool isOnLoad) {
   /* Set capability for object tagging. */
   capabilities.can_tag_objects = 1;
 
-  /* Set capabilities for Deadlock detector. */
-  TDeadlockFinder::setCapabilities(&capabilities, isOnLoad);
-
   /* Set capabilities for Thread Recording. */
   TThreadRecorder::setCapabilities(&capabilities);
 
@@ -478,9 +494,9 @@ jint InitEventSetting(jvmtiEnv *jvmti, bool isOnLoad) {
 
   /* Setup MonitorContendedEnter event. */
   if (conf->CheckDeadlock()->get()) {
-    TMonitorContendedEnterCallback::mergeCapabilities(&capabilities);
-    TMonitorContendedEnterCallback::registerCallback(
-        &OnMonitorContendedEnterForDeadlock);
+    if (!dldetector::initialize(jvmti, isOnLoad)) {
+      return DLDETECTOR_SETUP_FAILED;
+    }
   }
 
   /* Setup VMInit event. */
@@ -536,10 +552,6 @@ jint CommonInitialization(JavaVM *vm, jvmtiEnv **jvmti, char *options) {
     return GET_LOW_LEVEL_INFO_FAILED;
   }
 
-  if (!jvmInfo->setHSVersion(*jvmti)) {
-    return GET_LOW_LEVEL_INFO_FAILED;
-  }
-
   /* Initialize configuration */
   conf = new TConfiguration(jvmInfo);
 
@@ -557,6 +569,11 @@ jint CommonInitialization(JavaVM *vm, jvmtiEnv **jvmti, char *options) {
 
   logger->setLogLevel(conf->LogLevel()->get());
   logger->setLogFile(conf->LogFile()->get());
+
+  /* Parse JDK Version */
+  if (!jvmInfo->setHSVersion(*jvmti)) {
+    return GET_LOW_LEVEL_INFO_FAILED;
+  }
 
   /* Show package information. */
   logger->printInfoMsg(PACKAGE_STRING);

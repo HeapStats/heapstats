@@ -1,3 +1,52 @@
+2017-12-05 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3498: Agent cannot work on brandnew glibc
+
+2017-11-08 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3491: Fix potential error when conflict between VMDeath and interval logging
+
+2017-11-01 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3458: Temp directory for ArchiveData is not removed when exiting
+
+2017-10-31 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3456: Build warnings w/ GCC 7.2.1
+	* Bug 3457: Object.finalize() should not be used
+
+2017-10-10 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3464: Fix launcher and attacher to use on Ubuntu
+
+2017-09-26 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3454: mvn reports exception w/ Java 9
+
+2017-09-15 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3450: Remove dependency to heapstats-mbean from heapstats-plugin-api
+
+2017-08-15 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3437: Add support for JDK 9 Version-String Scheme (JEP 223)
+
+2017-08-02 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3430: Fix potential error when conflict between VMDeath and class loading
+
+2017-08-02 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3293: [REFACTORING] Realtime deadlock detector implementation
+
+2017-07-24 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3429: [REGRESSION] Cannot build HeapStats Agent on RHEL
+
+2017-07-22 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3424: HeapStats Agent might crash when thread recorder is disabled via realoading configuration
+
 2017-07-19 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3422: [REFACTORING] Stack and base pointer operation

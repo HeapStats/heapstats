@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/bash
 
 
 #### Default values
@@ -65,8 +65,12 @@ fi
 
 # Check attacher.
 if test ! -f "$ATTACHER_PATH" ; then
-  echo "Attacher not found."
-  exit 2
+  echo "Attacher not found at $libexecdir, try to find heapstats-attacher.jar instead"
+  ATTACHER_PATH=$(find . -name "heapstats-attacher.jar" | head -n 1)
+  if test ! -f "$ATTACHER_PATH" ; then
+    echo "Attacher not found."
+    exit 2
+  fi
 fi
 
 # Check tools.jar

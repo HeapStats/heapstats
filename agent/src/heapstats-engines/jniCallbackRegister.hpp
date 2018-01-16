@@ -1,7 +1,7 @@
 /*!
  * \file jniCallbackRegister.hpp
  * \brief Handling JNI function callback.
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2017 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,8 @@
 
 #include <jvmti.h>
 #include <jni.h>
+
+#include <pthread.h>
 
 #include <list>
 
@@ -51,6 +53,11 @@ class TJNICallbackRegister {
    */
   static std::list<T> epilogueCallbackList;
 
+  /*!
+   * \brief Read-Write lock for callback container.
+   */
+  static pthread_rwlock_t callbackLock;
+
  public:
   /*!
    * \brief Register callbacks for JNI function.
@@ -59,13 +66,63 @@ class TJNICallbackRegister {
    * \param epilogue [in] Callback after calling JNI function.
    */
   static void registerCallback(T prologue, T epilogue) {
-    if (prologue != NULL) {
-      prologueCallbackList.push_back(prologue);
-    }
+    pthread_rwlock_wrlock(&callbackLock);
+    {
+      if (prologue != NULL) {
+        prologueCallbackList.push_back(prologue);
+      }
 
-    if (epilogue != NULL) {
-      epilogueCallbackList.push_back(epilogue);
+      if (epilogue != NULL) {
+        epilogueCallbackList.push_back(epilogue);
+      }
     }
+    pthread_rwlock_unlock(&callbackLock);
+  };
+
+  /*!
+   * \brief Unegister callbacks for JNI function.
+   *
+   * \param prologue [in] Callback before calling JNI function.
+   * \param epilogue [in] Callback after calling JNI function.
+   */
+  static void unregisterCallback(T prologue, T epilogue) {
+    pthread_rwlock_wrlock(&callbackLock);
+    {
+      if (prologue != NULL) {
+#ifdef USE_N2350
+        // C++11 support
+        auto prologue_begin = prologueCallbackList.cbegin();
+        auto prologue_end = prologueCallbackList.cend();
+#else
+        auto prologue_begin = prologueCallbackList.begin();
+        auto prologue_end = prologueCallbackList.end();
+#endif
+        for (auto itr = prologue_begin; itr != prologue_end; itr++) {
+          if (prologue == *itr) {
+            prologueCallbackList.erase(itr);
+            break;
+          }
+        }
+      }
+
+      if (epilogue != NULL) {
+#ifdef USE_N2350
+        // C++11 support
+        auto epilogue_begin = prologueCallbackList.cbegin();
+        auto epilogue_end = prologueCallbackList.cend();
+#else
+        auto epilogue_begin = prologueCallbackList.begin();
+        auto epilogue_end = prologueCallbackList.end();
+#endif
+        for (auto itr = epilogue_begin; itr != epilogue_end; itr++) {
+          if (epilogue == *itr) {
+            epilogueCallbackList.erase(itr);
+            break;
+          }
+        }
+      }
+    }
+    pthread_rwlock_unlock(&callbackLock);
   };
 };
 
@@ -81,20 +138,35 @@ std::list<T> TJNICallbackRegister<T>::prologueCallbackList;
 template <typename T>
 std::list<T> TJNICallbackRegister<T>::epilogueCallbackList;
 
+/*!
+ * \brief Read-Write lock for callback container.
+ */
+template <typename T>
+pthread_rwlock_t TJNICallbackRegister<T>::callbackLock =
+                                              PTHREAD_RWLOCK_INITIALIZER;
+
 #define ITERATE_JNI_CALLBACK_CHAIN(type, originalFunc, ...)                   \
   std::list<type>::iterator itr;                                              \
                                                                               \
-  for (itr = prologueCallbackList.begin(); itr != prologueCallbackList.end(); \
-       itr++) {                                                               \
-    (*itr)(__VA_ARGS__);                                                      \
+  pthread_rwlock_rdlock(&callbackLock);                                       \
+  {                                                                           \
+    for (itr = prologueCallbackList.begin();                                  \
+         itr != prologueCallbackList.end(); itr++) {                          \
+      (*itr)(__VA_ARGS__);                                                    \
+    }                                                                         \
   }                                                                           \
+  pthread_rwlock_unlock(&callbackLock);                                       \
                                                                               \
   originalFunc(__VA_ARGS__);                                                  \
                                                                               \
-  for (itr = epilogueCallbackList.begin(); itr != epilogueCallbackList.end(); \
-       itr++) {                                                               \
-    (*itr)(__VA_ARGS__);                                                      \
-  }
+  pthread_rwlock_rdlock(&callbackLock);                                       \
+  {                                                                           \
+    for (itr = epilogueCallbackList.begin();                                  \
+         itr != epilogueCallbackList.end(); itr++) {                          \
+      (*itr)(__VA_ARGS__);                                                    \
+    }                                                                         \
+  }                                                                           \
+  pthread_rwlock_unlock(&callbackLock);
 
 /*!
  * \brief JVM_Sleep callback (java.lang.System#sleep())
