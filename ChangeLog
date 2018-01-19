@@ -1,3 +1,7 @@
+2017-01-23 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3512: Drop SSE3 instruction set supporting
+
 2018-01-19 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3511: Migrate to Intel TBB

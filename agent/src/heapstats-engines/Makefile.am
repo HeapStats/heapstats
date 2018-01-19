@@ -45,17 +45,6 @@ if SSE2
     libheapstats_engine_sse2_2_0_so_CCASFLAGS = $(BASE_CCAS_FLAGS) -DSSE2
 endif
 
-if SSE3
-    bin_PROGRAMS += libheapstats-engine-sse3-2.0.so
-
-    libheapstats_engine_sse3_2_0_so_SOURCES   = $(BASE_SOURCE) \
-                                                arch/x86/x86BitMapMarker.cpp \
-                                                arch/x86/sse2/sse2BitMapMarker.cpp
-    libheapstats_engine_sse3_2_0_so_LDFLAGS   = $(BASE_LD_FLAGS)
-    libheapstats_engine_sse3_2_0_so_CXXFLAGS  = $(BASE_CXX_FLAGS) -msse3 -DSSE3
-    libheapstats_engine_sse3_2_0_so_CCASFLAGS = $(BASE_CCAS_FLAGS) -DSSE3
-endif
-
 if SSE4
     bin_PROGRAMS += libheapstats-engine-sse4-2.0.so
 

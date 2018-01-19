@@ -168,6 +168,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jan 23 2018 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+- Remove SSE 3 optimized binary.
 * Thu Jan 18 2018 Yasumasa Suenaga <yasuenag@gmail.com>
 - Add dependencies to TBB
 * Tue Jul 11 2017 Yasumasa Suenaga <yasuenag@gmail.com>

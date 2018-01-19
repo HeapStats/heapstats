@@ -405,16 +405,13 @@ JNIEXPORT jstring JNICALL GetHeapStatsVersion(JNIEnv *env, jobject obj) {
 #ifdef SSE2
                                          "SSE2)"
 #endif
-#ifdef SSE3
-                                         "SSE3)"
-#endif
 #ifdef SSE4
                                          "SSE4)"
 #endif
 #ifdef AVX
                                          "AVX)"
 #endif
-#if (!defined AVX) && (!defined SSE4) && (!defined SSE3) && (!defined SSE2)
+#if (!defined AVX) && (!defined SSE4) && (!defined SSE2)
                                          "None)"
 #endif
                                          );

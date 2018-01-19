@@ -28,7 +28,6 @@
 /* Instruction set definition */
 #define OPTIMIZE_NONE "none"
 #define OPTIMIZE_SSE2 "sse2"
-#define OPTIMIZE_SSE3 "sse3"
 #define OPTIMIZE_SSE4 "sse4"
 #define OPTIMIZE_AVX "avx"
 

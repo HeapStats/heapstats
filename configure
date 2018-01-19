@@ -631,8 +631,6 @@ AVX_FALSE
 AVX_TRUE
 SSE4_FALSE
 SSE4_TRUE
-SSE3_FALSE
-SSE3_TRUE
 SSE2_FALSE
 SSE2_TRUE
 LIBNETSNMP_PATH
@@ -771,7 +769,6 @@ with_arch
 with_jdk
 enable_vmstructs
 enable_sse2
-enable_sse3
 enable_sse4
 enable_avx
 enable_debug
@@ -1424,7 +1421,6 @@ Optional Features:
   --enable-vmstructs[=yes/no]
                           Use symbol of VMStructs in libjvm.so . [default=no]
   --enable-sse2[=yes/no]  Enable SSE2 instruction set. [default=yes]
-  --enable-sse3[=yes/no]  Enable SSE3 instruction set. [default=yes]
   --enable-sse4[=yes/no]  Enable SSE4 instruction set. [default=yes]
   --enable-avx[=yes/no]   Enable AVX instruction set. [default=yes]
   --enable-debug[=yes/no] Enable debug compile flags. [default=yes]
@@ -8561,57 +8557,6 @@ else
 fi
 
 
-  INST_NAME_UPPER=SSE3
-  INST_NAME_LOWER=sse3
-
-  # Check whether --enable-sse3 was given.
-if test "${enable_sse3+set}" = set; then :
-  enableval=$enable_sse3;
-else
-  enable_sse3=yes
-fi
-
-
-  if test "$enable_sse3" = "yes"; then
-    OLD_CXXFLAGS=$CXXFLAGS
-    CXXFLAGS=-msse3
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether compiler supports SSE3 instruction set" >&5
-$as_echo_n "checking whether compiler supports SSE3 instruction set... " >&6; }
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-
-else
-  enable_sse3=no
-
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $enable_sse3" >&5
-$as_echo "$enable_sse3" >&6; }
-
-    CXXFLAGS=$OLD_CXXFLAGS
-  fi
-
-
-   if test $enable_sse3 = yes; then
-  SSE3_TRUE=
-  SSE3_FALSE='#'
-else
-  SSE3_TRUE='#'
-  SSE3_FALSE=
-fi
-
-
   INST_NAME_UPPER=SSE4
   INST_NAME_LOWER=sse4
 
@@ -8720,14 +8665,6 @@ else
 else
   SSE2_TRUE='#'
   SSE2_FALSE=
-fi
-
-   if false; then
-  SSE3_TRUE=
-  SSE3_FALSE='#'
-else
-  SSE3_TRUE='#'
-  SSE3_FALSE=
 fi
 
    if false; then
@@ -9031,10 +8968,6 @@ if test -z "${SSE2_TRUE}" && test -z "${SSE2_FALSE}"; then
   as_fn_error $? "conditional \"SSE2\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${SSE3_TRUE}" && test -z "${SSE3_FALSE}"; then
-  as_fn_error $? "conditional \"SSE3\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
 if test -z "${SSE4_TRUE}" && test -z "${SSE4_FALSE}"; then
   as_fn_error $? "conditional \"SSE4\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
@@ -9045,10 +8978,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${SSE2_TRUE}" && test -z "${SSE2_FALSE}"; then
   as_fn_error $? "conditional \"SSE2\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${SSE3_TRUE}" && test -z "${SSE3_FALSE}"; then
-  as_fn_error $? "conditional \"SSE3\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${SSE4_TRUE}" && test -z "${SSE4_FALSE}"; then
