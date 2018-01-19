@@ -1,3 +1,7 @@
+2018-01-19 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3511: Migrate to Intel TBB
+
 2017-12-05 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3498: Agent cannot work on brandnew glibc

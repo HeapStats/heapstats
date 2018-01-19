@@ -19,6 +19,7 @@ Buildroot: /var/tmp/heapstats
 
 # Requires for running
 Requires: pcre >= 6
+Requires: tbb
 
 # Requires for building
 BuildRequires: pcre-devel >= 6
@@ -28,6 +29,7 @@ BuildRequires: binutils >= 2
 BuildRequires: binutils-devel
 BuildRequires: autoconf
 BuildRequires: automake
+BuildRequires: tbb-devel
 
 %if 0%{?WITH_ANALYZER:1}
 BuildRequires: java-1.8.0-openjdk-openjfx-devel
@@ -166,6 +168,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Jan 18 2018 Yasumasa Suenaga <yasuenag@gmail.com>
+- Add dependencies to TBB
 * Tue Jul 11 2017 Yasumasa Suenaga <yasuenag@gmail.com>
 - Add Analyzer package.
 * Tue Feb 09 2016 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
