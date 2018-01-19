@@ -376,7 +376,7 @@ class TSnapShotContainer {
 #include "arch/x86/avx/snapShotContainer.inline.hpp"
 #elif defined SSE4
 #include "arch/x86/sse4/snapShotContainer.inline.hpp"
-#elif defined SSE2 || defined SSE3
+#elif defined SSE2
 #include "arch/x86/sse2/snapShotContainer.inline.hpp"
 #elif defined NEON
 #include "arch/arm/neon/snapShotContainer.inline.hpp"

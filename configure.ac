@@ -362,15 +362,12 @@ AC_DEFINE_UNQUOTED([LIBNETSNMP_PATH], "$LIBNETSNMP_PATH")
 if test x"$PROCESSOR_TYPE" = "xx86"; then
   CHECK_COMPILER_OPTO([SSE2], [sse2])
   AM_CONDITIONAL(SSE2, test $enable_sse2 = yes)
-  CHECK_COMPILER_OPTO([SSE3], [sse3])
-  AM_CONDITIONAL(SSE3, test $enable_sse3 = yes)
   CHECK_COMPILER_OPTO([SSE4], [sse4])
   AM_CONDITIONAL(SSE4, test $enable_sse4 = yes)
   CHECK_COMPILER_OPTO([AVX], [avx])
   AM_CONDITIONAL(AVX, test $enable_avx = yes)
 else
   AM_CONDITIONAL(SSE2, false)
-  AM_CONDITIONAL(SSE3, false)
   AM_CONDITIONAL(SSE4, false)
   AM_CONDITIONAL(AVX, false)
 fi

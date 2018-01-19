@@ -407,7 +407,7 @@ class TProcessMark {
 /* CPU Specific utilities. */
 #ifdef AVX
 #include "arch/x86/avx/util.hpp"
-#elif defined(SSE2) || defined(SSE3) || defined(SSE4)
+#elif defined(SSE2) || defined(SSE4)
 #include "arch/x86/sse2/util.hpp"
 #elif defined(NEON)
 #include "arch/arm/neon/util.hpp"

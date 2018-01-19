@@ -658,9 +658,7 @@ class TJvmInfo {
 /* Include optimized inline functions. */
 #ifdef AVX
 #include "arch/x86/avx/jvmInfo.inline.hpp"
-#elif defined(SSE4) || defined(SSE3)
-#include "arch/x86/sse3/jvmInfo.inline.hpp"
-#elif defined(SSE2)
+#elif defined(SSE4) || defined(SSE2)
 #include "arch/x86/sse2/jvmInfo.inline.hpp"
 #elif defined(NEON)
 #include "arch/arm/neon/jvmInfo.inline.hpp"

@@ -582,9 +582,6 @@ jint CommonInitialization(JavaVM *vm, jvmtiEnv **jvmti, char *options) {
 #ifdef SSE2
       " SSE2"
 #endif
-#ifdef SSE3
-      " SSE3"
-#endif
 #ifdef SSE4
       " SSE4"
 #endif
@@ -594,8 +591,7 @@ jint CommonInitialization(JavaVM *vm, jvmtiEnv **jvmti, char *options) {
 #ifdef NEON
       " NEON"
 #endif
-#if (!defined NEON) && (!defined AVX) && (!defined SSE4) && (!defined SSE3) && \
-    (!defined SSE2)
+#if (!defined NEON) && (!defined AVX) && (!defined SSE4) && (!defined SSE2)
       " None"
 #endif
       );

@@ -35,7 +35,7 @@
 #include "arch/x86/avx/avxBitMapMarker.hpp"
 #endif
 
-#if (defined SSE2) || (defined SSE3) || (defined SSE4)
+#if (defined SSE2) || (defined SSE4)
 #include "arch/x86/sse2/sse2BitMapMarker.hpp"
 #endif
 
@@ -1253,7 +1253,7 @@ bool setupForCMS(void) {
 /* Create bitmap to check object collected flag. */
 #ifdef AVX
     checkObjectMap = new TAVXBitMapMarker(startAddr, youngSize);
-#elif(defined SSE2) || (defined SSE3) || (defined SSE4)
+#elif(defined SSE2) || (defined SSE4)
     checkObjectMap = new TSSE2BitMapMarker(startAddr, youngSize);
 #elif PROCESSOR_ARCH == X86
     checkObjectMap = new TX86BitMapMarker(startAddr, youngSize);
@@ -1299,7 +1299,7 @@ bool setupForG1(size_t maxMemSize) {
 /* Create bitmap to check object collected flag. */
 #ifdef AVX
     checkObjectMap = new TAVXBitMapMarker(vmVal->getG1StartAddr(), maxMemSize);
-#elif(defined SSE2) || (defined SSE3) || (defined SSE4)
+#elif(defined SSE2) || (defined SSE4)
     checkObjectMap = new TSSE2BitMapMarker(vmVal->getG1StartAddr(), maxMemSize);
 #elif PROCESSOR_ARCH == X86
     checkObjectMap = new TX86BitMapMarker(vmVal->getG1StartAddr(), maxMemSize);

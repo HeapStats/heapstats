@@ -91,11 +91,10 @@ host_triplet = @host@
 bin_PROGRAMS = $(am__EXEEXT_1)
 @X86_TRUE@am__append_1 = arch/x86/heapstats_md_x86.cpp
 @SSE2_TRUE@@X86_TRUE@am__append_2 = -DSSE2
-@SSE3_TRUE@@X86_TRUE@am__append_3 = -DSSE3
-@SSE4_TRUE@@X86_TRUE@am__append_4 = -DSSE4
-@AVX_TRUE@@X86_TRUE@am__append_5 = -DAVX
-@ARM_TRUE@am__append_6 = arch/arm/heapstats_md_arm.cpp
-@ARM_TRUE@am__append_7 = -mhard-float
+@SSE4_TRUE@@X86_TRUE@am__append_3 = -DSSE4
+@AVX_TRUE@@X86_TRUE@am__append_4 = -DAVX
+@ARM_TRUE@am__append_5 = arch/arm/heapstats_md_arm.cpp
+@ARM_TRUE@am__append_6 = -mhard-float
 subdir = agent/src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/compiler-opto \
@@ -344,13 +343,13 @@ HEAPSTATS_BIN_TARGET = libheapstats-2.0.so.3
 SUBDIRS = heapstats-engines iotracer
 ACLOCAL_AMFLAGS = -I ../m4
 libheapstats_2_0_so_3_SOURCES = heapstats.cpp $(am__append_1) \
-	$(am__append_6)
+	$(am__append_5)
 libheapstats_2_0_so_3_LDFLAGS = -shared -Wl,-soname,libheapstats.so \
 	-dl
 libheapstats_2_0_so_3_CXXFLAGS = -I@JDK_DIR@/include \
 	-I@JDK_DIR@/include/linux -Wall -Wno-strict-aliasing -fPIC \
 	$(am__append_2) $(am__append_3) $(am__append_4) \
-	$(am__append_5) $(am__append_7)
+	$(am__append_6)
 all: all-recursive
 
 .SUFFIXES:
