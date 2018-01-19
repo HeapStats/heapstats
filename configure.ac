@@ -54,6 +54,8 @@ AC_CACHE_SAVE
 AC_CHECK_LIB([iberty], [main], [], [])
 AC_CHECK_LIB([bfd], [main], [],
   [AC_MSG_ERROR([BFD library was not found.])])
+AC_CHECK_LIB([pthread], [main], [],
+  [AC_MSG_ERROR([Posix thread library was not found.])])
 AC_CACHE_SAVE
 
 # Checks for common header files.
@@ -109,6 +111,8 @@ AC_RUN_IFELSE(
   ]
 )
 AM_CONDITIONAL(USE_PCRE, test -n "${ac_cv_header_pcre_h}")
+
+AC_CHECK_HEADERS([sys/auxv.h], [], [])  # Supplemental headers
 
 # Check Container insert/erase and iterator constness (N2350)
 AC_MSG_CHECKING([for N2350])
@@ -218,7 +222,16 @@ AC_ARG_WITH(arch,
 if test -n "$ARCH"; then
   CXXFLAGS+=" -march=$ARCH";
   CCASFLAGS+=" -march=$ARCH"
+elif test x"$PROCESSOR_TYPE" = "xarm"; then  # Raspberry Pi 2 support
+  CXXFLAGS+=" -march=armv7-a"
+  CCASFLAGS+=" -march=armv7-a"
 fi
+
+# check TBB --------------------------------------------------------------------
+AC_CHECK_HEADERS([ \
+  tbb/concurrent_hash_map.h tbb/concurrent_queue.h \
+  ], [], [AC_MSG_ERROR([Not found common header files.])])
+AC_CHECK_LIB([tbb], [main], [], [AC_MSG_ERROR([TBB library was not found.])])
 
 # end processor type -----------------------------------------------------------
 

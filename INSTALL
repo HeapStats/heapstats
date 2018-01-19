@@ -11,6 +11,9 @@
     - pcre-devel 6 or later
     - net-snmp-devel 5.3 or later
     - binutils 2 or later
+    - Intel(R) Threading Building Blocks (TBB)
+        * If you compile the agent for Raspberry Pi 2, you have to install
+          libtbb2 and libtbb-dev in official Debian repository.
 
   Analyzer:
     - Java SE 8 or later

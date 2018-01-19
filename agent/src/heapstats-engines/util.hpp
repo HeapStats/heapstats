@@ -361,20 +361,33 @@ inline char *strerror_wrapper(char *buf, size_t buflen) {
 /* Classes. */
 
 /*!
- * \brief Hasher class for std::tr1::unordered_map.
- *        This template class will be used when key is numeric type.
- *        (int, pointer, etc)
+ * \brief Hasher class for tbb::concurrent_hash_map.
+ *        This template class is for number type except pointers.
  */
 template <typename T>
 class TNumericalHasher {
- public:
-  /*!
-   * \brief Get hash value from designated value.
-   *        This function always return convert to integer only.
-   * \param val [in] Hash source data.
-   * \return Hash value.
-   */
-  size_t operator()(const T &val) const { return (size_t)val; };
+  public:
+
+   static size_t hash(const T v) {
+     return v;
+   }
+
+   static bool equal(const T v1, const T v2) {
+     return v1 == v2;
+   }
+
+};
+
+/*!
+ * \brief Hasher class for tbb::concurrent_hash_map.
+ *        This template class is for pointer type.
+ */
+template <typename T>
+class TPointerHasher : public TNumericalHasher<T> {
+  public:
+    static size_t hash(const T v) {
+      return reinterpret_cast<size_t>(v) / sizeof(T);
+    }
 };
 
 /*!
