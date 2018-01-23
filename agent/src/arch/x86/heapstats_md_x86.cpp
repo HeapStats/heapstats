@@ -67,11 +67,6 @@ static const char *checkInstructionSet(void) {
     return OPTIMIZE_SSE4;
   } else
 #endif
-#ifdef SSE3
-      if (((cFlag >> 9) & 1) || (cFlag & 1)) {
-    return OPTIMIZE_SSE3;
-  } else
-#endif
 #ifdef SSE2
       if ((dFlag >> 26) & 1) {
     return OPTIMIZE_SSE2;

@@ -18,10 +18,6 @@ if SSE2
     libheapstats_2_0_so_3_CXXFLAGS += -DSSE2
 endif
 
-if SSE3
-    libheapstats_2_0_so_3_CXXFLAGS += -DSSE3
-endif
-
 if SSE4
     libheapstats_2_0_so_3_CXXFLAGS += -DSSE4
 endif
