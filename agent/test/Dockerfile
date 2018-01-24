@@ -16,6 +16,7 @@ RUN dnf install -y \
     ant \
     binutils-devel \
     gcc-c++ \
+    tbb-devel \
 # If you want to test with old jdk, use below
 #    java-1.6.0-openjdk-devel java-1.7.0-openjdk-devel \
     java-1.8.0-openjdk-devel \
@@ -44,10 +45,11 @@ ENV HEAPSTATS_LIB ${HEAPSTATS_PATH}/agent/src/libheapstats-2.0.so.3
 WORKDIR ${HEAPSTATS_PATH}/agent/test/gtest
 RUN dnf install -y \
     gtest-devel \
-    gdb \
- && make
+    gdb
+#RUN make
 
 WORKDIR ${HEAPSTATS_PATH}/agent/test
+RUN git clone https://github.com/HeapStats/race-condition.git
 RUN useradd testuser \
  && chown -R testuser.testuser ./*
 USER testuser

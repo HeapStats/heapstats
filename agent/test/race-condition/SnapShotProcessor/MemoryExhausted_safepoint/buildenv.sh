@@ -1,1 +1,0 @@
-../MemoryExhausted/buildenv.sh
