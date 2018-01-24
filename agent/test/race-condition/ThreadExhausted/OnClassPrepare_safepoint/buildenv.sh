@@ -1,1 +1,0 @@
-../OnClassPrepare/buildenv.sh
