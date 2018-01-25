@@ -1,6 +1,7 @@
 # Test for HeapStats
 
 Test cases for HeapStats. These test cases could run on containers.
+A race-condition testing has been moved another repository([HeapStats/race-condition](https://github.com/HeapStats/race-condition))
 
 ## Usage
 

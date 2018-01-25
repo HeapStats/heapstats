@@ -1,3 +1,7 @@
+2017-01-25 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3513: Move test cases for race-conditions to another repository
+
 2017-01-23 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3512: Drop SSE3 instruction set supporting
