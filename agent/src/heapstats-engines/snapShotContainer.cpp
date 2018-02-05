@@ -227,7 +227,8 @@ TChildClassCounter *TSnapShotContainer::pushNewChildClass(
   /* Set to children map. */
   TChildrenMapKey key = std::make_pair(clsCounter, objData->klassOop);
   TChildrenMap::accessor acc;
-  childrenMap.insert(acc, std::make_pair(key, newCounter));
+  TChildrenMap::value_type value = std::make_pair(key, newCounter);
+  childrenMap.insert(acc, value);
   acc.release();
 
   /* Add new counter to children list */
