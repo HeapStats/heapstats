@@ -1,3 +1,7 @@
+2018-02-05 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3515: Cannot build HeapStats Agent on CentOS 6 after merging TBB
+
 2017-01-25 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3513: Move test cases for race-conditions to another repository
