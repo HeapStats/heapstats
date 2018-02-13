@@ -1,3 +1,7 @@
+2018-04-02 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3527: Remove unused code for deadlock detector
+
 2018-03-12 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3536: Cannot kill Java process on error
