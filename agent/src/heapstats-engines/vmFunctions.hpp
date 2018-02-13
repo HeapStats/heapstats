@@ -1,7 +1,7 @@
 /*!
  * \file vmFunctions.hpp
  * \brief This file includes functions in HotSpot VM.
- * Copyright (C) 2014-2017 Yasumasa Suenaga
+ * Copyright (C) 2014-2018 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -136,11 +136,6 @@
 
 
 /*!
- * \brief Symbol of ObjectSynchronizer::get_lock_owner().
- */
-#define GETLOCKOWNER_SYMBOL "_ZN18ObjectSynchronizer14get_lock_ownerE6Handleb"
-
-/*!
  * \brief Symbol of ThreadSafepointState::create().
  */
 #define THREADSAFEPOINTSTATE_CREATE_SYMBOL \
@@ -271,16 +266,6 @@ typedef void (*TUserHandler)(int sig, void *siginfo, void *context);
 typedef void (*TSR_Handler)(int sig, siginfo_t *siginfo, ucontext_t *context);
 
 /*!
- * \brief function type of
- * "JavaThread* ObjectSynchronizer::get_lock_owner(Handle h_obj, bool doLock)".
- * \param monitor_oop [in] Target monitor oop.
- * \param doLock      [in] Enable oop lock.
- * \return Monitor owner thread oop.<br>
- *         Value is NULL, if owner is none.
- */
-typedef void *(*TGetLockOwner)(void *monitor_oop, bool doLock);
-
-/*!
  * \brief function type of common thread operation.
  * \param thread [in] Target thread object is inner JVM class instance.
  */
@@ -362,11 +347,6 @@ class TVMFunctions {
    * \brief Function pointer for "SR_handler".
    */
   TSR_Handler sr_handler;
-
-  /*!
-   * \brief Function pointer for "ObjectSynchronizer::get_lock_owner()".
-   */
-  TGetLockOwner getLockOwner;
 
   /*!
    * \brief Function pointer for "ThreadSafepointState::create()".
@@ -475,10 +455,6 @@ class TVMFunctions {
   inline void *GetUserHandlerPointer(void) { return (void *)userHandler; }
 
   inline void *GetSRHandlerPointer(void) { return (void *)sr_handler; }
-
-  inline void *GetLockOwner(void *monitor_oop, bool doLock) {
-    return getLockOwner(monitor_oop, doLock);
-  }
 
   inline void ThreadSafepointStateCreate(void *thread) {
     threadSafepointStateCreate(thread);

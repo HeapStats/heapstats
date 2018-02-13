@@ -1,7 +1,7 @@
 /*!
  * \file vmFunctions.cpp
  * \brief This file includes functions in HotSpot VM.<br>
- * Copyright (C) 2014-2017 Yasumasa Suenaga
+ * Copyright (C) 2014-2018 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -196,14 +196,6 @@ bool TVMFunctions::getFunctionsFromSymbol(void) {
         }
       }
     }
-  }
-
-  /* Search "ObjectSynchronizer::get_lock_owner()" function symbol. */
-  getLockOwner = (TGetLockOwner) this->symFinder->findSymbol(
-                                                           GETLOCKOWNER_SYMBOL);
-  if (unlikely(getLockOwner == NULL)) {
-    logger->printWarnMsg("ObjectSynchronizer::get_lock_owner() not found.");
-    return false;
   }
 
   /* Search "ThreadSafepointState::create()" function symbol. */
