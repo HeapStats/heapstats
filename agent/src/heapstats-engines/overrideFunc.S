@@ -3,7 +3,7 @@
  * \brief This file is used to override JVM inner function.<br>
  *        The function defined this file, used with v-table hook.<br>
  *        So in this file, all function is written by only assembler and macro.
- * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2018 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -240,6 +240,13 @@ OVERRIDE_DEFINE(par_jdk9, 2, 2)
 OVERRIDE_DEFINE(par_jdk9, 3, 2)
 /* InstanceClassLoaderKlass::oop_ms_adjust_pointers(oopDesc*) */
 OVERRIDE_DEFINE(par_jdk9, 4, 2)
+
+/* For JDK 10 Serial / Parallel GC hook */
+
+/* AdjustPointerClosure::do_oop(oopDesc**) */
+OVERRIDE_DEFINE(par_jdk10, 0, 2)
+/* AdjustPointerClosure::do_oop(unsigned int*) */
+OVERRIDE_DEFINE(par_jdk10, 1, 2)
 
 /* For JDK 9 ParallelOld GC hook */
 

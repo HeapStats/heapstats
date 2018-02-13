@@ -1,7 +1,7 @@
 /*!
  * \file overrider.hpp
  * \brief Controller of overriding functions in HotSpot VM.
- * Copyright (C) 2014-2016 Yasumasa Suenaga
+ * Copyright (C) 2014-2018 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -176,7 +176,9 @@ typedef enum {
  * \brief Macro to select override function with CR.
  */
 #define SELECT_HOOK_FUNCS(prefix)              \
-  if (jvmInfo->isAfterJDK9()) {                \
+  if (jvmInfo->isAfterJDK10()) {               \
+    prefix##_hook = jdk10_##prefix##_hook;     \
+  } else if (jvmInfo->isAfterJDK9()) {         \
     prefix##_hook = jdk9_##prefix##_hook;      \
   } else if (jvmInfo->isAfterCR8049421()) {    \
     prefix##_hook = CR8049421_##prefix##_hook; \

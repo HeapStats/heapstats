@@ -1,7 +1,7 @@
 /*!
  * \file overrider.cpp
  * \brief Controller of overriding functions in HotSpot VM.
- * Copyright (C) 2014-2017 Yasumasa Suenaga
+ * Copyright (C) 2014-2018 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,6 +57,7 @@
 DEFINE_OVERRIDE_FUNC_4(par);
 DEFINE_OVERRIDE_FUNC_5(par_6964458);
 DEFINE_OVERRIDE_FUNC_5(par_jdk9);
+DEFINE_OVERRIDE_FUNC_2(par_jdk10);
 
 /*!
  * \brief Override function for heap object on parallelOldGC.
@@ -64,6 +65,7 @@ DEFINE_OVERRIDE_FUNC_5(par_jdk9);
 DEFINE_OVERRIDE_FUNC_4(parOld);
 DEFINE_OVERRIDE_FUNC_5(parOld_6964458);
 DEFINE_OVERRIDE_FUNC_5(parOld_jdk9);
+
 
 /*!
  * \brief Override function for sweep at old gen on CMSGC.
@@ -205,6 +207,18 @@ THookFunctionInfo jdk9_par_hook[] = {
     HOOK_FUNC_END};
 
 /*!
+ * \brief Pointer of hook information on parallelGC for after jdk 10.
+ */
+THookFunctionInfo jdk10_par_hook[] = {
+    HOOK_FUNC(par_jdk10, 0, "_ZTV20AdjustPointerClosure",
+              "_ZN20AdjustPointerClosure6do_oopEPP7oopDesc",
+              &callbackForDoOop),
+    HOOK_FUNC(par_jdk10, 1, "_ZTV20AdjustPointerClosure",
+              "_ZN20AdjustPointerClosure6do_oopEPj",
+              &callbackForDoNarrowOop),
+    HOOK_FUNC_END};
+
+/*!
  * \brief Pointer of hook information on parallelGC.
  */
 THookFunctionInfo *par_hook = NULL;
@@ -310,6 +324,7 @@ THookFunctionInfo jdk9_parOld_hook[] = {
  */
 #define CR8027746_parOld_hook CR8000213_parOld_hook
 #define CR8049421_parOld_hook CR8000213_parOld_hook
+#define jdk10_parOld_hook jdk9_parOld_hook
 
 /*!
  * \brief Pointer of hook information on parallelOldGC.
@@ -431,6 +446,7 @@ THookFunctionInfo jdk9_cms_new_hook[] = {
 */
 #define CR8027746_cms_new_hook CR8000213_cms_new_hook
 #define CR8049421_cms_new_hook CR8000213_cms_new_hook
+#define jdk10_cms_new_hook jdk9_cms_new_hook
 
 /*!
  * \brief Pointer of hook information on CMSGC.
@@ -726,6 +742,8 @@ THookFunctionInfo jdk9_g1_hook[] = {
         "_ZN24InstanceClassLoaderKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
         &callbackForIterate),
     HOOK_FUNC_END};
+
+#define jdk10_g1_hook jdk9_g1_hook
 
 /*!
  * \brief Pointer of hook information on G1GC.
@@ -1565,7 +1583,7 @@ void callbackForDoOop(void **oop) {
     return;
   }
 
-  if (checkObjectMap->checkAndMark(*oop)) {
+  if ((checkObjectMap != NULL) && checkObjectMap->checkAndMark(*oop)) {
     /* Object is already collected by G1GC collector. */
     return;
   }
