@@ -1,7 +1,7 @@
 /*!
  * \file jvmInfo.hpp
  * \brief This file is used to get JVM performance information.
- * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2018 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -398,10 +398,17 @@ class TJvmInfo {
   }
 
   /*!
-   * \brief Running on JDK 9 or not.
+   * \brief Running on JDK 9
    */
   inline bool isAfterJDK9(void) {
     return (this->_hsVersion >= MAKE_HS_VERSION(1, 9, 0, 0, 0));
+  }
+
+  /*!
+   * \brief Running on JDK 10 or later
+   */
+  inline bool isAfterJDK10(void) {
+    return (this->_hsVersion >= MAKE_HS_VERSION(1, 10, 0, 0, 0));
   }
 
   /*!
