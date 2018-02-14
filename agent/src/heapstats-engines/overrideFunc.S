@@ -317,6 +317,56 @@ OVERRIDE_DEFINE(g1_jdk9, 10, 2)
 /* InstanceClassLoaderKlass::oop_oop_iterate_nv(oopDesc*, G1CMOopClosure*) */
 OVERRIDE_DEFINE(g1_jdk9, 11, 2)
 
+/* For JDK 10 G1 GC hook */
+
+/* initial-mark */
+/* G1ParCopyClosure<(G1Barrier)0, (G1Mark)1, false>::do_oop(oopDesc**) */
+OVERRIDE_DEFINE(g1_jdk10, 0, 2)
+/* G1ParCopyClosure<(G1Barrier)0, (G1Mark)1, false>::do_oop(unsigned int*) */
+OVERRIDE_DEFINE(g1_jdk10, 1, 2)
+
+/* concurrent-root-region-scan */
+/* InstanceKlass::oop_oop_iterate_nv(oopDesc*, G1RootRegionScanClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 2, 2)
+/* ObjArrayKlass::oop_oop_iterate_nv(oopDesc*, G1RootRegionScanClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 3, 2)
+/* TypeArrayKlass::oop_oop_iterate_nv(oopDesc*, G1RootRegionScanClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 4, 2)
+/* InstanceRefKlass::oop_oop_iterate_nv(oopDesc*, G1RootRegionScanClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 5, 2)
+/* InstanceClassLoaderKlass::oop_oop_iterate_nv(oopDesc*, G1RootRegionScanClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 6, 2)
+
+/* concurrent-mark / remark */
+/* InstanceKlass::oop_oop_iterate_nv(oopDesc*, G1CMOopClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 7, 2)
+/* ObjArrayKlass::oop_oop_iterate_nv(oopDesc*, G1CMOopClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 8, 2)
+/* TypeArrayKlass::oop_oop_iterate_nv(oopDesc*, G1CMOopClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 9, 2)
+/* InstanceRefKlass::oop_oop_iterate_nv(oopDesc*, G1CMOopClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 10, 2)
+/* InstanceClassLoaderKlass::oop_oop_iterate_nv(oopDesc*, G1CMOopClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 11, 2)
+
+/* Parallel Full GC Root Scan */
+/* G1MarkAndPushClosure::do_oop(oopDesc**) */
+OVERRIDE_DEFINE(g1_jdk10, 12, 2)
+/* G1MarkAndPushClosure::do_oop(unsigned int*) */
+OVERRIDE_DEFINE(g1_jdk10, 13, 2)
+
+/* Parallel Full GC oop iteration */
+/* InstanceKlass::oop_oop_iterate_nv(oopDesc*, G1MarkAndPushClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 14, 2)
+/* ObjArrayKlass::oop_oop_iterate_nv(oopDesc*, G1MarkAndPushClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 15, 2)
+/* TypeArrayKlass::oop_oop_iterate_nv(oopDesc*, G1MarkAndPushClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 16, 2)
+/* InstanceRefKlass::oop_oop_iterate_nv(oopDesc*, G1MarkAndPushClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 17, 2)
+/* InstanceClassLoaderKlass::oop_oop_iterate_nv(oopDesc*, G1MarkAndPushClosure*) */
+OVERRIDE_DEFINE(g1_jdk10, 18, 2)
+
 
 #ifdef AVOID__i686
 /* Restore definition. */

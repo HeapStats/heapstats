@@ -85,6 +85,7 @@ DEFINE_OVERRIDE_FUNC_5(cms_new_jdk9);
 DEFINE_OVERRIDE_FUNC_9(g1);
 DEFINE_OVERRIDE_FUNC_11(g1_6964458);
 DEFINE_OVERRIDE_FUNC_12(g1_jdk9);
+DEFINE_OVERRIDE_FUNC_19(g1_jdk10);
 
 /*!
  * \brief Override function for cleanup and System.gc() event on G1GC.
@@ -758,7 +759,87 @@ THookFunctionInfo jdk9_g1_hook[] = {
         &callbackForIterate),
     HOOK_FUNC_END};
 
-#define jdk10_g1_hook jdk9_g1_hook
+/*!
+ * \brief Pointer of hook information on G1GC for after JDK 10.
+ */
+THookFunctionInfo jdk10_g1_hook[] = {
+    HOOK_FUNC(
+        g1_jdk10, 0, "_ZTV16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE",
+        "_ZN16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE6do_oopEPP7oopDesc",
+        &callbackForDoOop),
+    HOOK_FUNC(
+        g1_jdk10, 1, "_ZTV16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE",
+        "_ZN16G1ParCopyClosureIL9G1Barrier0EL6G1Mark1ELb0EE6do_oopEPj",
+        &callbackForDoNarrowOop),
+    HOOK_FUNC(
+        g1_jdk10, 2, "_ZTV13InstanceKlass",
+        "_ZN13InstanceKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 3, "_ZTV13ObjArrayKlass",
+        "_ZN13ObjArrayKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 4, "_ZTV14TypeArrayKlass",
+        "_ZN14TypeArrayKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 5, "_ZTV16InstanceRefKlass",
+        "_ZN16InstanceRefKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 6, "_ZTV24InstanceClassLoaderKlass",
+        "_ZN24InstanceClassLoaderKlass18oop_oop_iterate_nvEP7oopDescP23G1RootRegionScanClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 7, "_ZTV13InstanceKlass",
+        "_ZN13InstanceKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 8, "_ZTV13ObjArrayKlass",
+        "_ZN13ObjArrayKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 9, "_ZTV14TypeArrayKlass",
+        "_ZN14TypeArrayKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 10, "_ZTV16InstanceRefKlass",
+        "_ZN16InstanceRefKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 11, "_ZTV24InstanceClassLoaderKlass",
+        "_ZN24InstanceClassLoaderKlass18oop_oop_iterate_nvEP7oopDescP14G1CMOopClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 12, "_ZTV20G1MarkAndPushClosure",
+        "_ZN20G1MarkAndPushClosure6do_oopEPP7oopDesc",
+        &callbackForDoOop),
+    HOOK_FUNC(
+        g1_jdk10, 13, "_ZTV20G1MarkAndPushClosure",
+        "_ZN20G1MarkAndPushClosure6do_oopEPj",
+        &callbackForDoNarrowOop),
+    HOOK_FUNC(
+        g1_jdk10, 14, "_ZTV13InstanceKlass",
+        "_ZN13InstanceKlass18oop_oop_iterate_nvEP7oopDescP20G1MarkAndPushClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 15, "_ZTV13ObjArrayKlass",
+        "_ZN13ObjArrayKlass18oop_oop_iterate_nvEP7oopDescP20G1MarkAndPushClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 16, "_ZTV14TypeArrayKlass",
+        "_ZN14TypeArrayKlass18oop_oop_iterate_nvEP7oopDescP20G1MarkAndPushClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 17, "_ZTV16InstanceRefKlass",
+        "_ZN16InstanceRefKlass18oop_oop_iterate_nvEP7oopDescP20G1MarkAndPushClosure",
+        &callbackForIterate),
+    HOOK_FUNC(
+        g1_jdk10, 18, "_ZTV24InstanceClassLoaderKlass",
+        "_ZN24InstanceClassLoaderKlass18oop_oop_iterate_nvEP7oopDescP20G1MarkAndPushClosure",
+        &callbackForIterate),
+    HOOK_FUNC_END};
 
 /*!
  * \brief Pointer of hook information on G1GC.
@@ -1785,7 +1866,9 @@ void callbackForG1Full(void *thisptr) {
    * Disable G1 callback function:
    *  OopClosure for typeArrayKlass is called by G1 FullCollection.
    */
-  switchOverrideFunction(g1_hook, false);
+  if (!jvmInfo->isAfterJDK10()) {
+    switchOverrideFunction(g1_hook, false);
+  }
 
   /* Discard existed snapshot data */
   clearCurrentSnapShot();
@@ -1798,7 +1881,9 @@ void callbackForG1Full(void *thisptr) {
  */
 void callbackForG1FullReturn(void *thisptr) {
   /* Restore G1 callback. */
-  switchOverrideFunction(g1_hook, true);
+  if (!jvmInfo->isAfterJDK10()) {
+    switchOverrideFunction(g1_hook, true);
+  }
 
   if (likely(g1FinishCallbackFunc != NULL)) {
     /* Invoke callback. */
