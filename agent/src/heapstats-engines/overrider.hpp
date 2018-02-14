@@ -124,6 +124,15 @@ typedef enum {
   DEFINE_OVERRIDE_FUNC_N(prefix, 3)    \
   DEFINE_OVERRIDE_FUNC_N(prefix, 4)
 
+#define DEFINE_OVERRIDE_FUNC_7(prefix) \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 0)    \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 1)    \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 2)    \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 3)    \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 4)    \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 5)    \
+  DEFINE_OVERRIDE_FUNC_N(prefix, 6)
+
 #define DEFINE_OVERRIDE_FUNC_8(prefix) \
   DEFINE_OVERRIDE_FUNC_N(prefix, 0)    \
   DEFINE_OVERRIDE_FUNC_N(prefix, 1)    \
@@ -248,7 +257,9 @@ extern "C" void callbackForParallel(void *oop);
 extern "C" void callbackForParallelWithMarkCheck(void *oop);
 extern "C" void callbackForParOld(void *oop);
 extern "C" void callbackForDoOop(void **oop);
+extern "C" void callbackForDoOopWithMarkCheck(void **oop);
 extern "C" void callbackForDoNarrowOop(unsigned int *narrowOop);
+extern "C" void callbackForDoNarrowOopWithMarkCheck(unsigned int *narrowOop);
 extern "C" void callbackForIterate(void *oop);
 extern "C" void callbackForSweep(void *oop);
 extern "C" void callbackForAdjustPtr(void *oop);

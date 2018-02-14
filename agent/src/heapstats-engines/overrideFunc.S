@@ -247,6 +247,17 @@ OVERRIDE_DEFINE(par_jdk9, 4, 2)
 OVERRIDE_DEFINE(par_jdk10, 0, 2)
 /* AdjustPointerClosure::do_oop(unsigned int*) */
 OVERRIDE_DEFINE(par_jdk10, 1, 2)
+/* InstanceKlass::oop_oop_iterate_nv(oopDesc*, MarkAndPushClosure*) */
+OVERRIDE_DEFINE(par_jdk10, 2, 2)
+/* ObjArrayKlass::oop_oop_iterate_nv(oopDesc*, MarkAndPushClosure*) */
+OVERRIDE_DEFINE(par_jdk10, 3, 2)
+/* TypeArrayKlass::oop_oop_iterate_nv(oopDesc*, MarkAndPushClosure*) */
+OVERRIDE_DEFINE(par_jdk10, 4, 2)
+/* InstanceRefKlass::oop_oop_iterate_nv(oopDesc*, MarkAndPushClosure*) */
+OVERRIDE_DEFINE(par_jdk10, 5, 2)
+/* InstanceClassLoaderKlass::oop_oop_iterate_nv(oopDesc*, MarkAndPushClosure*) */
+OVERRIDE_DEFINE(par_jdk10, 6, 2)
+
 
 /* For JDK 9 ParallelOld GC hook */
 

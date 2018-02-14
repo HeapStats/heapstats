@@ -57,7 +57,7 @@
 DEFINE_OVERRIDE_FUNC_4(par);
 DEFINE_OVERRIDE_FUNC_5(par_6964458);
 DEFINE_OVERRIDE_FUNC_5(par_jdk9);
-DEFINE_OVERRIDE_FUNC_2(par_jdk10);
+DEFINE_OVERRIDE_FUNC_7(par_jdk10);
 
 /*!
  * \brief Override function for heap object on parallelOldGC.
@@ -212,10 +212,25 @@ THookFunctionInfo jdk9_par_hook[] = {
 THookFunctionInfo jdk10_par_hook[] = {
     HOOK_FUNC(par_jdk10, 0, "_ZTV20AdjustPointerClosure",
               "_ZN20AdjustPointerClosure6do_oopEPP7oopDesc",
-              &callbackForDoOop),
+              &callbackForDoOopWithMarkCheck),
     HOOK_FUNC(par_jdk10, 1, "_ZTV20AdjustPointerClosure",
               "_ZN20AdjustPointerClosure6do_oopEPj",
-              &callbackForDoNarrowOop),
+              &callbackForDoNarrowOopWithMarkCheck),
+    HOOK_FUNC(par_jdk10, 2, "_ZTV13InstanceKlass",
+              "_ZN13InstanceKlass18oop_oop_iterate_nvEP7oopDescP18MarkAndPushClosure",
+              &callbackForParallelWithMarkCheck),
+    HOOK_FUNC(par_jdk10, 3, "_ZTV13ObjArrayKlass",
+              "_ZN13ObjArrayKlass18oop_oop_iterate_nvEP7oopDescP18MarkAndPushClosure",
+              &callbackForParallelWithMarkCheck),
+    HOOK_FUNC(par_jdk10, 4, "_ZTV14TypeArrayKlass",
+              "_ZN14TypeArrayKlass18oop_oop_iterate_nvEP7oopDescP18MarkAndPushClosure",
+              &callbackForParallelWithMarkCheck),
+    HOOK_FUNC(par_jdk10, 5, "_ZTV16InstanceRefKlass",
+              "_ZN16InstanceRefKlass18oop_oop_iterate_nvEP7oopDescP18MarkAndPushClosure",
+              &callbackForParallelWithMarkCheck),
+    HOOK_FUNC(par_jdk10, 6, "_ZTV24InstanceClassLoaderKlass",
+              "_ZN24InstanceClassLoaderKlass18oop_oop_iterate_nvEP7oopDescP18MarkAndPushClosure",
+              &callbackForParallelWithMarkCheck),
     HOOK_FUNC_END};
 
 /*!
@@ -1593,6 +1608,26 @@ void callbackForDoOop(void **oop) {
 }
 
 /*!
+ * \brief Callback function for OopClosure::do_oop(oop *).<br>
+ *        This function checks whether the oop is marked.
+ * \param oop [in] Java heap object(OopDesc format).
+ */
+void callbackForDoOopWithMarkCheck(void **oop) {
+  if ((oop == NULL) || (*oop == NULL) || is_in_permanent(collectedHeap, *oop)) {
+    return;
+  }
+
+  TVMVariables *vmVal = TVMVariables::getInstance();
+  unsigned long markOop = *(ptrdiff_t *)incAddress(oop,
+                                                   vmVal->getOfsMarkAtOop());
+  uint64_t markValue = markOop & vmVal->getLockMaskInPlaceMarkOop();
+
+  if (markValue == vmVal->getMarkedValue()) {
+    gcCallbackFunc(*oop, NULL);
+  }
+}
+
+/*!
  * \brief Callback function for OopClosure::do_oop(narrowOop *).<br>
  *        This function is targeted for G1ParScanAndMarkExtRootClosure.
  *        (initial-mark for G1)
@@ -1601,6 +1636,16 @@ void callbackForDoOop(void **oop) {
 void callbackForDoNarrowOop(unsigned int *narrowOop) {
   void *oop = getWideOop(*narrowOop);
   callbackForDoOop(&oop);
+}
+
+/*!
+ * \brief Callback function for OopClosure::do_oop(narrowOop *).<br>
+ *        This function checks whether the oop is marked.
+ * \param oop [in] Java heap object(OopDesc format).
+ */
+void callbackForDoNarrowOopWithMarkCheck(unsigned int *narrowOop) {
+  void *oop = getWideOop(*narrowOop);
+  callbackForDoOopWithMarkCheck(&oop);
 }
 
 /*!
