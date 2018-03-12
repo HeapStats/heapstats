@@ -1,12 +1,16 @@
+2018-03-12 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+
+	* Bug 3536: Cannot kill Java process on error
+
 2018-02-05 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3515: Cannot build HeapStats Agent on CentOS 6 after merging TBB
 
-2017-01-25 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+2018-01-25 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3513: Move test cases for race-conditions to another repository
 
-2017-01-23 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
+2018-01-23 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 
 	* Bug 3512: Drop SSE3 instruction set supporting
 
