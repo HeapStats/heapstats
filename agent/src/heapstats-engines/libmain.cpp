@@ -427,10 +427,6 @@ void JNICALL OnVMDeath(jvmtiEnv *jvmti, JNIEnv *env) {
  * \warning This function is always no return.
  */
 void forcedAbortJVM(jvmtiEnv *jvmti, JNIEnv *env, const char *causeMsg) {
-  /* Terminate all event and thread. */
-  OnVMDeath(jvmti, env);
-  logger->flush();
-
   /* Output last message. */
   logger->printCritMsg("Aborting JVM by HeapStats. cause: %s", causeMsg);
   logger->flush();
