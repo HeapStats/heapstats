@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- Copyright (C) 2014-2015 Yasumasa Suenaga
+ Copyright (C) 2014-2018 Yasumasa Suenaga
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@
                 <Font size="36.0" />
             </font>
         </Label>
-        <Label layoutX="263.0" layoutY="63.0" text="Version 2.0.trunk">
+        <Label layoutX="263.0" layoutY="63.0" text="Version 2.2.trunk">
             <font>
                 <Font size="24.0" />
             </font>

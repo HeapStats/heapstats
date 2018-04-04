@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- Copyright (C) 2015-2017 Yasumasa Suenaga
+ Copyright (C) 2015-2018 Yasumasa Suenaga
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>jp.co.ntt.oss.heapstats</groupId>
     <artifactId>heapstats-mbean</artifactId>
-    <version>2.1-SNAPSHOT</version>
+    <version>2.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>HeapStats MBean Java Module</name>

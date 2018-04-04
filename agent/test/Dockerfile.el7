@@ -43,7 +43,7 @@ WORKDIR ${HEAPSTATS_PATH}
 RUN bash configure --with-jdk=${JAVA_HOME} \
  && make agent mbean
 
-ENV HEAPSTATS_LIB ${HEAPSTATS_PATH}/agent/src/libheapstats-2.0.so.3
+ENV HEAPSTATS_LIB ${HEAPSTATS_PATH}/agent/src/libheapstats-2.2.so.3
 
 # Prepare to test HeapStats
 WORKDIR ${HEAPSTATS_PATH}/agent/test

@@ -2,7 +2,7 @@
 
 Summary: A Java programming language debugging tool.
 Name: heapstats
-Version: 2.0.trunk
+Version: 2.2.trunk
 %define DIST_EXT 0%{?dist:%{dist}}%{!?dist:.el5}
 Release: %{DIST_EXT}
 License: GPLv2
@@ -51,20 +51,20 @@ Requires: heapstats-cli
 
 %description
 A lightweight monitoring JVMTI agent for Java HotSpot VM.
-Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation.
+Copyright (C) 2011-2018 Nippon Telegraph and Telephone Corporation.
 
 %description cli
 Commandline analysis tool for HeapStats.
-Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation.
+Copyright (C) 2011-2018 Nippon Telegraph and Telephone Corporation.
 
 %if 0%{?WITH_ANALYZER:1}
 %description analyzer
 HeapStats GUI Analyzer
-Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation.
+Copyright (C) 2011-2018 Nippon Telegraph and Telephone Corporation.
 %endif
 
 %prep
-%setup -q -n heapstats-2.0
+%setup -q -n heapstats-2.2
 
 %build
 CXXFLAGS="$RPM_OPT_FLAGS" ./configure \
@@ -168,6 +168,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Apr 04 2018 Yasumasa Suenaga <yasuenag@gmail.com>
+- Update version number to 2.2.trunk
 * Tue Jan 23 2018 KUBOTA Yuji <kubota.yuji@lab.ntt.co.jp>
 - Remove SSE 3 optimized binary.
 * Thu Jan 18 2018 Yasumasa Suenaga <yasuenag@gmail.com>

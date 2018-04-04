@@ -1,4 +1,4 @@
-bin_PROGRAMS = libheapstats-engine-none-2.0.so
+bin_PROGRAMS = libheapstats-engine-none-2.2.so
 
 BASE_SOURCE     = libmain.cpp util.cpp symbolFinder.cpp vmStructScanner.cpp   \
                   oopUtil.cpp bitMapMarker.cpp agentThread.cpp jvmInfo.cpp    \
@@ -28,44 +28,44 @@ ACLOCAL_AMFLAGS = -I ../m4
 
 if X86
   # Normal binary for x86
-  libheapstats_engine_none_2_0_so_SOURCES   = $(BASE_SOURCE) \
+  libheapstats_engine_none_2_2_so_SOURCES   = $(BASE_SOURCE) \
                                               arch/x86/x86BitMapMarker.cpp
-  libheapstats_engine_none_2_0_so_LDFLAGS   = $(BASE_LD_FLAGS)
-  libheapstats_engine_none_2_0_so_CXXFLAGS  = $(BASE_CXX_FLAGS)
-  libheapstats_engine_none_2_0_so_CCASFLAGS = $(BASE_CCAS_FLAGS)
+  libheapstats_engine_none_2_2_so_LDFLAGS   = $(BASE_LD_FLAGS)
+  libheapstats_engine_none_2_2_so_CXXFLAGS  = $(BASE_CXX_FLAGS)
+  libheapstats_engine_none_2_2_so_CCASFLAGS = $(BASE_CCAS_FLAGS)
 
 if SSE2
-    bin_PROGRAMS += libheapstats-engine-sse2-2.0.so
+    bin_PROGRAMS += libheapstats-engine-sse2-2.2.so
 
-    libheapstats_engine_sse2_2_0_so_SOURCES   = $(BASE_SOURCE) \
+    libheapstats_engine_sse2_2_2_so_SOURCES   = $(BASE_SOURCE) \
                                                 arch/x86/x86BitMapMarker.cpp \
                                                 arch/x86/sse2/sse2BitMapMarker.cpp
-    libheapstats_engine_sse2_2_0_so_LDFLAGS   = $(BASE_LD_FLAGS)
-    libheapstats_engine_sse2_2_0_so_CXXFLAGS  = $(BASE_CXX_FLAGS) -msse2 -DSSE2
-    libheapstats_engine_sse2_2_0_so_CCASFLAGS = $(BASE_CCAS_FLAGS) -DSSE2
+    libheapstats_engine_sse2_2_2_so_LDFLAGS   = $(BASE_LD_FLAGS)
+    libheapstats_engine_sse2_2_2_so_CXXFLAGS  = $(BASE_CXX_FLAGS) -msse2 -DSSE2
+    libheapstats_engine_sse2_2_2_so_CCASFLAGS = $(BASE_CCAS_FLAGS) -DSSE2
 endif
 
 if SSE4
-    bin_PROGRAMS += libheapstats-engine-sse4-2.0.so
+    bin_PROGRAMS += libheapstats-engine-sse4-2.2.so
 
-    libheapstats_engine_sse4_2_0_so_SOURCES   = $(BASE_SOURCE) \
+    libheapstats_engine_sse4_2_2_so_SOURCES   = $(BASE_SOURCE) \
                                                 arch/x86/x86BitMapMarker.cpp \
                                                 arch/x86/sse2/sse2BitMapMarker.cpp
-    libheapstats_engine_sse4_2_0_so_LDFLAGS   = $(BASE_LD_FLAGS)
-    libheapstats_engine_sse4_2_0_so_CXXFLAGS  = $(BASE_CXX_FLAGS) -msse4 -DSSE4
-    libheapstats_engine_sse4_2_0_so_CCASFLAGS = $(BASE_CCAS_FLAGS) -DSSE4
+    libheapstats_engine_sse4_2_2_so_LDFLAGS   = $(BASE_LD_FLAGS)
+    libheapstats_engine_sse4_2_2_so_CXXFLAGS  = $(BASE_CXX_FLAGS) -msse4 -DSSE4
+    libheapstats_engine_sse4_2_2_so_CCASFLAGS = $(BASE_CCAS_FLAGS) -DSSE4
 endif
 
 if AVX
-    bin_PROGRAMS += libheapstats-engine-avx-2.0.so
+    bin_PROGRAMS += libheapstats-engine-avx-2.2.so
 
-    libheapstats_engine_avx_2_0_so_SOURCES   = $(BASE_SOURCE) \
+    libheapstats_engine_avx_2_2_so_SOURCES   = $(BASE_SOURCE) \
                                                arch/x86/x86BitMapMarker.cpp \
                                                arch/x86/sse2/sse2BitMapMarker.cpp \
                                                arch/x86/avx/avxBitMapMarker.cpp
-    libheapstats_engine_avx_2_0_so_LDFLAGS   = $(BASE_LD_FLAGS)
-    libheapstats_engine_avx_2_0_so_CXXFLAGS  = $(BASE_CXX_FLAGS) -mavx -DAVX
-    libheapstats_engine_avx_2_0_so_CCASFLAGS = $(BASE_CCAS_FLAGS) -DAVX
+    libheapstats_engine_avx_2_2_so_LDFLAGS   = $(BASE_LD_FLAGS)
+    libheapstats_engine_avx_2_2_so_CXXFLAGS  = $(BASE_CXX_FLAGS) -mavx -DAVX
+    libheapstats_engine_avx_2_2_so_CCASFLAGS = $(BASE_CCAS_FLAGS) -DAVX
 endif
 
 endif
@@ -74,24 +74,24 @@ endif
 
 if ARM
   # Normal binary for ARM (target to Raspberry Pi)
-  libheapstats_engine_none_2_0_so_SOURCES   = $(BASE_SOURCE) \
+  libheapstats_engine_none_2_2_so_SOURCES   = $(BASE_SOURCE) \
                                               arch/arm/armBitMapMarker.cpp
-  libheapstats_engine_none_2_0_so_LDFLAGS   = $(BASE_LD_FLAGS)
-  libheapstats_engine_none_2_0_so_CXXFLAGS  = $(BASE_CXX_FLAGS) \
+  libheapstats_engine_none_2_2_so_LDFLAGS   = $(BASE_LD_FLAGS)
+  libheapstats_engine_none_2_2_so_CXXFLAGS  = $(BASE_CXX_FLAGS) \
                                               -mhard-float -mtune=arm1176jzf-s
-  libheapstats_engine_none_2_0_so_CCASFLAGS = $(BASE_CCAS_FLAGS) \
+  libheapstats_engine_none_2_2_so_CCASFLAGS = $(BASE_CCAS_FLAGS) \
                                               -mhard-float -mtune=arm1176jzf-s
 
   # NEON-optimized binary (target to Raspberryu Pi 2)
-  bin_PROGRAMS += libheapstats-engine-neon-2.0.so
-  libheapstats_engine_neon_2_0_so_SOURCES   = $(BASE_SOURCE) \
+  bin_PROGRAMS += libheapstats-engine-neon-2.2.so
+  libheapstats_engine_neon_2_2_so_SOURCES   = $(BASE_SOURCE) \
                                               arch/arm/armBitMapMarker.cpp  \
                                               arch/arm/neon/neonBitMapMarker.cpp
-  libheapstats_engine_neon_2_0_so_LDFLAGS   = $(BASE_LD_FLAGS)
-  libheapstats_engine_neon_2_0_so_CXXFLAGS  = $(BASE_CXX_FLAGS) -DNEON \
+  libheapstats_engine_neon_2_2_so_LDFLAGS   = $(BASE_LD_FLAGS)
+  libheapstats_engine_neon_2_2_so_CXXFLAGS  = $(BASE_CXX_FLAGS) -DNEON \
                                                   -mhard-float -mtune=arm7 \
                                                   -mfpu=neon
-  libheapstats_engine_neon_2_0_so_CCASFLAGS = $(BASE_CCAS_FLAGS) -DNEON \
+  libheapstats_engine_neon_2_2_so_CCASFLAGS = $(BASE_CCAS_FLAGS) -DNEON \
                                                   -mhard-float -mtune=arm7 \
                                                   -mfpu=neon
 endif

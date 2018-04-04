@@ -105,22 +105,22 @@ DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__EXEEXT_1 = libheapstats-2.0.so.3$(EXEEXT)
+am__EXEEXT_1 = libheapstats-2.2.so.3$(EXEEXT)
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am__libheapstats_2_0_so_3_SOURCES_DIST = heapstats.cpp \
+am__libheapstats_2_2_so_3_SOURCES_DIST = heapstats.cpp \
 	arch/x86/heapstats_md_x86.cpp arch/arm/heapstats_md_arm.cpp
 am__dirstamp = $(am__leading_dot)dirstamp
-@X86_TRUE@am__objects_1 = arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.$(OBJEXT)
-@ARM_TRUE@am__objects_2 = arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.$(OBJEXT)
-am_libheapstats_2_0_so_3_OBJECTS =  \
-	libheapstats_2_0_so_3-heapstats.$(OBJEXT) $(am__objects_1) \
+@X86_TRUE@am__objects_1 = arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.$(OBJEXT)
+@ARM_TRUE@am__objects_2 = arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.$(OBJEXT)
+am_libheapstats_2_2_so_3_OBJECTS =  \
+	libheapstats_2_2_so_3-heapstats.$(OBJEXT) $(am__objects_1) \
 	$(am__objects_2)
-libheapstats_2_0_so_3_OBJECTS = $(am_libheapstats_2_0_so_3_OBJECTS)
-libheapstats_2_0_so_3_LDADD = $(LDADD)
-libheapstats_2_0_so_3_LINK = $(CXXLD) \
-	$(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) \
-	$(libheapstats_2_0_so_3_LDFLAGS) $(LDFLAGS) -o $@
+libheapstats_2_2_so_3_OBJECTS = $(am_libheapstats_2_2_so_3_OBJECTS)
+libheapstats_2_2_so_3_LDADD = $(LDADD)
+libheapstats_2_2_so_3_LINK = $(CXXLD) \
+	$(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) \
+	$(libheapstats_2_2_so_3_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -154,8 +154,8 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(libheapstats_2_0_so_3_SOURCES)
-DIST_SOURCES = $(am__libheapstats_2_0_so_3_SOURCES_DIST)
+SOURCES = $(libheapstats_2_2_so_3_SOURCES)
+DIST_SOURCES = $(am__libheapstats_2_2_so_3_SOURCES_DIST)
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
 	ctags-recursive dvi-recursive html-recursive info-recursive \
 	install-data-recursive install-dvi-recursive \
@@ -339,14 +339,14 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-HEAPSTATS_BIN_TARGET = libheapstats-2.0.so.3
+HEAPSTATS_BIN_TARGET = libheapstats-2.2.so.3
 SUBDIRS = heapstats-engines iotracer
 ACLOCAL_AMFLAGS = -I ../m4
-libheapstats_2_0_so_3_SOURCES = heapstats.cpp $(am__append_1) \
+libheapstats_2_2_so_3_SOURCES = heapstats.cpp $(am__append_1) \
 	$(am__append_5)
-libheapstats_2_0_so_3_LDFLAGS = -shared -Wl,-soname,libheapstats.so \
+libheapstats_2_2_so_3_LDFLAGS = -shared -Wl,-soname,libheapstats.so \
 	-dl
-libheapstats_2_0_so_3_CXXFLAGS = -I@JDK_DIR@/include \
+libheapstats_2_2_so_3_CXXFLAGS = -I@JDK_DIR@/include \
 	-I@JDK_DIR@/include/linux -Wall -Wno-strict-aliasing -fPIC \
 	$(am__append_2) $(am__append_3) $(am__append_4) \
 	$(am__append_6)
@@ -392,7 +392,7 @@ arch/x86/$(am__dirstamp):
 arch/x86/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) arch/x86/$(DEPDIR)
 	@: > arch/x86/$(DEPDIR)/$(am__dirstamp)
-arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.$(OBJEXT):  \
+arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.$(OBJEXT):  \
 	arch/x86/$(am__dirstamp) arch/x86/$(DEPDIR)/$(am__dirstamp)
 arch/arm/$(am__dirstamp):
 	@$(MKDIR_P) arch/arm
@@ -400,12 +400,12 @@ arch/arm/$(am__dirstamp):
 arch/arm/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) arch/arm/$(DEPDIR)
 	@: > arch/arm/$(DEPDIR)/$(am__dirstamp)
-arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.$(OBJEXT):  \
+arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.$(OBJEXT):  \
 	arch/arm/$(am__dirstamp) arch/arm/$(DEPDIR)/$(am__dirstamp)
 
-libheapstats-2.0.so.3$(EXEEXT): $(libheapstats_2_0_so_3_OBJECTS) $(libheapstats_2_0_so_3_DEPENDENCIES) $(EXTRA_libheapstats_2_0_so_3_DEPENDENCIES) 
-	@rm -f libheapstats-2.0.so.3$(EXEEXT)
-	$(AM_V_CXXLD)$(libheapstats_2_0_so_3_LINK) $(libheapstats_2_0_so_3_OBJECTS) $(libheapstats_2_0_so_3_LDADD) $(LIBS)
+libheapstats-2.2.so.3$(EXEEXT): $(libheapstats_2_2_so_3_OBJECTS) $(libheapstats_2_2_so_3_DEPENDENCIES) $(EXTRA_libheapstats_2_2_so_3_DEPENDENCIES) 
+	@rm -f libheapstats-2.2.so.3$(EXEEXT)
+	$(AM_V_CXXLD)$(libheapstats_2_2_so_3_LINK) $(libheapstats_2_2_so_3_OBJECTS) $(libheapstats_2_2_so_3_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -415,9 +415,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_2_0_so_3-heapstats.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@arch/arm/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_arm.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@arch/x86/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_x86.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_2_2_so_3-heapstats.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@arch/arm/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_arm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@arch/x86/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_x86.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -435,47 +435,47 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-libheapstats_2_0_so_3-heapstats.o: heapstats.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_2_0_so_3-heapstats.o -MD -MP -MF $(DEPDIR)/libheapstats_2_0_so_3-heapstats.Tpo -c -o libheapstats_2_0_so_3-heapstats.o `test -f 'heapstats.cpp' || echo '$(srcdir)/'`heapstats.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_2_0_so_3-heapstats.Tpo $(DEPDIR)/libheapstats_2_0_so_3-heapstats.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='heapstats.cpp' object='libheapstats_2_0_so_3-heapstats.o' libtool=no @AMDEPBACKSLASH@
+libheapstats_2_2_so_3-heapstats.o: heapstats.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_2_2_so_3-heapstats.o -MD -MP -MF $(DEPDIR)/libheapstats_2_2_so_3-heapstats.Tpo -c -o libheapstats_2_2_so_3-heapstats.o `test -f 'heapstats.cpp' || echo '$(srcdir)/'`heapstats.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_2_2_so_3-heapstats.Tpo $(DEPDIR)/libheapstats_2_2_so_3-heapstats.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='heapstats.cpp' object='libheapstats_2_2_so_3-heapstats.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_2_0_so_3-heapstats.o `test -f 'heapstats.cpp' || echo '$(srcdir)/'`heapstats.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_2_2_so_3-heapstats.o `test -f 'heapstats.cpp' || echo '$(srcdir)/'`heapstats.cpp
 
-libheapstats_2_0_so_3-heapstats.obj: heapstats.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_2_0_so_3-heapstats.obj -MD -MP -MF $(DEPDIR)/libheapstats_2_0_so_3-heapstats.Tpo -c -o libheapstats_2_0_so_3-heapstats.obj `if test -f 'heapstats.cpp'; then $(CYGPATH_W) 'heapstats.cpp'; else $(CYGPATH_W) '$(srcdir)/heapstats.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_2_0_so_3-heapstats.Tpo $(DEPDIR)/libheapstats_2_0_so_3-heapstats.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='heapstats.cpp' object='libheapstats_2_0_so_3-heapstats.obj' libtool=no @AMDEPBACKSLASH@
+libheapstats_2_2_so_3-heapstats.obj: heapstats.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_2_2_so_3-heapstats.obj -MD -MP -MF $(DEPDIR)/libheapstats_2_2_so_3-heapstats.Tpo -c -o libheapstats_2_2_so_3-heapstats.obj `if test -f 'heapstats.cpp'; then $(CYGPATH_W) 'heapstats.cpp'; else $(CYGPATH_W) '$(srcdir)/heapstats.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_2_2_so_3-heapstats.Tpo $(DEPDIR)/libheapstats_2_2_so_3-heapstats.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='heapstats.cpp' object='libheapstats_2_2_so_3-heapstats.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_2_0_so_3-heapstats.obj `if test -f 'heapstats.cpp'; then $(CYGPATH_W) 'heapstats.cpp'; else $(CYGPATH_W) '$(srcdir)/heapstats.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_2_2_so_3-heapstats.obj `if test -f 'heapstats.cpp'; then $(CYGPATH_W) 'heapstats.cpp'; else $(CYGPATH_W) '$(srcdir)/heapstats.cpp'; fi`
 
-arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.o: arch/x86/heapstats_md_x86.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -MT arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.o -MD -MP -MF arch/x86/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_x86.Tpo -c -o arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.o `test -f 'arch/x86/heapstats_md_x86.cpp' || echo '$(srcdir)/'`arch/x86/heapstats_md_x86.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/x86/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_x86.Tpo arch/x86/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_x86.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='arch/x86/heapstats_md_x86.cpp' object='arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.o' libtool=no @AMDEPBACKSLASH@
+arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.o: arch/x86/heapstats_md_x86.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -MT arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.o -MD -MP -MF arch/x86/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_x86.Tpo -c -o arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.o `test -f 'arch/x86/heapstats_md_x86.cpp' || echo '$(srcdir)/'`arch/x86/heapstats_md_x86.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/x86/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_x86.Tpo arch/x86/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_x86.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='arch/x86/heapstats_md_x86.cpp' object='arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -c -o arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.o `test -f 'arch/x86/heapstats_md_x86.cpp' || echo '$(srcdir)/'`arch/x86/heapstats_md_x86.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -c -o arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.o `test -f 'arch/x86/heapstats_md_x86.cpp' || echo '$(srcdir)/'`arch/x86/heapstats_md_x86.cpp
 
-arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.obj: arch/x86/heapstats_md_x86.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -MT arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.obj -MD -MP -MF arch/x86/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_x86.Tpo -c -o arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.obj `if test -f 'arch/x86/heapstats_md_x86.cpp'; then $(CYGPATH_W) 'arch/x86/heapstats_md_x86.cpp'; else $(CYGPATH_W) '$(srcdir)/arch/x86/heapstats_md_x86.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/x86/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_x86.Tpo arch/x86/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_x86.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='arch/x86/heapstats_md_x86.cpp' object='arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.obj' libtool=no @AMDEPBACKSLASH@
+arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.obj: arch/x86/heapstats_md_x86.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -MT arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.obj -MD -MP -MF arch/x86/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_x86.Tpo -c -o arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.obj `if test -f 'arch/x86/heapstats_md_x86.cpp'; then $(CYGPATH_W) 'arch/x86/heapstats_md_x86.cpp'; else $(CYGPATH_W) '$(srcdir)/arch/x86/heapstats_md_x86.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/x86/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_x86.Tpo arch/x86/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_x86.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='arch/x86/heapstats_md_x86.cpp' object='arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -c -o arch/x86/libheapstats_2_0_so_3-heapstats_md_x86.obj `if test -f 'arch/x86/heapstats_md_x86.cpp'; then $(CYGPATH_W) 'arch/x86/heapstats_md_x86.cpp'; else $(CYGPATH_W) '$(srcdir)/arch/x86/heapstats_md_x86.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -c -o arch/x86/libheapstats_2_2_so_3-heapstats_md_x86.obj `if test -f 'arch/x86/heapstats_md_x86.cpp'; then $(CYGPATH_W) 'arch/x86/heapstats_md_x86.cpp'; else $(CYGPATH_W) '$(srcdir)/arch/x86/heapstats_md_x86.cpp'; fi`
 
-arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.o: arch/arm/heapstats_md_arm.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -MT arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.o -MD -MP -MF arch/arm/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_arm.Tpo -c -o arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.o `test -f 'arch/arm/heapstats_md_arm.cpp' || echo '$(srcdir)/'`arch/arm/heapstats_md_arm.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/arm/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_arm.Tpo arch/arm/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_arm.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='arch/arm/heapstats_md_arm.cpp' object='arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.o' libtool=no @AMDEPBACKSLASH@
+arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.o: arch/arm/heapstats_md_arm.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -MT arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.o -MD -MP -MF arch/arm/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_arm.Tpo -c -o arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.o `test -f 'arch/arm/heapstats_md_arm.cpp' || echo '$(srcdir)/'`arch/arm/heapstats_md_arm.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/arm/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_arm.Tpo arch/arm/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_arm.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='arch/arm/heapstats_md_arm.cpp' object='arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -c -o arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.o `test -f 'arch/arm/heapstats_md_arm.cpp' || echo '$(srcdir)/'`arch/arm/heapstats_md_arm.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -c -o arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.o `test -f 'arch/arm/heapstats_md_arm.cpp' || echo '$(srcdir)/'`arch/arm/heapstats_md_arm.cpp
 
-arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.obj: arch/arm/heapstats_md_arm.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -MT arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.obj -MD -MP -MF arch/arm/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_arm.Tpo -c -o arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.obj `if test -f 'arch/arm/heapstats_md_arm.cpp'; then $(CYGPATH_W) 'arch/arm/heapstats_md_arm.cpp'; else $(CYGPATH_W) '$(srcdir)/arch/arm/heapstats_md_arm.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/arm/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_arm.Tpo arch/arm/$(DEPDIR)/libheapstats_2_0_so_3-heapstats_md_arm.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='arch/arm/heapstats_md_arm.cpp' object='arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.obj' libtool=no @AMDEPBACKSLASH@
+arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.obj: arch/arm/heapstats_md_arm.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -MT arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.obj -MD -MP -MF arch/arm/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_arm.Tpo -c -o arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.obj `if test -f 'arch/arm/heapstats_md_arm.cpp'; then $(CYGPATH_W) 'arch/arm/heapstats_md_arm.cpp'; else $(CYGPATH_W) '$(srcdir)/arch/arm/heapstats_md_arm.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/arm/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_arm.Tpo arch/arm/$(DEPDIR)/libheapstats_2_2_so_3-heapstats_md_arm.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='arch/arm/heapstats_md_arm.cpp' object='arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_0_so_3_CXXFLAGS) $(CXXFLAGS) -c -o arch/arm/libheapstats_2_0_so_3-heapstats_md_arm.obj `if test -f 'arch/arm/heapstats_md_arm.cpp'; then $(CYGPATH_W) 'arch/arm/heapstats_md_arm.cpp'; else $(CYGPATH_W) '$(srcdir)/arch/arm/heapstats_md_arm.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_2_2_so_3_CXXFLAGS) $(CXXFLAGS) -c -o arch/arm/libheapstats_2_2_so_3-heapstats_md_arm.obj `if test -f 'arch/arm/heapstats_md_arm.cpp'; then $(CYGPATH_W) 'arch/arm/heapstats_md_arm.cpp'; else $(CYGPATH_W) '$(srcdir)/arch/arm/heapstats_md_arm.cpp'; fi`
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run 'make' without going through this Makefile.
