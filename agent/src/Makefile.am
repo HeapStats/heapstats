@@ -1,37 +1,37 @@
-HEAPSTATS_BIN_TARGET = libheapstats-2.0.so.3
+HEAPSTATS_BIN_TARGET = libheapstats-2.2.so.3
 bin_PROGRAMS = $(HEAPSTATS_BIN_TARGET)
 SUBDIRS = heapstats-engines iotracer
 
 ACLOCAL_AMFLAGS = -I ../m4
-libheapstats_2_0_so_3_SOURCES = heapstats.cpp
+libheapstats_2_2_so_3_SOURCES = heapstats.cpp
 
-libheapstats_2_0_so_3_LDFLAGS = -shared
-libheapstats_2_0_so_3_LDFLAGS += -Wl,-soname,libheapstats.so -dl
+libheapstats_2_2_so_3_LDFLAGS = -shared
+libheapstats_2_2_so_3_LDFLAGS += -Wl,-soname,libheapstats.so -dl
 
-libheapstats_2_0_so_3_CXXFLAGS = -I@JDK_DIR@/include -I@JDK_DIR@/include/linux
-libheapstats_2_0_so_3_CXXFLAGS += -Wall -Wno-strict-aliasing -fPIC
+libheapstats_2_2_so_3_CXXFLAGS = -I@JDK_DIR@/include -I@JDK_DIR@/include/linux
+libheapstats_2_2_so_3_CXXFLAGS += -Wall -Wno-strict-aliasing -fPIC
 
 if X86
-  libheapstats_2_0_so_3_SOURCES += arch/x86/heapstats_md_x86.cpp
+  libheapstats_2_2_so_3_SOURCES += arch/x86/heapstats_md_x86.cpp
 
 if SSE2
-    libheapstats_2_0_so_3_CXXFLAGS += -DSSE2
+    libheapstats_2_2_so_3_CXXFLAGS += -DSSE2
 endif
 
 if SSE4
-    libheapstats_2_0_so_3_CXXFLAGS += -DSSE4
+    libheapstats_2_2_so_3_CXXFLAGS += -DSSE4
 endif
 
 if AVX
-    libheapstats_2_0_so_3_CXXFLAGS += -DAVX
+    libheapstats_2_2_so_3_CXXFLAGS += -DAVX
 endif
 
 endif
 
 
 if ARM
-  libheapstats_2_0_so_3_SOURCES += arch/arm/heapstats_md_arm.cpp
-  libheapstats_2_0_so_3_CXXFLAGS += -mhard-float
+  libheapstats_2_2_so_3_SOURCES += arch/arm/heapstats_md_arm.cpp
+  libheapstats_2_2_so_3_CXXFLAGS += -mhard-float
 endif
 
 
