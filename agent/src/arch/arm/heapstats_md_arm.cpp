@@ -2,7 +2,7 @@
  * \file heapstats_md_arm.cpp
  * \brief Proxy library for HeapStats backend.
  *        This file implements ARM specific code for loading backend library.
- * Copyright (C) 2015 Yasumasa Suenaga
+ * Copyright (C) 2015-2018 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,10 +48,10 @@
  */
 static int findHeapStatsCallback(struct dl_phdr_info *info, size_t size,
                                  void *data) {
-  ptrdiff_t this_func_addr = (ptrdiff_t)&findHeapStatsCallback;
+  uintptr_t this_func_addr = (uintptr_t)&findHeapStatsCallback;
 
   for (int idx = 0; idx < info->dlpi_phnum; idx++) {
-    ptrdiff_t base_addr = info->dlpi_addr + info->dlpi_phdr[idx].p_vaddr;
+    uintptr_t base_addr = info->dlpi_addr + info->dlpi_phdr[idx].p_vaddr;
 
     if ((this_func_addr >= base_addr) &&
         (this_func_addr <= base_addr + info->dlpi_phdr[idx].p_memsz)) {
