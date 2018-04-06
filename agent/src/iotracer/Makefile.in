@@ -234,6 +234,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+JDK_HOME = @JDK_DIR@
 all: all-am
 
 .SUFFIXES:
@@ -419,11 +420,12 @@ uninstall-am: uninstall-local
 
 .PRECIOUS: Makefile
 
+
 all:
-	$(ANT) all
+	env JAVA_HOME=$(JDK_HOME) bash -c "$(ANT) all"
 
 clean-local:
-	$(ANT) clean
+	env JAVA_HOME=$(JDK_HOME) bash -c "$(ANT) clean"
 
 install-exec-local:
 	$(mkdir_p) $(DESTDIR)/$(sysconfdir)/iotracer

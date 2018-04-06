@@ -1,8 +1,10 @@
+JDK_HOME = @JDK_DIR@
+
 all:
-	$(ANT) all
+	env JAVA_HOME=$(JDK_HOME) bash -c "$(ANT) all"
  
 clean-local:
-	$(ANT) clean
+	env JAVA_HOME=$(JDK_HOME) bash -c "$(ANT) clean"
  
 install-exec-local:
 	$(mkdir_p) $(DESTDIR)/$(sysconfdir)/iotracer
