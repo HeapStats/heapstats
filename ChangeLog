@@ -1,6 +1,7 @@
 2018-04-08 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3570: Build warning on Arm box
+	* Bug 3571: Build process of HeapStats attacher should regard the value detected by configure
 
 2018-04-04 Yasumasa Suenaga <yasuenag@gmail.com>
 

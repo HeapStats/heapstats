@@ -7,7 +7,7 @@ all:
 	env JAVA_HOME=$(JDK_HOME) bash -c $(ANT)
 
 clean-local:
-	$(ANT) clean
+	env JAVA_HOME=$(JDK_HOME) bash -c "$(ANT) clean"
 
 install-exec-local:
 	$(mkdir_p) $(DESTDIR)/$(bindir)
