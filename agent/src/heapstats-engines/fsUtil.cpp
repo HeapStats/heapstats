@@ -1,7 +1,7 @@
 /*!
  * \file fsUtil.cpp
  * \brief This file is utilities to access file system.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2018 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -352,13 +352,13 @@ void removeTempDir(char const *basePath) {
  */
 char *createUniquePath(char *path, bool isDirectory) {
   /* Variable for temporary path. */
-  char tempPath[PATH_MAX + 1] = {0};
+  char tempPath[PATH_MAX] = {0};
   /* Variables for file system. */
   FILE *file = NULL;
   DIR *dir = NULL;
   /* Variable for file path and extensition. */
-  char ext[PATH_MAX + 1] = {0};
-  char tempName[PATH_MAX + 1] = {0};
+  char ext[PATH_MAX] = {0};
+  char tempName[PATH_MAX] = {0};
 
   /* Sanity check. */
   if (unlikely(path == NULL || strlen(path) == 0)) {
@@ -368,6 +368,9 @@ char *createUniquePath(char *path, bool isDirectory) {
 
   /* Search extension. */
   char *extPos = strrchr(path, '.');
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
   /* If create path for file and exists extension. */
   if (!isDirectory && extPos != NULL) {
     int pathSize = (extPos - path);
@@ -383,6 +386,7 @@ char *createUniquePath(char *path, bool isDirectory) {
 
   /* Copy default path. */
   strncpy(tempPath, path, PATH_MAX);
+#pragma GCC diagnostic pop
 
   /* Try make unique path loop. */
   const unsigned long int MAX_RETRY_COUNT = 1000000;
@@ -419,7 +423,12 @@ char *createUniquePath(char *path, bool isDirectory) {
     }
 
     /* Make new path insert sequence number between 000000 and 999999. */
-    snprintf(tempPath, PATH_MAX, "%s_%06lu%s", tempName, loopCount, ext);
+    int ret = snprintf(tempPath, PATH_MAX, "%s_%06lu%s",
+                       tempName, loopCount, ext);
+    if (ret >= PATH_MAX) {
+      logger->printCritMsg("Temp path is too long: %s", tempPath);
+      return NULL;
+    }
   }
 
   /* If give up to try unique naming by number. */
@@ -435,7 +444,11 @@ char *createUniquePath(char *path, bool isDirectory) {
     }
 
     /* Uniquely naming by random string. */
-    snprintf(tempPath, PATH_MAX, "%s_%6s%s", tempName, randStr, ext);
+    int ret = snprintf(tempPath, PATH_MAX, "%s_%6s%s", tempName, randStr, ext);
+    if (ret >= PATH_MAX) {
+      logger->printCritMsg("Temp path is too long: %s", tempPath);
+      return NULL;
+    }
     logger->printWarnMsg("Not found unique name. So used random string.");
   }
 

@@ -2,7 +2,7 @@
  * \file heapstats_md_x86.cpp
  * \brief Proxy library for HeapStats backend.
  *        This file implements x86 specific code for loading backend library.
- * Copyright (C) 2014 Yasumasa Suenaga
+ * Copyright (C) 2014-2018 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -112,10 +112,15 @@ void *loadHeapStatsEngine(void) {
     return NULL;
   }
 
-  sprintf(engine_path,
-          "%s/heapstats-engines/libheapstats-engine-%s-" HEAPSTATS_MAJOR_VERSION
-          ".so",
-          heapstats_path, checkInstructionSet());
+  int ret = snprintf(engine_path, PATH_MAX,
+                     "%s/heapstats-engines/libheapstats-engine-%s-"
+                     HEAPSTATS_MAJOR_VERSION ".so",
+                     heapstats_path, checkInstructionSet());
+  if (ret >= PATH_MAX) {
+    fprintf(stderr,
+            "HeapStats engine could not be loaded: engine path is too long\n");
+    return NULL;
+  }
 
   void *hEngine = dlopen(engine_path, RTLD_NOW);
   if (hEngine == NULL) {
