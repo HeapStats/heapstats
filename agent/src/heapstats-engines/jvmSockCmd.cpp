@@ -1,7 +1,7 @@
 /*!
  * \file jvmSockCmd.cpp
  * \brief This file is used by thread dump.
- * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2018 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -216,7 +216,7 @@ int TJVMSockCmd::execute(char const* cmd, const TJVMSockCmdArgs conf,
  */
 bool TJVMSockCmd::createJvmSock(void) {
   /* Socket file path. */
-  char sockPath[PATH_MAX + 1] = {0};
+  char sockPath[PATH_MAX] = {0};
 
   /* Search jvm socket file. */
   if (!findJvmSock((char*)&sockPath, PATH_MAX)) {

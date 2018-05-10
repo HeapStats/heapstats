@@ -1,7 +1,7 @@
 /*!
  * \file logManager.cpp
  * \brief This file is used collect log information.
- * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2018 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1432,10 +1432,12 @@ char *TLogManager::createArchiveName(TMSecTime nowTime) {
   time_t nowTimeSec = 0;
   struct tm time_struct = {0};
   char time_str[20] = {0};
-  char arcName[PATH_MAX + 1] = {0};
-  char extPart[PATH_MAX + 1] = {0};
-  char namePart[PATH_MAX + 1] = {0};
+  char arcName[PATH_MAX] = {0};
+  char extPart[PATH_MAX] = {0};
+  char namePart[PATH_MAX] = {0};
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
   /* Search extension. */
   char *archiveFileName = conf->ArchiveFile()->get();
   char *extPos = strrchr(archiveFileName, '.');
@@ -1447,6 +1449,7 @@ char *TLogManager::createArchiveName(TMSecTime nowTime) {
     /* Not found extension in path. */
     strncpy(namePart, archiveFileName, PATH_MAX);
   }
+#pragma GCC diagnostic pop
 
   /* Get now datetime and convert to string. */
   nowTimeSec = (time_t)(nowTime / 1000);
@@ -1454,7 +1457,11 @@ char *TLogManager::createArchiveName(TMSecTime nowTime) {
   strftime(time_str, 20, "%y%m%d%H%M%S", &time_struct);
 
   /* Create file name. */
-  snprintf(arcName, PATH_MAX, "%s%s%s", namePart, time_str, extPart);
+  int ret = snprintf(arcName, PATH_MAX, "%s%s%s", namePart, time_str, extPart);
+  if (ret >= PATH_MAX) {
+    logger->printCritMsg("Archive name is too long: %s", arcName);
+    return NULL;
+  }
 
   /* Create unique file name. */
   return createUniquePath(arcName, false);
