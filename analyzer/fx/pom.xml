@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- Copyright (C) 2015-2018 Yasumasa Suenaga
+ Copyright (C) 2015-2019 Yasumasa Suenaga
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -24,6 +24,14 @@
     <artifactId>heapstats-analyzer</artifactId>
     <version>2.2-SNAPSHOT</version>
     <packaging>jar</packaging>
+
+    <repositories>
+        <repository>
+            <id>alfresco</id>
+            <name>Alfresco</name>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
+        </repository>
+    </repositories>
 
     <name>HeapStats Analyzer</name>
     <description>HeapStats JavaFX GUI analyzer</description>
@@ -91,11 +99,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.mxgraph</groupId>
+            <groupId>com.github.jgraph</groupId>
             <artifactId>jgraphx</artifactId>
-            <version>3.3.1.1</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/jgraphx.jar</systemPath>
+            <version>v3.9.10</version>
         </dependency>
     </dependencies>
 
