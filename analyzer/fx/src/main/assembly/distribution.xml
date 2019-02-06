@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- Copyright (C) 2015 Takahide Fujii
+ Copyright (C) 2015 - 2019 Takahide Fujii
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -50,13 +50,6 @@
             <outputDirectory>heapstats-analyzer-${project.version}/lib</outputDirectory>
             <includes>
                 <include>*.jar</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${pom.basedir}</directory>
-            <outputDirectory>heapstats-analyzer-${project.version}</outputDirectory>
-            <includes>
-                <include>THIRD_PARTY_README</include>
             </includes>
         </fileSet>
     </fileSets>
