@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- Copyright (C) 2015-2017 Nippon Telegraph and Telephone Corporation
+ Copyright (C) 2015-2019 Nippon Telegraph and Telephone Corporation
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<SplitPane dividerPositions="0.2551813471502591" focusTraversable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="160.0" prefWidth="200.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.plugin.builtin.snapshot.tabs.SummaryController">
+<SplitPane dividerPositions="0.2551813471502591" focusTraversable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="160.0" prefWidth="200.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.fx.plugin.builtin.snapshot.tabs.SummaryController">
     <items>
         <TableView fx:id="summaryTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
             <columns>
@@ -40,7 +40,7 @@
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
             </columnResizePolicy>
         </TableView>
-        <SplitPane dividerPositions="0.25, 0.5, 0.75" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" orientation="VERTICAL" stylesheets="@/jp/co/ntt/oss/heapstats/plugin/builtin/snapshot/snapshot.css">
+        <SplitPane dividerPositions="0.25, 0.5, 0.75" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" orientation="VERTICAL" stylesheets="@/jp/co/ntt/oss/heapstats/fx/plugin/builtin/snapshot/snapshot.css">
             <items>
                 <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
                     <children>

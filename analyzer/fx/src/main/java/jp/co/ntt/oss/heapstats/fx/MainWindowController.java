@@ -242,7 +242,7 @@ public class MainWindowController implements Initializable, WindowController {
     }
 
     private void initializeAboutDialog(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/jp/co/ntt/oss/heapstats/aboutDialog.fxml"), HeapStatsUtils.getResourceBundle());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/jp/co/ntt/oss/heapstats/fx/aboutDialog.fxml"), HeapStatsUtils.getResourceBundle());
 
         try {
             loader.load();
