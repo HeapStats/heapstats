@@ -24,7 +24,7 @@
     xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2
                         http://maven.apache.org/xsd/assembly-1.1.2.xsd">
 
-    <id>bin</id>
+    <id>${os.name}-${os.arch}</id>
     <formats>
         <format>dir</format>
         <format>zip</format>
@@ -32,35 +32,31 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <outputDirectory>heapstats-analyzer-${project.version}</outputDirectory>
+            <directory>${project.build.directory}${file.separator}${imageName}</directory>
+            <outputDirectory>${file.separator}</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${pom.basedir}</directory>
+            <outputDirectory>${file.separator}bin</outputDirectory>
+            <includes>
+                <include>heapstats-analyzer</include>
+                <include>heapstats-analyzer.bat</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${pom.basedir}</directory>
+            <outputDirectory>${file.separator}</outputDirectory>
             <includes>
                 <include>filterDefine.xsd</include>
                 <include>heapstats.properties</include>
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${project.build.directory}</directory>
-            <outputDirectory>heapstats-analyzer-${project.version}</outputDirectory>
-            <includes>
-                <include>*.jar</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${pom.basedir}/lib</directory>
-            <outputDirectory>heapstats-analyzer-${project.version}/lib</outputDirectory>
+            <directory>${project.build.directory}${file.separator}dependency</directory>
+            <outputDirectory>${file.separator}${file.separator}mods</outputDirectory>
             <includes>
                 <include>*.jar</include>
             </includes>
         </fileSet>
     </fileSets>
-    <dependencySets>
-        <dependencySet>
-            <unpack>false</unpack>
-            <scope>runtime</scope>
-            <useProjectArtifact>false</useProjectArtifact>
-            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-            <outputDirectory>heapstats-analyzer-${project.version}/lib</outputDirectory>
-        </dependencySet>
-    </dependencySets>
-
 </assembly>
