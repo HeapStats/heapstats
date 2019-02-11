@@ -268,7 +268,7 @@
                                 <argument>--module-path</argument>
                                 <argument>${java.home}/jmods${path.separator}${project.build.directory}/fxmods</argument>
                                 <argument>--add-modules</argument>
-                                <argument>java.logging,java.management,java.rmi,javafx.controls,javafx.fxml,javafx.swing</argument>
+                                <argument>java.logging,java.management,java.rmi,javafx.controls,javafx.fxml,javafx.swing,jdk.unsupported.desktop</argument>
                                 <argument>--output</argument>
                                 <argument>${project.build.directory}/${imageName}</argument>
                                 <argument>--compress</argument>

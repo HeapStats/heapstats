@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2016 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2015-2019 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -183,7 +183,7 @@ public class SummaryController implements Initializable {
         free = new XYChart.Series<>();
         free.setName("Free");
 
-        String cssName = "/jp/co/ntt/oss/heapstats/plugin/builtin/snapshot/tabs/";
+        String cssName = "/jp/co/ntt/oss/heapstats/fx/plugin/builtin/snapshot/tabs/";
         if (HeapStatsUtils.getHeapOrder()) {
             heapChart.getData().addAll(youngUsage, oldUsage, free);
             cssName += "heapsummary-bottom-young.css";
@@ -191,7 +191,7 @@ public class SummaryController implements Initializable {
             heapChart.getData().addAll(oldUsage, youngUsage, free);
             cssName += "heapsummary-bottom-old.css";
         }
-        heapChart.getStylesheets().add(cssName);
+        heapChart.getStylesheets().add(SummaryController.class.getResource(cssName).toString());
 
         instances = new XYChart.Series<>();
         instances.setName("Instances");

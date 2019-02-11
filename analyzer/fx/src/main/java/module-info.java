@@ -36,6 +36,12 @@ module heapstats.fx {
     //   https://github.com/jgraph/jgraphx/pull/93
     requires com.mxgraph.jgraphx;
     
-    exports jp.co.ntt.oss.heapstats.fx to javafx.graphics, javafx.fxml;
+    exports jp.co.ntt.oss.heapstats.fx to javafx.graphics;
     opens jp.co.ntt.oss.heapstats.fx to javafx.fxml;
+    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.log to javafx.fxml;
+    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.log.tabs to javafx.fxml;
+    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.snapshot to javafx.fxml;
+    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.snapshot.tabs to javafx.fxml;
+    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.threadrecorder to javafx.fxml;
+    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.jvmlive to javafx.fxml;
 }

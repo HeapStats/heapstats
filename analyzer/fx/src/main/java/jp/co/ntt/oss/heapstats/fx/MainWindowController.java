@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2017 Yasumasa Suenaga
+ * Copyright (C) 2014-2019 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -296,15 +296,16 @@ public class MainWindowController implements Initializable, WindowController {
             }
         }
 
-        Path libPath = appJarPath.getParent().resolve("lib");
+        Path libPath = appJarPath.getParent();
         URL[] jarURLList = null;
 
         try(DirectoryStream<Path> jarPaths = Files.newDirectoryStream(libPath, "*.jar")){
             jarURLList = StreamSupport.stream(jarPaths.spliterator(), false)
                                       .map(new FunctionWrapper<>(p -> p.toUri().toURL()))
-                                      .filter(u -> !u.getFile().endsWith("heapstats-core.jar"))
-                                      .filter(u -> !u.getFile().endsWith("heapstats-mbean.jar"))
-                                      .filter(u -> !u.getFile().endsWith("jgraphx.jar"))
+                                      .filter(u -> !u.getFile().startsWith("heapstats-"))
+                                      .filter(u -> !u.getFile().startsWith("javax.activation-api"))
+                                      .filter(u -> !u.getFile().startsWith("jaxb-api"))
+                                      .filter(u -> !u.getFile().startsWith("jgraphx-"))
                                       .collect(Collectors.toList())
                                       .toArray(new URL[0]);
         }
@@ -322,7 +323,7 @@ public class MainWindowController implements Initializable, WindowController {
         String resourceName = "/" + this.getClass().getName().replace('.', '/') + ".class";
         String appJarString = this.getClass().getResource(resourceName).getPath();
 
-        pluginClassLoader = appJarString.contains("!") ? createPluginClassLoader(appJarString.substring(0, appJarString.indexOf('!')).replaceFirst("file:", ""))
+        pluginClassLoader = appJarString.contains("!") ? createPluginClassLoader(appJarString.substring(0, appJarString.indexOf('!')).replaceFirst("file://", ""))
                                                        : MainWindowController.class.getClassLoader();
 
         FXMLLoader.setDefaultClassLoader(pluginClassLoader);
