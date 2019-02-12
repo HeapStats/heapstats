@@ -432,7 +432,7 @@ fi
 
 # end of configure attacher  ---------------------------------------------------
 
-AC_CONFIG_FILES([Makefile agent/Makefile agent/src/Makefile agent/src/heapstats-engines/Makefile agent/attacher/Makefile agent/attacher/heapstats-attacher agent/src/iotracer/Makefile mbean/Makefile mbean/native/Makefile analyzer/cli/heapstats-cli])
+AC_CONFIG_FILES([Makefile agent/Makefile agent/src/Makefile agent/src/heapstats-engines/Makefile agent/attacher/Makefile agent/attacher/heapstats-attacher agent/src/iotracer/Makefile mbean/Makefile mbean/native/Makefile])
 AC_CONFIG_FILES([agent/heapstats.conf])
 
 AC_OUTPUT

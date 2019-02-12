@@ -98,7 +98,7 @@ DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES = analyzer/cli/heapstats-cli
+CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -159,9 +159,9 @@ DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/./m4/compile \
 	$(top_srcdir)/./m4/config.guess $(top_srcdir)/./m4/config.sub \
 	$(top_srcdir)/./m4/install-sh $(top_srcdir)/./m4/missing \
-	$(top_srcdir)/analyzer/cli/heapstats-cli.in ./m4/compile \
-	./m4/config.guess ./m4/config.sub ./m4/depcomp ./m4/install-sh \
-	./m4/missing AUTHORS COPYING ChangeLog INSTALL NEWS README
+	./m4/compile ./m4/config.guess ./m4/config.sub ./m4/depcomp \
+	./m4/install-sh ./m4/missing AUTHORS COPYING ChangeLog INSTALL \
+	NEWS README
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -360,8 +360,6 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
-analyzer/cli/heapstats-cli: $(top_builddir)/config.status $(top_srcdir)/analyzer/cli/heapstats-cli.in
-	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run 'make' without going through this Makefile.
