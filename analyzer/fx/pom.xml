@@ -68,7 +68,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>jp.co.ntt.oss.heapstats.HeapStatsFXAnalyzer</mainClass>
         <imageName>heapstats-analyzer-${project.version}</imageName>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
