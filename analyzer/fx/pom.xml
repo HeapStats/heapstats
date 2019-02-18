@@ -281,6 +281,28 @@
     </build>
     <profiles>
         <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <name>Linux</name>
+                </os>
+            </activation>
+            <properties>
+                <package.os.name>linux</package.os.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <package.os.name>windows</package.os.name>
+            </properties>
+        </profile>
+        <profile>
             <id>release-sign-artifacts</id>
             <!-- releasing for maven repository, mvn -DperformRelease=true deploy -->
             <activation>

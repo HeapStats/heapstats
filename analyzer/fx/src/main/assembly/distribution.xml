@@ -24,12 +24,12 @@
     xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2
                         http://maven.apache.org/xsd/assembly-1.1.2.xsd">
 
-    <id>${os.name}-${os.arch}</id>
+    <id>${package.os.name}-${os.arch}</id>
     <formats>
         <format>dir</format>
         <format>zip</format>
     </formats>
-    <includeBaseDirectory>false</includeBaseDirectory>
+    <includeBaseDirectory>true</includeBaseDirectory>
     <fileSets>
         <fileSet>
             <directory>${project.build.directory}${file.separator}${imageName}</directory>
