@@ -61,8 +61,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <imageName>heapstats-cli-${project.version}</imageName>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>13</maven.compiler.source>
+        <maven.compiler.target>13</maven.compiler.target>
     </properties>
 
     <organization>
@@ -176,6 +176,7 @@
                                 <argument>2</argument>
                                 <argument>--no-header-files</argument>
                                 <argument>--no-man-pages</argument>
+                                <argument>${jlink.argument}</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -255,6 +256,7 @@
             </activation>
             <properties>
                 <package.os.name>linux</package.os.name>
+                <jlink.argument>--strip-native-debug-symbols=exclude-debuginfo-files</jlink.argument>
             </properties>
         </profile>
         <profile>
@@ -266,6 +268,7 @@
             </activation>
             <properties>
                 <package.os.name>windows</package.os.name>
+                <jlink.argument/>
             </properties>
         </profile>
         <profile>
