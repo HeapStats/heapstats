@@ -1,3 +1,7 @@
+2019-07-24 KUBOTA Yuji <kubota.yuji@gmail.com>
+
+	* Bug 3747: Add note to avoid misrecognized about ResourceExhausted
+
 2019-02-07 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3692: Remove JGraphX binary from source tree
