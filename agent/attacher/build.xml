@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
  
 <!--
-     Copyright (C) 2015 Yasumasa Suenaga
+     Copyright (C) 2015-2019 Yasumasa Suenaga
  
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@
   <property environment="env"/>
  
   <target name="compile">
-    <javac srcdir="${src.dir}" destdir="${build.dir}" source="6" target="6"
+    <javac srcdir="${src.dir}" destdir="${build.dir}" source="7" target="7"
                         debug="on" classpath="${env.JAVA_HOME}/lib/tools.jar"
                                                     includeantruntime="false"/>
   </target>
