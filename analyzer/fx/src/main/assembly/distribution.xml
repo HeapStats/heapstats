@@ -39,8 +39,7 @@
             <directory>${pom.basedir}</directory>
             <outputDirectory>${file.separator}bin</outputDirectory>
             <includes>
-                <include>heapstats-analyzer</include>
-                <include>heapstats-analyzer.bat</include>
+                <include>heapstats-analyzer${launcher.ext}</include>
             </includes>
         </fileSet>
         <fileSet>
