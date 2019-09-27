@@ -70,7 +70,7 @@ NOT support it. In addition, OracleJDK needs to be run with the following option
 
 If you want to analyze HeapStats SnapShot on CUI environment, you can use HeapStats CLI.
 
-  $ java -jar heapstats-cli.jar
+  $ heapstats-cli
 
 If you want to see details, please run heapstats-cli with -help .
 

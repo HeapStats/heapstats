@@ -5,29 +5,31 @@
     xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2
                         http://maven.apache.org/xsd/assembly-1.1.2.xsd">
 
-    <id>bin</id>
+    <id>${package.os.name}-${os.arch}</id>
     <formats>
         <format>dir</format>
         <format>zip</format>
     </formats>
-    <includeBaseDirectory>false</includeBaseDirectory>
+    <includeBaseDirectory>true</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>${project.build.directory}</directory>
-            <outputDirectory>heapstats-cli-${project.version}</outputDirectory>
+            <directory>${project.build.directory}${file.separator}${imageName}</directory>
+            <outputDirectory>${file.separator}</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${pom.basedir}</directory>
+            <outputDirectory>${file.separator}bin</outputDirectory>
+            <includes>
+                <include>heapstats-cli</include>
+                <include>heapstats-cli.bat</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${project.build.directory}${file.separator}dependency</directory>
+            <outputDirectory>${file.separator}${file.separator}mods</outputDirectory>
             <includes>
                 <include>*.jar</include>
             </includes>
         </fileSet>
     </fileSets>
-    <dependencySets>
-        <dependencySet>
-            <unpack>false</unpack>
-            <scope>runtime</scope>
-            <useProjectArtifact>false</useProjectArtifact>
-            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-            <outputDirectory>heapstats-cli-${project.version}/lib</outputDirectory>
-        </dependencySet>
-    </dependencySets>
-
 </assembly>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (C) 2014-2019 Yasumasa Suenaga
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane id="stackPane" fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.fx.MainWindowController">
+    <children>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <children>
+                <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="TOP_LEFT">
+                    <menus>
+                        <Menu mnemonicParsing="false" text="%menu.file">
+                            <items>
+                                <Menu mnemonicParsing="false" text="%menu.file.open">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#onSnapShotOpenClick" text="%menu.file.open.snapshot" />
+                                        <MenuItem mnemonicParsing="false" onAction="#onLogOpenClick" text="%menu.file.open.log" />
+                              <MenuItem mnemonicParsing="false" onAction="#onThreadRecorderOpenClick" text="%menu.file.open.threadrecorder" />
+                                    </items>
+                                </Menu>
+                                <MenuItem mnemonicParsing="false" onAction="#onExitClick" text="%menu.file.exit" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="%menu.option">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#onRankLevelClick" text="%menu.option.ranklevel" />
+                                <Menu mnemonicParsing="false" text="%menu.option.csv">
+                                    <items>
+                                        <Menu mnemonicParsing="false" text="%menu.option.csv.heap">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" onAction="#onHeapAllClick" text="%menu.option.csv.heap.all" />
+                                                <MenuItem mnemonicParsing="false" onAction="#onHeapSelectedClick" text="%menu.option.csv.heap.selected" />
+                                            </items>
+                                        </Menu>
+                                        <Menu mnemonicParsing="false" text="%menu.option.csv.gc">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" onAction="#onGCAllClick" text="%menu.option.csv.gc.all" />
+                                                <MenuItem mnemonicParsing="false" onAction="#onGCSelectedClick" text="%menu.option.csv.gc.selected" />
+                                            </items>
+                                        </Menu>
+                                    </items>
+                                </Menu>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="%menu.help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#onHowToClick" text="%menu.help.howto" />
+                                <MenuItem mnemonicParsing="false" onAction="#onAboutMenuClick" text="%menu.help.about" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <TabPane id="tabPane" fx:id="tabPane" layoutY="25.0" prefHeight="618.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0" />
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

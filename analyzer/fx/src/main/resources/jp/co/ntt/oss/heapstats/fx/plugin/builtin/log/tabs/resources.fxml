@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (C) 2015-2019 Nippon Telegraph and Telephone Corporation
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.StackedAreaChart?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+
+<GridPane fx:id="chartGrid" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="479.0" prefWidth="772.0" stylesheets="@/jp/co/ntt/oss/heapstats/fx/plugin/builtin/log/log.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.fx.plugin.builtin.log.tabs.LogResourcesController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <children>
+                <LineChart id="threadChart" fx:id="threadChart" animated="false" legendVisible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" title="%chart.thread">
+                    <xAxis>
+                        <NumberAxis autoRanging="false" minorTickVisible="false" side="BOTTOM" tickLabelsVisible="false" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis minorTickVisible="false" side="LEFT" />
+                    </yAxis>
+                </LineChart>
+                <AnchorPane fx:id="threadsAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
+            </children>
+        </StackPane>
+        <TableView fx:id="procSummary" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <columns>
+                <TableColumn id="category" fx:id="categoryColumn" editable="false" prefWidth="200.0" sortable="false" />
+                <TableColumn id="value" fx:id="valueColumn" editable="false" prefWidth="200.0" sortable="false" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+        <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
+            <children>
+                <StackedAreaChart id="javaCPUChart" fx:id="javaCPUChart" animated="false" legendVisible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" title="%chart.javacpu">
+                    <xAxis>
+                        <NumberAxis autoRanging="false" minorTickVisible="false" side="BOTTOM" tickLabelsVisible="false" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis autoRanging="false" label="\%" lowerBound="0.0" minorTickVisible="false" side="LEFT" tickUnit="10.0" upperBound="100.0d" />
+                    </yAxis>
+                </StackedAreaChart>
+                <AnchorPane fx:id="javaCPUAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
+            </children>
+        </StackPane>
+        <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" GridPane.columnIndex="1">
+            <children>
+                <StackedAreaChart id="systemCPUChart" fx:id="systemCPUChart" animated="false" legendVisible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" title="%chart.systemcpu">
+                    <xAxis>
+                        <NumberAxis autoRanging="false" minorTickVisible="false" side="BOTTOM" tickLabelsVisible="false" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis autoRanging="false" label="\%" lowerBound="0.0" minorTickVisible="false" side="LEFT" tickUnit="10.0" upperBound="100.0d" />
+                    </yAxis>
+                </StackedAreaChart>
+                <AnchorPane fx:id="systemCPUAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
+            </children>
+        </StackPane>
+        <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" GridPane.rowIndex="1">
+            <children>
+                <LineChart id="javaMemoryChart" fx:id="javaMemoryChart" animated="false" legendVisible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" title="%chart.nativememory">
+                    <xAxis>
+                        <NumberAxis autoRanging="false" minorTickVisible="false" side="BOTTOM" tickLabelsVisible="false" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="MB" minorTickVisible="false" side="LEFT" />
+                    </yAxis>
+                </LineChart>
+                <AnchorPane fx:id="javaMemoryAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
+            </children>
+        </StackPane>
+        <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" GridPane.rowIndex="2">
+            <children>
+                <LineChart id="safepointChart" fx:id="safepointChart" animated="false" legendVisible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" title="%chart.safepoint.count">
+                    <xAxis>
+                        <NumberAxis autoRanging="false" minorTickVisible="false" side="BOTTOM" tickLabelsVisible="false" visible="false" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis minorTickVisible="false" side="LEFT" />
+                    </yAxis>
+                </LineChart>
+                <AnchorPane fx:id="safepointAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
+            </children>
+        </StackPane>
+        <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <children>
+                <LineChart id="safepointTimeChart" fx:id="safepointTimeChart" animated="false" legendVisible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" title="%chart.safepoint.time">
+                    <xAxis>
+                        <NumberAxis autoRanging="false" minorTickVisible="false" side="BOTTOM" tickLabelsVisible="false" visible="false" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="ms" minorTickVisible="false" side="LEFT" />
+                    </yAxis>
+                </LineChart>
+                <AnchorPane fx:id="safepointTimeAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
+            </children>
+        </StackPane>
+        <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" GridPane.rowIndex="3">
+            <children>
+                <LineChart id="monitorChart" fx:id="monitorChart" animated="false" legendVisible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" title="%chart.monitorcontention">
+                    <xAxis>
+                        <NumberAxis autoRanging="false" minorTickVisible="false" side="BOTTOM" tickLabelsVisible="false" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis minorTickVisible="false" side="LEFT" />
+                    </yAxis>
+                </LineChart>
+                <AnchorPane fx:id="monitorAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mouseTransparent="true" />
+            </children>
+        </StackPane>
+    </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</GridPane>

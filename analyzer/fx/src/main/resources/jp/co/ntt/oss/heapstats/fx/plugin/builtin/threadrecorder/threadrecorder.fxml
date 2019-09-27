@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (C) 2015-2019 Yasumasa Suenaga
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="600.0" prefWidth="800.0" spacing="10.0" stylesheets="@threadrecorder.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.co.ntt.oss.heapstats.fx.plugin.builtin.threadrecorder.ThreadRecorderController">
+    <children>
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
+         <children>
+              <Button mnemonicParsing="false" onAction="#onOpenBtnClick" text="%button.file" />
+              <TextField fx:id="fileNameBox" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" HBox.hgrow="ALWAYS" />
+              <Button fx:id="okBtn" disable="true" mnemonicParsing="false" onAction="#onOkBtnClick" text="OK" />
+         </children>
+      </HBox>
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
+         <children>
+              <Label text="%label.timerange" />
+              <SplitPane fx:id="rangePane" disable="true" dividerPositions="0.0, 1.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" HBox.hgrow="ALWAYS">
+                  <items>
+                      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" prefWidth="0.0" styleClass="rect-range-unselected" />
+                      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" styleClass="rect-range-selected" />
+                      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="0.0" prefWidth="0.0" styleClass="rect-range-unselected" />
+                  </items>
+              </SplitPane>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" spacing="5.0">
+         <children>
+              <Label fx:id="startTimeLabel" />
+              <Label text="-" />
+              <Label fx:id="endTimeLabel" />
+         </children>
+      </HBox>
+        <TableView fx:id="timelineView" editable="true" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="showColumn" prefWidth="37.0" />
+                <TableColumn fx:id="threadNameColumn" editable="false" prefWidth="166.0" text="%table.column.thread" />
+                <TableColumn fx:id="timelineColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="525.0" sortable="false" />
+            </columns>
+        </TableView>
+      <GridPane vgap="5.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints />
+          <RowConstraints />
+        </rowConstraints>
+         <children>
+            <Label alignment="CENTER" prefWidth="120.0" styleClass="rect-run" text="Run" />
+            <Label alignment="CENTER" prefWidth="120.0" styleClass="rect-monitorwait" text="Monitor Wait" GridPane.columnIndex="1" />
+            <Label alignment="CENTER" prefWidth="120.0" styleClass="rect-monitorcontended" text="Monitor Contended" GridPane.columnIndex="2" />
+            <Label alignment="CENTER" prefWidth="120.0" styleClass="rect-threadsleep" text="Sleep" GridPane.columnIndex="3" />
+            <Label alignment="CENTER" prefWidth="120.0" styleClass="rect-park" text="Park" GridPane.columnIndex="4" />
+            <Label alignment="CENTER" prefWidth="120.0" styleClass="rect-filewrite" text="File Write" GridPane.rowIndex="1" />
+            <Label alignment="CENTER" prefWidth="120.0" styleClass="rect-fileread" text="File Read" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label alignment="CENTER" prefWidth="120.0" styleClass="rect-socketwrite" text="Socket Write" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label alignment="CENTER" prefWidth="120.0" styleClass="rect-socketread" text="Socket Read" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Label alignment="CENTER" prefWidth="120.0" styleClass="rect-fusion" text="Fusion" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+    </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>
