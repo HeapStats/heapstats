@@ -24,8 +24,6 @@ agent/heapstats.conf
 autom4te.cache/
 agent/attacher/dist/*.jar
 agent/attacher/heapstats-attacher
-analyzer/cli/heapstats-cli
-analyzer/fx/heapstats-analyzer
 *.o
 *.lo
 *.Po

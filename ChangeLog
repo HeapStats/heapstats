@@ -1,3 +1,7 @@
+2019-10-05 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3754: Could not bundle heapstats-cli launcher
+
 2019-09-27 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3752: Migrate to OpenJFX 13

@@ -20,8 +20,7 @@
             <directory>${pom.basedir}</directory>
             <outputDirectory>${file.separator}bin</outputDirectory>
             <includes>
-                <include>heapstats-cli</include>
-                <include>heapstats-cli.bat</include>
+                <include>heapstats-cli${launcher.ext}</include>
             </includes>
         </fileSet>
         <fileSet>

@@ -1,0 +1,3 @@
+#!/bin/sh
+DIR=`dirname $0`
+$DIR/java --module-path $DIR/../mods -m heapstats.cli/jp.co.ntt.oss.heapstats.cli.CliMain $@

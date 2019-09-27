@@ -257,6 +257,7 @@
             <properties>
                 <package.os.name>linux</package.os.name>
                 <jlink.argument>--strip-native-debug-symbols=exclude-debuginfo-files</jlink.argument>
+                <launcher.ext/>
             </properties>
         </profile>
         <profile>
@@ -269,6 +270,7 @@
             <properties>
                 <package.os.name>windows</package.os.name>
                 <jlink.argument/>
+                <launcher.ext>.bat</launcher.ext>
             </properties>
         </profile>
         <profile>
