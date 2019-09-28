@@ -118,7 +118,7 @@ Linux x64 or Windows x64
 
 ## How to use ##
 
-Run `<cli dir>/bin/heapstats-cli` (Linux) or `<cli dir>\bin\heapstats-cli.bat (Windows)
+Run `<cli dir>/bin/heapstats-cli` (Linux) or `<cli dir>\bin\heapstats-cli.bat` (Windows)
 
 If you want to see options, please run `heapstats-cli` with `-help`.
 
