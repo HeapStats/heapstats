@@ -16,31 +16,19 @@
           libtbb2 and libtbb-dev in official Debian repository.
 
   Analyzer:
-    - Java SE 8 or later
-    - JavaFX 8 or later
+    - Java SE 13 or later
+    - JavaFX 13 or later
     - Maven2 or later
 
 
 2. How to build
 
-  (1) run configure with path to JDK 8
+  (1) run configure with path to JDK 13
 
-       $ ./configure --with-jdk=/path/to/JDK8
-
-      *HINT* HeapStats Analyzer requires JavaFX 8.
-             OpenJDK does not provide JavaFX. Open source JavaFX is OpenJFX.
-             If you have not installed OpenJFX, You have to pass OracleJDK8.
+       $ ./configure --with-jdk=/path/to/JDK13
 
   (2) run make
        $ make
-
-      *HINT* If your machine does not have JavaFX (OpenJFX or OracleJDK),
-             you can avoid to build HeapStats Analyzer as below:
-
-               $ make agent  <- build HeapStats agent
-               $ make mbean  <- build HeapStats MBean
-               $ mvn -am -pl analyzer/cli package  <- build HeapStats CLI
-
 
   configure script provides several useful options.
   If you want to know them, please run "./configure --help" .
