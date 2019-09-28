@@ -1,49 +1,86 @@
 HeapStats
 ===================
 
-HeapStats is Java troubleshooting tool.
-This tool is composed of three programs:
+HeapStats is Java troubleshooting tool.  
+This tool suites of three applications.
 
 * Agent
- * HeapStats JVMTI agent for gathering JavaVM runtime information continuously.
+    * HeapStats JVMTI agent for gathering JavaVM runtime information continuously.
 * Analyzer
- * HeapStats JavaFX GUI analyzer for analysis by various graphs.
+    * HeapStats JavaFX GUI analyzer for analysis by various graphs.
 * CLI
- * HeapStats commandline analyzer.
+    * HeapStats commandline analyzer.
 
+Also two supplemental applications are available:
 
-## Agent ##
+* MBean
+    * MBean for operating HeapStats Agent via JMX
+    * See [mbean/README.md](mbean/README.md) for more details
+* Attacher
+    * Attach JVMTI agent to existing process
+    * See [agent/attacher/README.md](agent/attacher/README.md) for more details
+
+# Agent #
 
 Agent gathers various JavaVM runtime information such as the below.
 
- * The amount of instances and total size per live object
- * The reference relationship of objects on Java Heap
- * Thread condition
- * and more. More detailed is [here](http://icedtea.classpath.org/wiki/HeapStats/information_to_be_collected).
+* The amount of instances and total size per live object
+* The reference relationship of objects on Java Heap
+* Thread condition
+* Process information
+
+More detailes are [here](http://icedtea.classpath.org/wiki/HeapStats/information_to_be_collected).
+
+## Requirements ##
+
+* Linux x64 / x86_64 / AArch32
+* Oracle JDK / OpenJDK 6u18 or later
+
+## How to use ##
 
 You can attach HeapStats agent by any way of the following:
 
-* -agentlib:heapstats[=conf]
- * If libheapstats.so is located at LD_LIBRARY_PATH, you can pass -agentlib option to java.
-* -agentpath:/path/to/heapstats[=conf]
- * Pass libheapstats.so with -agentpath option to java.
-* heapstats-attacher
- * If you want to attach HeapStats to existed process, you can use this script.
+* `-agentlib:heapstats[=conf]`
+    * JVM will load `libheapstats.so` from library path.
+    * `libheapstats.so` should be resolved via `LD_LIBRARY_PATH` or library path (e.g. `/etc/ld.so.conf`)
+* `-agentpath:/path/to/heapstats[=conf]`
+    * JVM will load `libheapstats.so` from specified path
+* `heapstats-attacher`
+    * Attach to existing process
+    * Recommend to use on JDK 8 or earlier
+* `jcmd <PID> JVMTI.agent_load /path/to/libheapstats.so`
+    * Attach to existing process
+    * `JVMTI.agent_load` has been introduced in Java 9
+    * Recommend to specify with absolute path
 
-If you want to set specified configuration, you can pass it to -agentlib/-agentpath after "=config file" .
+## Build requirements ##
 
+* GNU make
+* Apache Ant
+* GCC
+* JDK 7 or later
+* Intel TBB
+* NetSNMP
+* GNU Binutils
 
-## Analyzer ##
+See also: [HeapStats Builder](https://github.com/HeapStats/heapstats-builder)
 
-HeapStats analyzer is GUI application for analyzing HeapStats SnapShot.
-You can run it on any GUI environment which has JavaFX runtime.
+# Analyzer #
 
-HeapStats analyzer supports JDP autodiscovery and Error Report Transmission.
+Analyzer is GUI application for analyzing data which are collected from Agent.  
+Also it supports JDP autodiscovery and Error Report Transmission.
+
+## Requirements ##
+
+Linux x64 or Windows x64
+
+## How to use ##
+
+Run `<analyzer dir>/bin/heapstats-analyzer` (Linux) or `<analyzer dir>\bin\heapstats-analyzer.bat` (Windows)
 
 ### JDP ###
 
-The automatic discovery function of JDP (Java Discovery Protocol) can be
-enabled by the following JVM options.
+The automatic discovery on JDP (Java Discovery Protocol) can be enabled by the following JVM options.
 
 ```
 -Dcom.sun.management.jmxremote.port=<JMX port>
@@ -52,38 +89,65 @@ enabled by the following JVM options.
 -Dcom.sun.management.jmxremote.autodiscovery=true
 ```
 
-The JDP function sends a packet at regular intervals: 5 seconds by default.
-If analyzer can NOT receive a JDP packet from a monitoring JVM instance,
-the instance's name displayed on the screen will become orange.
+JDP sends a packet per 5 seconds by default. If Analyzer can NOT receive a JDP packet from a monitoring JVM instance, color of its name on the screen will become orange.
 
 ### Error Report Transmission ###
 
-OracleJDK can provide a real-time detection of JVM crash, but OpenJDK does
-NOT support it. In addition, OracleJDK needs to be run with the following options.
+Oracle JDK can provide a real-time detection of JVM crash, but OpenJDK DOES NOT support it. In addition, Oracle JDK needs to be run with the following options.
 
 ```
 -XX:+TransmitErrorReport
 -XX:ErrorReportServer=<address>:<port (4711 by default)>
 ```
 
-## CLI ##
+**NOTE: Error Report Transmission has been removed since JDK 12**
 
-If you want to analyze HeapStats SnapShot on CUI environment, you can use HeapStats CLI.
+## Build requirements ##
 
-  $ heapstats-cli
+* Apache Maven
+* JDK 13 or later
 
-If you want to see details, please run heapstats-cli with -help .
+# CLI #
 
-## Documents and Binaries ##
+If you want to analyze data which are collected by HeapStats Agent on CUI environment, you can use HeapStats CLI.
 
-More detailed documents and released binaries are hosted at icedtea community: http://icedtea.classpath.org/wiki/HeapStats
+## Requirements ##
 
-## Contributing ##
+Linux x64 or Windows x64
+
+## How to use ##
+
+Run `<cli dir>/bin/heapstats-cli` (Linux) or `<cli dir>\bin\heapstats-cli.bat` (Windows)
+
+If you want to see options, please run `heapstats-cli` with `-help`.
+
+## Build requirements ##
+
+* Apache Maven
+* JDK 13 or later
+
+# Documents and Binaries #
+
+More detailes and released binaries are available on icedtea community: http://icedtea.classpath.org/wiki/HeapStats
+
+# Build all #
+
+```
+$ configure --with-jdk=/path/to/jdk13
+$ make
+```
+
+# Testing #
+
+* Basic test is [agent/test](agent/test)
+* Race condition tests are available on [race-condition](https://github.com/HeapStats/race-condition)
+
+# Contributing #
 
 Contribution are most welcome! HeapStats is an open source project under the GNU General Public License, version 2.
-See [CONTRIBUTING.md](https://github.com/HeapStats/heapstats/blob/master/CONTRIBUTING.md) for details.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-## License ##
+# License #
 
- [GNU General Public License, version 2](https://github.com/HeapStats/heapstats/blob/master/COPYING)
+[GNU General Public License, version 2](COPYING)
 
