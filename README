@@ -15,11 +15,10 @@ Also two supplemental applications are available:
 
 * MBean
     * MBean for operating HeapStats Agent via JMX
-    * Deploy `heapstats-mbean.jar` and `libheapstats-mbean.so` to the target process
+    * See [mbean/README.md](mbean/README.md) for more details
 * Attacher
     * Attach JVMTI agent to existing process
-    * Run `heapstats-attacher`
-    * This application provides equivalent feature with `jcmd JVMTI.agent_load` which is introduced in Java 9
+    * See [agent/attacher/README.md](agent/attacher/README.md) for more details
 
 # Agent #
 
@@ -59,7 +58,7 @@ You can attach HeapStats agent by any way of the following:
 * GNU make
 * Apache Ant
 * GCC
-* JDK 6 or later
+* JDK 7 or later
 * Intel TBB
 * NetSNMP
 * GNU Binutils

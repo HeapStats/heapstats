@@ -5,7 +5,7 @@
 1. Pre-Requirements
 
   Agent:
-    - Java SE 6 or later
+    - JDK 7  or later
     - Maven2 or later
     - Ant 1.8 or later
     - pcre-devel 6 or later
@@ -16,18 +16,16 @@
           libtbb2 and libtbb-dev in official Debian repository.
 
   Analyzer:
-    - Java SE 13 or later
+    - JDK 13 or later
     - JavaFX 13 or later
     - Maven2 or later
 
 
 2. How to build
 
-  (1) run configure with path to JDK 13
+  Run `configure` and `make` as following:
 
        $ ./configure --with-jdk=/path/to/JDK13
-
-  (2) run make
        $ make
 
   configure script provides several useful options.
