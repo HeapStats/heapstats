@@ -1,3 +1,7 @@
+2019-10-07 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3757: Update SPEC for modularity
+
 2019-10-05 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3754: Could not bundle heapstats-cli launcher
