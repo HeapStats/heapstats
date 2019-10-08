@@ -1428,6 +1428,8 @@ int TLogManager::makeSocketOwnerFile(char const *basePath) {
  *         Don't forget deallocate memory.<br>
  *         Process is failure, if value is null.
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
 char *TLogManager::createArchiveName(TMSecTime nowTime) {
   time_t nowTimeSec = 0;
   struct tm time_struct = {0};
@@ -1436,8 +1438,6 @@ char *TLogManager::createArchiveName(TMSecTime nowTime) {
   char extPart[PATH_MAX] = {0};
   char namePart[PATH_MAX] = {0};
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-truncation"
   /* Search extension. */
   char *archiveFileName = conf->ArchiveFile()->get();
   char *extPos = strrchr(archiveFileName, '.');
@@ -1449,7 +1449,6 @@ char *TLogManager::createArchiveName(TMSecTime nowTime) {
     /* Not found extension in path. */
     strncpy(namePart, archiveFileName, PATH_MAX);
   }
-#pragma GCC diagnostic pop
 
   /* Get now datetime and convert to string. */
   nowTimeSec = (time_t)(nowTime / 1000);
@@ -1466,3 +1465,4 @@ char *TLogManager::createArchiveName(TMSecTime nowTime) {
   /* Create unique file name. */
   return createUniquePath(arcName, false);
 }
+#pragma GCC diagnostic pop

@@ -350,6 +350,8 @@ void removeTempDir(char const *basePath) {
  * \param isDirectory [in] Path is directory.
  * \return Unique path.<br>Don't forget deallocate.
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
 char *createUniquePath(char *path, bool isDirectory) {
   /* Variable for temporary path. */
   char tempPath[PATH_MAX] = {0};
@@ -369,8 +371,6 @@ char *createUniquePath(char *path, bool isDirectory) {
   /* Search extension. */
   char *extPos = strrchr(path, '.');
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-truncation"
   /* If create path for file and exists extension. */
   if (!isDirectory && extPos != NULL) {
     int pathSize = (extPos - path);
@@ -386,7 +386,6 @@ char *createUniquePath(char *path, bool isDirectory) {
 
   /* Copy default path. */
   strncpy(tempPath, path, PATH_MAX);
-#pragma GCC diagnostic pop
 
   /* Try make unique path loop. */
   const unsigned long int MAX_RETRY_COUNT = 1000000;
@@ -460,6 +459,7 @@ char *createUniquePath(char *path, bool isDirectory) {
 
   return result;
 }
+#pragma GCC diagnostic pop
 
 /*!
  * \brief Get parent directory path.

@@ -1,3 +1,7 @@
+2019-10-08 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3759: HeapStats Agent could not be built on CentOS 6
+
 2019-10-07 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3757: Update SPEC for modularity
