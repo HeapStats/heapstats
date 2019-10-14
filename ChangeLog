@@ -1,6 +1,7 @@
 2019-11-11 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3764: Agent thread might not be stopped when it works
+	* Bug 3766: HeapStats Analyzer plugin does not work
 
 2019-11-10 Yasumasa Suenaga <yasuenag@gmail.com>
 

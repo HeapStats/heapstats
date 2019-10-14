@@ -36,6 +36,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.scene.control.Alert;
@@ -74,11 +75,22 @@ public class HeapStatsUtils {
     public static Path getHeapStatsHomeDirectory() {
 
         if (currentPath == null) {
-            String appJar = Stream.of(System.getProperty("java.class.path").split(System.getProperty("path.separator")))
-                    .filter(s -> s.endsWith("heapstats-analyzer.jar"))
-                    .findFirst()
-                    .orElse(".");
-            currentPath = Paths.get(appJar).toAbsolutePath().getParent();
+            if (System.getProperty("heapstats.boot.mode").equals("jlink")) {
+                currentPath = Path.of(System.getProperty("java.home"));
+            } else {
+                Pattern pat = Pattern.compile("heaptats-analzer[^" + System.getProperty("path.separator") + "]*\\.jar$");
+                currentPath = Stream.of(System.getProperty("java.class.path").split(System.getProperty("path.separator")))
+                                    .filter(s -> pat.matcher(s).matches())
+                                    .findFirst()
+                                    .map(Path::of)
+                                    .orElse(Path.of("."));
+
+                // If currentPath points to a file (e.g. heapstats-analyzer.jar),
+                // currentPath set to parent path.
+                if (currentPath.toFile().isFile()) {
+                    currentPath = currentPath.getParent();
+                }
+            }
         }
 
         return currentPath;
