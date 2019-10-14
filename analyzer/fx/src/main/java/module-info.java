@@ -38,10 +38,10 @@ module heapstats.fx {
     
     exports jp.co.ntt.oss.heapstats.fx to javafx.graphics;
     opens jp.co.ntt.oss.heapstats.fx to javafx.fxml;
-    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.log to javafx.fxml;
+    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.log;
     opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.log.tabs to javafx.fxml;
-    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.snapshot to javafx.fxml;
+    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.snapshot;
     opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.snapshot.tabs to javafx.fxml;
-    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.threadrecorder to javafx.fxml;
-    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.jvmlive to javafx.fxml;
+    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.threadrecorder;
+    opens jp.co.ntt.oss.heapstats.fx.plugin.builtin.jvmlive;
 }
