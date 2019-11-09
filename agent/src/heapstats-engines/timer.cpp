@@ -72,12 +72,16 @@ void JNICALL TTimer::entryPoint(jvmtiEnv *jvmti, JNIEnv *jni, void *data) {
   controller->_isRunning = true;
 
   /* Loop for agent run. */
-  while (!controller->_terminateRequest) {
+  while (true) {
     /* Reset timer interrupt flag. */
     controller->_isInterrupted = false;
 
     {
       TMutexLocker locker(&controller->mutex);
+
+      if (unlikely(controller->_terminateRequest)) {
+        break;
+      }
 
       /* Create limit datetime. */
       struct timespec limitTs = {0};

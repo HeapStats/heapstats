@@ -19,6 +19,8 @@
  *
  */
 
+#include <sched.h>
+
 #include "globals.hpp"
 #include "util.hpp"
 #include "agentThread.hpp"
@@ -134,7 +136,7 @@ void TAgentThread::stop(void) {
 
   /* SpinLock for AgentThread termination. */
   while (this->_isRunning) {
-    ; /* none. */
+    sched_yield();
   }
 
   /* Clean termination flag. */

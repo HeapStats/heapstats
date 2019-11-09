@@ -1,3 +1,7 @@
+2019-11-11 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3764: Agent thread might not be stopped when it works
+
 2019-11-10 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3765: pthread mutex lock/unlock enhancement
