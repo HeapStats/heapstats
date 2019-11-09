@@ -1,7 +1,7 @@
 /*!
  * \file gcWatcher.cpp
  * \brief This file is used to take snapshot when finish garbage collection.
- * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2019 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -68,7 +68,9 @@ void JNICALL TGCWatcher::entryPoint(jvmtiEnv *jvmti, JNIEnv *jni, void *data) {
     /* Variable for notification flag. */
     bool needProcess = false;
 
-    ENTER_PTHREAD_SECTION(&controller->mutex) {
+    {
+      TMutexLocker locker(&controller->mutex);
+
       /* If no exists request. */
       if (likely(controller->_numRequests == 0)) {
         /* Wait for notification or termination. */
@@ -82,7 +84,6 @@ RACE_COND_DEBUG_POINT:
         needProcess = true;
       }
     }
-    EXIT_PTHREAD_SECTION(&controller->mutex)
 
     /* If waiting finished by notification. */
     if (needProcess) {

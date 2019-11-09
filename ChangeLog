@@ -1,3 +1,7 @@
+2019-11-10 Yasumasa Suenaga <yasuenag@gmail.com>
+
+	* Bug 3765: pthread mutex lock/unlock enhancement
+
 2019-10-08 Yasumasa Suenaga <yasuenag@gmail.com>
 
 	* Bug 3759: HeapStats Agent could not be built on CentOS 6

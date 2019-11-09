@@ -1,7 +1,7 @@
 /*!
  * \file fsUtil.cpp
  * \brief This file is utilities to access file system.
- * Copyright (C) 2011-2018 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2019 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -242,8 +242,8 @@ int createTempDir(char **basePath, char const *wishesName) {
   }
 
   int raisedErrNum = -1;
-  /* Get mutex. */
-  ENTER_PTHREAD_SECTION(&directoryMutex) {
+  {
+    TMutexLocker locker(&directoryMutex);
 
     /* Create unique directory path. */
     uniqName = createUniquePath((char *)wishesName, true);
@@ -258,8 +258,6 @@ int createTempDir(char **basePath, char const *wishesName) {
       }
     }
   }
-  /* Release mutex. */
-  EXIT_PTHREAD_SECTION(&directoryMutex)
 
   /* If failed to create temporary directory. */
   if (unlikely(raisedErrNum != 0)) {
@@ -330,8 +328,8 @@ void removeTempDir(char const *basePath) {
   /* Cleanup. */
   closedir(dir);
 
-  /* Get mutex. */
-  ENTER_PTHREAD_SECTION(&directoryMutex) {
+  {
+    TMutexLocker locker(&directoryMutex);
 
     /* Remove directory. */
     if (unlikely(rmdir(basePath) != 0)) {
@@ -340,8 +338,6 @@ void removeTempDir(char const *basePath) {
     }
 
   }
-  /* Release mutex. */
-  EXIT_PTHREAD_SECTION(&directoryMutex)
 }
 
 /*!

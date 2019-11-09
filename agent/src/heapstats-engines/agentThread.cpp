@@ -1,7 +1,7 @@
 /*!
  * \file agentThread.cpp
  * \brief This file is used to work on Jthread.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2019 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -108,11 +108,10 @@ void TAgentThread::start(jvmtiEnv *jvmti, JNIEnv *env,
  */
 void TAgentThread::notify(void) {
   /* Send notification and count notify. */
-  ENTER_PTHREAD_SECTION(&this->mutex) {
-    this->_numRequests++;
-    pthread_cond_signal(&this->mutexCond);
-  }
-  EXIT_PTHREAD_SECTION(&this->mutex)
+  TMutexLocker locker(&this->mutex);
+
+  this->_numRequests++;
+  pthread_cond_signal(&this->mutexCond);
 }
 
 /*!
@@ -126,11 +125,12 @@ void TAgentThread::stop(void) {
   }
 
   /* Send notification and count notify. */
-  ENTER_PTHREAD_SECTION(&this->mutex) {
+  {
+    TMutexLocker locker(&this->mutex);
+
     this->_terminateRequest = true;
     pthread_cond_signal(&this->mutexCond);
   }
-  EXIT_PTHREAD_SECTION(&this->mutex)
 
   /* SpinLock for AgentThread termination. */
   while (this->_isRunning) {

@@ -1,7 +1,7 @@
 /*!
  * \file deadlockDetector.cpp
  * \brief This file is used by find deadlock.
- * Copyright (C) 2017 Yasumasa Suenaga
+ * Copyright (C) 2017-2019 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -181,8 +181,9 @@ namespace dldetector {
     jvmti->GetObjectHashCode(thread, &thread_hash);
     jvmti->GetObjectHashCode(object, &monitor_hash);
 
-    ENTER_PTHREAD_SECTION(&mutex);
     {
+      TMutexLocker locker(&mutex);
+
       /* Avoid JDK-8185164 */
       bool canSkip = true;
 
@@ -233,7 +234,6 @@ namespace dldetector {
         }
       }
     }
-    EXIT_PTHREAD_SECTION(&mutex);
   }
 
 
@@ -262,8 +262,9 @@ namespace dldetector {
       return;
     }
 
-    ENTER_PTHREAD_SECTION(&mutex);
     {
+      TMutexLocker locker(&mutex);
+
       /* Remove all owned monitors from owner list */
       for (int idx = 0; idx < monitor_cnt; idx++) {
         jint monitor_hash;
@@ -277,7 +278,6 @@ namespace dldetector {
       jvmti->GetObjectHashCode(thread, &thread_hash);
       waiter_list.erase(thread_hash);
     }
-    EXIT_PTHREAD_SECTION(&mutex);
   }
 
 
@@ -343,12 +343,11 @@ namespace dldetector {
       sched_yield();
     }
 
-    ENTER_PTHREAD_SECTION(&mutex);
     {
+      TMutexLocker locker(&mutex);
       monitor_owners.clear();
       waiter_list.clear();
     }
-    EXIT_PTHREAD_SECTION(&mutex);
   }
 
 }

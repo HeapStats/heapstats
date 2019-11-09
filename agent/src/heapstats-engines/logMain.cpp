@@ -1,7 +1,7 @@
 /*!
  * \file logmain.cpp
  * \brief This file is used common logging process.
- * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2019 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -226,8 +226,8 @@ void JNICALL OnResourceExhausted(jvmtiEnv *jvmti, JNIEnv *env, jint flags,
   }
 
   bool isCollectLog = true;
-  /* Lock to use in multi-thread. */
-  ENTER_PTHREAD_SECTION(&errMutex) {
+  {
+    TMutexLocker locker(&errMutex);
 
     /* If collected already and collect first only. */
     if (conf->FirstCollect()->get() && conf->isFirstCollected()) {
@@ -238,8 +238,6 @@ void JNICALL OnResourceExhausted(jvmtiEnv *jvmti, JNIEnv *env, jint flags,
     conf->setFirstCollected(true);
 
   }
-  /* Unlock to use in multi-thread. */
-  EXIT_PTHREAD_SECTION(&errMutex)
 
   if (isCollectLog) {
     /* Setting collect log cause. */

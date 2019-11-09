@@ -1,7 +1,7 @@
 /*!
  * \file trapSender.cpp
  * \brief This file is used to send SNMP trap.
- * Copyright (C) 2016-2017 Yasumasa Suenaga
+ * Copyright (C) 2016-2019 Yasumasa Suenaga
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -96,7 +96,9 @@ bool TTrapSender::initialize(int snmp, char *pPeer, char *pCommName, int port) {
   }
 
   /* Initialize session. */
-  ENTER_PTHREAD_SECTION(&senderMutex) {
+  {
+    TMutexLocker locker(&senderMutex);
+
     memset(&session, 0, sizeof(netsnmp_session));
     netSnmpFuncs.snmp_sess_init(&session);
     session.version = snmp;
@@ -104,7 +106,7 @@ bool TTrapSender::initialize(int snmp, char *pPeer, char *pCommName, int port) {
     session.remote_port = port;
     session.community = (u_char *)strdup(pCommName);
     session.community_len = (pCommName != NULL) ? strlen(pCommName) : 0;
-  } EXIT_PTHREAD_SECTION(&senderMutex)
+  }
 
   return true;
 }
@@ -114,11 +116,13 @@ bool TTrapSender::initialize(int snmp, char *pPeer, char *pCommName, int port) {
  */
 void TTrapSender::finalize(void) {
   /* Close and free SNMP session. */
-  ENTER_PTHREAD_SECTION(&senderMutex) {
+  {
+    TMutexLocker locker(&senderMutex);
+
     netSnmpFuncs.snmp_close(&session);
     free(session.peername);
     free(session.community);
-  } EXIT_PTHREAD_SECTION(&senderMutex)
+  }
 
   /* Unload library */
   if (libnetsnmp_handle != NULL) {
@@ -130,35 +134,28 @@ void TTrapSender::finalize(void) {
  * \brief TrapSender constructor.
  */
 TTrapSender::TTrapSender() {
-  /* Lock to use in multi-thread. */
-  ENTER_PTHREAD_SECTION(&senderMutex) {
-    /* Disable NETSNMP logging. */
-    netSnmpFuncs.netsnmp_register_loghandler(
-                               NETSNMP_LOGHANDLER_NONE, LOG_EMERG);
-    /* Make a PDU */
-    pPdu = netSnmpFuncs.snmp_pdu_create(SNMP_MSG_TRAP2);
-  }
-  /* Unlock to use in multi-thread. */
-  EXIT_PTHREAD_SECTION(&senderMutex)
+  TMutexLocker locker(&senderMutex);
+
+  /* Disable NETSNMP logging. */
+  netSnmpFuncs.netsnmp_register_loghandler(
+                             NETSNMP_LOGHANDLER_NONE, LOG_EMERG);
+  /* Make a PDU */
+  pPdu = netSnmpFuncs.snmp_pdu_create(SNMP_MSG_TRAP2);
 }
 
 /*!
  * \brief TrapSender destructor.
  */
 TTrapSender::~TTrapSender(void) {
-  /* Lock to use in multi-thread. */
-  ENTER_PTHREAD_SECTION(&senderMutex) {
-    /* Clear Allocated str. */
-    clearValues();
+  TMutexLocker locker(&senderMutex);
 
-    /* Free SNMP pdu. */
-    if (pPdu != NULL) {
-      netSnmpFuncs.snmp_free_pdu(pPdu);
-    }
+  /* Clear Allocated str. */
+  clearValues();
 
+  /* Free SNMP pdu. */
+  if (pPdu != NULL) {
+    netSnmpFuncs.snmp_free_pdu(pPdu);
   }
-  /* Unlock to use in multi-thread. */
-  EXIT_PTHREAD_SECTION(&senderMutex)
 }
 
 /*!

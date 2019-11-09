@@ -1,7 +1,7 @@
 /*!
  * \file timer.cpp
  * \brief This file is used to take interval snapshot.
- * Copyright (C) 2011-2015 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2019 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -76,7 +76,9 @@ void JNICALL TTimer::entryPoint(jvmtiEnv *jvmti, JNIEnv *jni, void *data) {
     /* Reset timer interrupt flag. */
     controller->_isInterrupted = false;
 
-    ENTER_PTHREAD_SECTION(&controller->mutex) {
+    {
+      TMutexLocker locker(&controller->mutex);
+
       /* Create limit datetime. */
       struct timespec limitTs = {0};
       struct timeval nowTv = {0};
@@ -89,7 +91,6 @@ void JNICALL TTimer::entryPoint(jvmtiEnv *jvmti, JNIEnv *jni, void *data) {
       pthread_cond_timedwait(&controller->mutexCond, &controller->mutex,
                              &limitTs);
     }
-    EXIT_PTHREAD_SECTION(&controller->mutex)
 
     /* If waiting finished by timeout. */
     if (!controller->_isInterrupted) {
@@ -166,11 +167,10 @@ void TTimer::notify(void) {
 
   } else {
     /* Set interrupt flag and notify. */
-    ENTER_PTHREAD_SECTION(&this->mutex) {
-      this->_isInterrupted = true;
-      pthread_cond_signal(&this->mutexCond);
-    }
-    EXIT_PTHREAD_SECTION(&this->mutex)
+    TMutexLocker locker(&this->mutex);
+
+    this->_isInterrupted = true;
+    pthread_cond_signal(&this->mutexCond);
   }
 }
 

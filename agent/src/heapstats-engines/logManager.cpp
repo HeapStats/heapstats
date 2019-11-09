@@ -1,7 +1,7 @@
 /*!
  * \file logManager.cpp
  * \brief This file is used collect log information.
- * Copyright (C) 2011-2018 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2019 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -255,8 +255,8 @@ int TLogManager::collectNormalLog(TInvokeCause cause, TMSecTime nowTime,
            /* Params : Archive file name. */
            archivePath);
 
-  /* Get mutex. */
-  ENTER_PTHREAD_SECTION(&logMutex) {
+  {
+    TMutexLocker locker(&logMutex);
 
     /* Open log file. */
     int fd = open(conf->HeapLogFile()->get(), O_CREAT | O_WRONLY | O_APPEND,
@@ -282,8 +282,7 @@ int TLogManager::collectNormalLog(TInvokeCause cause, TMSecTime nowTime,
       }
     }
   }
-  /* Release mutex. */
-  EXIT_PTHREAD_SECTION(&logMutex)
+
   return result;
 }
 
@@ -379,8 +378,8 @@ int TLogManager::collectAllLog(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
      */
     result = -1;
 
-    /* Get mutex. */
-    ENTER_PTHREAD_SECTION(&archiveMutex) {
+    {
+      TMutexLocker locker(&archiveMutex);
 
       /* Create archive file name. */
       uniqArcName = createArchiveName(nowTime);
@@ -400,8 +399,6 @@ int TLogManager::collectAllLog(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause,
         }
       }
     }
-    /* Release mutex. */
-    EXIT_PTHREAD_SECTION(&archiveMutex)
 
     /* If failure create archive file yet. */
     if (unlikely(result != 0)) {
