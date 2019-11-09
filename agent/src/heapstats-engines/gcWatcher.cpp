@@ -64,12 +64,16 @@ void JNICALL TGCWatcher::entryPoint(jvmtiEnv *jvmti, JNIEnv *jni, void *data) {
   controller->_isRunning = true;
 
   /* Loop for agent run. */
-  while (!controller->_terminateRequest) {
+  while (true) {
     /* Variable for notification flag. */
     bool needProcess = false;
 
     {
       TMutexLocker locker(&controller->mutex);
+
+      if (controller->_terminateRequest) {
+        break;
+      }
 
       /* If no exists request. */
       if (likely(controller->_numRequests == 0)) {

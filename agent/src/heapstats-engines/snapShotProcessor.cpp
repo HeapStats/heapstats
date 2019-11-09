@@ -71,13 +71,17 @@ void JNICALL
 
   bool existRemainder = false;
   /* Loop for agent run or remaining work exist. */
-  while (!controller->_terminateRequest || existRemainder) {
+  while (true) {
     TSnapShotContainer *snapshot = NULL;
     /* Is notify flag. */
     bool needProcess = false;
 
     {
       TMutexLocker locker(&controller->mutex);
+
+      if (unlikely(controller->_terminateRequest && !existRemainder)) {
+        break;
+      }
 
       if (likely(controller->_numRequests == 0)) {
         /* Wait for notification or termination. */
