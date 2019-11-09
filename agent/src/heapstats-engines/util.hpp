@@ -1,7 +1,7 @@
 /*!
  * \file util.hpp
  * \brief This file is utilities.
- * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2019 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,9 +31,11 @@
 #include <cstdatomic>
 #endif
 
+#include <assert.h>
 #include <stddef.h>
 #include <errno.h>
 #include <string.h>
+#include <pthread.h>
 
 /* Branch prediction. */
 
@@ -47,23 +49,23 @@
  */
 #define unlikely(x) __builtin_expect(!!(x), 0)
 
-/* Critical section helper macro for pthread mutex. */
+/*!
+ * \brief C++ class for pthread mutex.
+ *        C'tor acquires mutex, and d'tor releases it.
+ */
+class TMutexLocker {
+  private:
+    pthread_mutex_t *_mutex;
 
-/*!
- * \brief Enter critical pthread section macro.
- */
-#define ENTER_PTHREAD_SECTION(monitor)                \
-  if (unlikely(pthread_mutex_lock((monitor)) != 0)) { \
-    logger->printWarnMsg("Entering mutex failed!");   \
-  } else {
-/*!
- * \brief Exit critical pthread section macro.
- */
-#define EXIT_PTHREAD_SECTION(monitor)                   \
-  if (unlikely(pthread_mutex_unlock((monitor)) != 0)) { \
-    logger->printWarnMsg("Exiting mutex failed!");      \
-  }                                                     \
-  }
+  public:
+    TMutexLocker(pthread_mutex_t *mutex) : _mutex(mutex) {
+      assert(pthread_mutex_lock(_mutex) == 0);
+    }
+
+    ~TMutexLocker() {
+      assert(pthread_mutex_unlock(_mutex) == 0);
+    }
+};
 
 /*!
  * \brief Calculate align macro.

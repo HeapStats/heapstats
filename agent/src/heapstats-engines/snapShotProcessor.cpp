@@ -1,7 +1,7 @@
 /*!
  * \file snapShotProcessor.cpp
  * \brief This file is used to output ranking and call snapshot function.
- * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2019 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -76,7 +76,9 @@ void JNICALL
     /* Is notify flag. */
     bool needProcess = false;
 
-    ENTER_PTHREAD_SECTION(&controller->mutex) {
+    {
+      TMutexLocker locker(&controller->mutex);
+
       if (likely(controller->_numRequests == 0)) {
         /* Wait for notification or termination. */
         pthread_cond_wait(&controller->mutexCond, &controller->mutex);
@@ -93,7 +95,6 @@ RACE_COND_DEBUG_POINT:
       /* Check remaining work. */
       existRemainder = (controller->_numRequests > 0);
     }
-    EXIT_PTHREAD_SECTION(&controller->mutex)
 
     /* If waiting is finished by notification. */
     if (needProcess && (snapshot != NULL)) {
@@ -158,7 +159,9 @@ void TSnapShotProcessor::notify(TSnapShotContainer *snapshot) {
 
   bool raiseException = true;
   /* Send notification and count notify. */
-  ENTER_PTHREAD_SECTION(&this->mutex) {
+  {
+    TMutexLocker locker(&this->mutex);
+
     try {
       /* Store and count data. */
       snapQueue.push(snapshot);
@@ -176,7 +179,6 @@ void TSnapShotProcessor::notify(TSnapShotContainer *snapshot) {
        */
     }
   }
-  EXIT_PTHREAD_SECTION(&this->mutex)
 
   if (unlikely(raiseException)) {
     throw "Failed to TSnapShotProcessor notify";

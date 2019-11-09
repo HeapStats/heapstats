@@ -1,7 +1,7 @@
 /*!
  * \file snapShotMain.cpp
  * \brief This file is used to take snapshot.
- * Copyright (C) 2011-2017 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2019 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -546,15 +546,12 @@ void JNICALL OnCMSGCFinish(jvmtiEnv *jvmti) {
  */
 void JNICALL OnDataDumpRequestForSnapShot(jvmtiEnv *jvmti) {
   TProcessMark mark(processing);
+  TMutexLocker locker(&dumpMutex);
 
   /* Avoid the plural simultaneous take snapshot by dump-request.        */
   /* E.g. keeping pushed dump key.                                       */
   /* Because classContainer register a redundancy class in TakeSnapShot. */
-  ENTER_PTHREAD_SECTION(&dumpMutex) {
-    /* Make snapshot. */
-    TakeSnapShot(jvmti, NULL, DataDumpRequest);
-  }
-  EXIT_PTHREAD_SECTION(&dumpMutex)
+  TakeSnapShot(jvmti, NULL, DataDumpRequest);
 }
 
 /*!
@@ -595,22 +592,21 @@ void TakeSnapShot(jvmtiEnv *jvmti, JNIEnv *env, TInvokeCause cause) {
 
     if (likely(snapshot != NULL)) {
       /* Lock to avoid doubling call JVMTI. */
-      ENTER_PTHREAD_SECTION(&jvmtiMutex) {
-        snapshotByJvmti = snapshot;
+      TMutexLocker locker(&jvmtiMutex);
 
-        /* Enable JVMTI hooking. */
-        if (likely(setJvmtiHookState(true))) {
-          /* Count object size on heap. */
-          error = jvmti->IterateOverHeap(JVMTI_HEAP_OBJECT_EITHER,
-                                         &HeapObjectCallBack, NULL);
+      snapshotByJvmti = snapshot;
 
-          /* Disable JVMTI hooking. */
-          setJvmtiHookState(false);
-        }
+      /* Enable JVMTI hooking. */
+      if (likely(setJvmtiHookState(true))) {
+        /* Count object size on heap. */
+        error = jvmti->IterateOverHeap(JVMTI_HEAP_OBJECT_EITHER,
+                                       &HeapObjectCallBack, NULL);
 
-        snapshotByJvmti = NULL;
+        /* Disable JVMTI hooking. */
+        setJvmtiHookState(false);
       }
-      EXIT_PTHREAD_SECTION(&jvmtiMutex)
+
+      snapshotByJvmti = NULL;
     }
 
     if (likely(error == JVMTI_ERROR_NONE)) {
