@@ -107,6 +107,10 @@ Oracle JDK can provide a real-time detection of JVM crash, but OpenJDK DOES NOT 
 * Apache Maven
 * JDK 13 or later
 
+## Add / Create Plugin
+
+HeapStats Analyzer supports custom plugin.  See [SamplePlugin](https://github.com/HeapStats/SamplePlugin) for details.
+
 # CLI #
 
 If you want to analyze data which are collected by HeapStats Agent on CUI environment, you can use HeapStats CLI.

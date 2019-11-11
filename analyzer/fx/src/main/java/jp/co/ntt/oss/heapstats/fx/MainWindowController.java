@@ -24,9 +24,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -281,31 +279,12 @@ public class MainWindowController implements Initializable, WindowController {
         this.hostServices = hostServices;
     }
 
-    private ClassLoader createPluginClassLoader(String appJarString){
-        Path appJarPath;
-
-        try{
-            appJarPath = Paths.get(appJarString);
-        }
-        catch(InvalidPathException e){
-            if((appJarString.charAt(0) == '/') && (appJarString.length() > 2)){ // for Windows
-                appJarPath = Paths.get(appJarString.substring(1));
-            }
-            else{
-                throw e;
-            }
-        }
-
-        Path libPath = appJarPath.getParent();
+    private ClassLoader createPluginClassLoader(){
         URL[] jarURLList = null;
 
-        try(DirectoryStream<Path> jarPaths = Files.newDirectoryStream(libPath, "*.jar")){
+        try(DirectoryStream<Path> jarPaths = Files.newDirectoryStream(HeapStatsUtils.getHeapStatsHomeDirectory().resolve("plugins"), "*.jar")){
             jarURLList = StreamSupport.stream(jarPaths.spliterator(), false)
                                       .map(new FunctionWrapper<>(p -> p.toUri().toURL()))
-                                      .filter(u -> !u.getFile().startsWith("heapstats-"))
-                                      .filter(u -> !u.getFile().startsWith("javax.activation-api"))
-                                      .filter(u -> !u.getFile().startsWith("jaxb-api"))
-                                      .filter(u -> !u.getFile().startsWith("jgraphx-"))
                                       .collect(Collectors.toList())
                                       .toArray(new URL[0]);
         }
@@ -313,19 +292,15 @@ public class MainWindowController implements Initializable, WindowController {
             Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return (jarURLList == null) ? MainWindowController.class.getClassLoader() : new URLClassLoader(jarURLList);
+        var parentLoader = this.getClass().getClassLoader();
+        return (jarURLList == null) ? parentLoader : new URLClassLoader("HeapStats Analyzer Plugin ClassLoader", jarURLList, parentLoader);
     }
 
     /**
      * Load plugins which is defined in heapstats.properties.
      */
     public void loadPlugin(){
-        String resourceName = "/" + this.getClass().getName().replace('.', '/') + ".class";
-        String appJarString = this.getClass().getResource(resourceName).getPath();
-
-        pluginClassLoader = appJarString.contains("!") ? createPluginClassLoader(appJarString.substring(0, appJarString.indexOf('!')).replaceFirst("file://", ""))
-                                                       : MainWindowController.class.getClassLoader();
-
+        pluginClassLoader = createPluginClassLoader();
         FXMLLoader.setDefaultClassLoader(pluginClassLoader);
 
         List<String> plugins =  new ArrayList<>();

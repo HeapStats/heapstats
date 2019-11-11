@@ -51,6 +51,11 @@
             </includes>
         </fileSet>
         <fileSet>
+            <!-- Empty directory -->
+            <outputDirectory>${file.separator}plugins</outputDirectory>
+            <excludes><exclude>**/*</exclude></excludes>
+        </fileSet>
+        <fileSet>
             <directory>${project.build.directory}${file.separator}dependency</directory>
             <outputDirectory>${file.separator}${file.separator}mods</outputDirectory>
             <includes>
