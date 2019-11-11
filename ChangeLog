@@ -2,6 +2,7 @@
 
 	* Bug 3764: Agent thread might not be stopped when it works
 	* Bug 3766: HeapStats Analyzer plugin does not work
+	* Bug 3767: Compiler warnings at `snmp_session::remote_port`
 
 2019-11-10 Yasumasa Suenaga <yasuenag@gmail.com>
 

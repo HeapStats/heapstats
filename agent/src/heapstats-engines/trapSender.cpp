@@ -77,6 +77,9 @@ netsnmp_session TTrapSender::session;
  * \param port      [in] Port used by SNMP trap.
  * \return true if succeeded.
  */
+// Avoid deprecation warning of snmp_session::remote_port
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 bool TTrapSender::initialize(int snmp, char *pPeer, char *pCommName, int port) {
   /* If snmp target is illegal. */
   if (pPeer == NULL) {
@@ -110,6 +113,7 @@ bool TTrapSender::initialize(int snmp, char *pPeer, char *pCommName, int port) {
 
   return true;
 }
+#pragma GCC diagnostic pop
 
 /*!
  * \brief TTrapSender global finalization.
@@ -244,6 +248,9 @@ int TTrapSender::addValue(oid id[], int len, const char *pValue, char type) {
  * \brief Add variable as send information by trap.
  * \return Return process result code.
  */
+// Avoid deprecation warning of snmp_session::remote_port
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 int TTrapSender::sendTrap(void) {
   /* If snmp target is illegal. */
   if (pPdu == NULL) {
@@ -313,6 +320,7 @@ int TTrapSender::sendTrap(void) {
 
   return (success) ? SNMP_PROC_SUCCESS : SNMP_PROC_FAILURE;
 }
+#pragma GCC diagnostic pop
 
 /*!
  * \brief Clear PDU and allocated strings.
