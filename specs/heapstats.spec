@@ -3,8 +3,7 @@
 Summary: A Java programming language debugging tool.
 Name: heapstats
 Version: 2.2.trunk
-%define DIST_EXT 0%{?dist:%{dist}}%{!?dist:.el5}
-Release: %{DIST_EXT}
+Release: 0%{dist}
 License: GPLv2
 Vendor: NTT OSS Center
 Group: Development/Tools
@@ -98,6 +97,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sat Feb 29 2020 Yasumasa Suenaga <yasuenag@gmail.com>
 - Remove dependency to PCRE
+- Update release version not to consideration for el5
 * Sun Oct 06 2019 Yasumasa Suenaga <yasuenag@gmail.com>
 - Update SPEC for modularity
 * Wed Apr 04 2018 Yasumasa Suenaga <yasuenag@gmail.com>
