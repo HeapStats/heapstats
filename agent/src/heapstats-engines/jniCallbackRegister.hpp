@@ -89,14 +89,8 @@ class TJNICallbackRegister {
     pthread_rwlock_wrlock(&callbackLock);
     {
       if (prologue != NULL) {
-#ifdef USE_N2350
-        // C++11 support
         auto prologue_begin = prologueCallbackList.cbegin();
         auto prologue_end = prologueCallbackList.cend();
-#else
-        auto prologue_begin = prologueCallbackList.begin();
-        auto prologue_end = prologueCallbackList.end();
-#endif
         for (auto itr = prologue_begin; itr != prologue_end; itr++) {
           if (prologue == *itr) {
             prologueCallbackList.erase(itr);
@@ -106,14 +100,8 @@ class TJNICallbackRegister {
       }
 
       if (epilogue != NULL) {
-#ifdef USE_N2350
-        // C++11 support
         auto epilogue_begin = prologueCallbackList.cbegin();
         auto epilogue_end = prologueCallbackList.cend();
-#else
-        auto epilogue_begin = prologueCallbackList.begin();
-        auto epilogue_end = prologueCallbackList.end();
-#endif
         for (auto itr = epilogue_begin; itr != epilogue_end; itr++) {
           if (epilogue == *itr) {
             epilogueCallbackList.erase(itr);

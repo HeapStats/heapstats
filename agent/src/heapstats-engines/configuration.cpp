@@ -24,11 +24,7 @@
 #include "signalManager.hpp"
 #include "configuration.hpp"
 
-#if USE_PCRE
-#include "pcreRegex.hpp"
-#else
 #include "cppRegex.hpp"
-#endif
 
 /* Macro define. */
 
@@ -362,11 +358,7 @@ void TConfiguration::loadConfiguration(const char *filename) {
     return;
   }
 
-#if USE_PCRE
-  TPCRERegex confRegex("^\\s*(\\S+?)\\s*=\\s*(\\S+)?\\s*$", 9);
-#else
   TCPPRegex confRegex("^\\s*(\\S+?)\\s*=\\s*(\\S+)?\\s*$");
-#endif
 
   /* Get string line from configure file. */
   long lineCnt = 0;

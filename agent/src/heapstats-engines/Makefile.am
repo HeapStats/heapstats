@@ -11,10 +11,6 @@ BASE_SOURCE     = libmain.cpp util.cpp symbolFinder.cpp vmStructScanner.cpp   \
                   threadRecorder.cpp heapstatsMBean.cpp overrideFunc.S        \
                   trapSender.cpp
 
-if USE_PCRE
-  BASE_SOURCE += pcreRegex.cpp
-endif
-
 BASE_CXX_FLAGS  = -I@JDK_DIR@/include -I@JDK_DIR@/include/linux -Wall        \
                   -Wno-strict-aliasing -fPIC @VMSTRUCTS_CXX_FLAGS@           \
                   @VMSTRUCTS_CXX_FLAGS@ -DDEFAULT_CONF_DIR=\"$(sysconfdir)\"

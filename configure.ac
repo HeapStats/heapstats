@@ -76,72 +76,12 @@ AC_CACHE_SAVE
 
 # Check C++11 support
 AC_LANG_PUSH([C++])
-ORIG_CXXFLAGS=$CXXFLAGS
 CXXFLAGS+=" -std=c++11"
-CPP11=1
-
 AC_MSG_CHECKING([C++11 support])
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [], [ CPP11=0 ])
-if test $CPP11 -eq 1; then
-  AC_MSG_RESULT([c++11])
-else
-  AC_MSG_RESULT([c++0x])
-  CXXFLAGS="$ORIG_CXXFLAGS -std=c++0x"
-fi
-
-# Check C++11 regex
-AC_MSG_CHECKING([for std::regex])
-
-AC_RUN_IFELSE(
-  [AC_LANG_PROGRAM(
-    [[
-      #include <regex>
-      #include <string>
-    ]], [[
-      std::string res = std::regex_replace(std::string("heapStats"), std::regex("h"), "H");
-    ]]
-  )], [
-    AC_MSG_RESULT([yes])
-    AC_DEFINE(USE_PCRE,0)
-  ], [
-    AC_MSG_RESULT([no])
-    AC_DEFINE(USE_PCRE,1)
-    AC_CHECK_HEADERS([pcre.h], [], [AC_MSG_ERROR([PCRE not found.])])
-    AC_CHECK_LIB([pcre], [main], [], [AC_MSG_ERROR([PCRE not found.])])
-  ]
-)
-AM_CONDITIONAL(USE_PCRE, test -n "${ac_cv_header_pcre_h}")
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [], [ AC_MSG_ERROR([Compiler does not support C++11.]) ])
+AC_LANG_POP([C++])
 
 AC_CHECK_HEADERS([sys/auxv.h], [], [])  # Supplemental headers
-
-# Check Container insert/erase and iterator constness (N2350)
-AC_MSG_CHECKING([for N2350])
-
-AC_RUN_IFELSE(
-  [AC_LANG_PROGRAM(
-    [[
-      #include <list>
-    ]], [[
-      std::list<int> test;
-      test.push_back(0);
-      test.erase(test.cbegin());
-    ]]
-  )], [
-    AC_MSG_RESULT([yes])
-    AC_DEFINE(USE_N2350, 1)
-  ], [
-    AC_MSG_RESULT([no])
-  ]
-)
-
-# Check for atomic operation
-AC_CHECK_HEADERS([atomic], [],
-[
-  AC_CHECK_HEADERS([cstdatomic], [],
-                        [AC_MSG_ERROR([Compiler does not support C++ atomic.])])
-])
-
-AC_LANG_POP([C++])
 
 # Checks for library header files.
 AC_CHECK_HEADERS([net-snmp/net-snmp-config.h],

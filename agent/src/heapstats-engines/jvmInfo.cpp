@@ -36,11 +36,7 @@
 #include "util.hpp"
 #include "jvmInfo.hpp"
 
-#if USE_PCRE
-#include "pcreRegex.hpp"
-#else
 #include "cppRegex.hpp"
-#endif
 
 
 /*!
