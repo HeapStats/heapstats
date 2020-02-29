@@ -25,11 +25,7 @@
 #include <jvmti.h>
 #include <jni.h>
 
-#ifdef HAVE_ATOMIC
 #include <atomic>
-#else
-#include <cstdatomic>
-#endif
 
 #include <assert.h>
 #include <stddef.h>

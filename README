@@ -34,6 +34,7 @@ More detailes are [here](http://icedtea.classpath.org/wiki/HeapStats/information
 ## Requirements ##
 
 * Linux x64 / x86_64 / AArch32
+    * In RHEL family, RHEL 7 / CentOS 7 or later
 * Oracle JDK / OpenJDK 6u18 or later
 
 ## How to use ##

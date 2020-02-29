@@ -3,8 +3,7 @@
 Summary: A Java programming language debugging tool.
 Name: heapstats
 Version: 2.2.trunk
-%define DIST_EXT 0%{?dist:%{dist}}%{!?dist:.el5}
-Release: %{DIST_EXT}
+Release: 0%{dist}
 License: GPLv2
 Vendor: NTT OSS Center
 Group: Development/Tools
@@ -13,11 +12,9 @@ Source: heapstats-%{version}.tar.gz
 Buildroot: /var/tmp/heapstats
 
 # Requires for running
-Requires: pcre >= 6
 Requires: tbb
 
 # Requires for building
-BuildRequires: pcre-devel >= 6
 BuildRequires: net-snmp-devel >= 5.3
 BuildRequires: java-1.8.0-openjdk-devel
 BuildRequires: binutils >= 2
@@ -98,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/snmp/mibs/HeapStatsMibs.txt
 
 %changelog
+* Sat Feb 29 2020 Yasumasa Suenaga <yasuenag@gmail.com>
+- Remove dependency to PCRE
+- Update release version not to consideration for el5
 * Sun Oct 06 2019 Yasumasa Suenaga <yasuenag@gmail.com>
 - Update SPEC for modularity
 * Wed Apr 04 2018 Yasumasa Suenaga <yasuenag@gmail.com>

@@ -19,16 +19,12 @@
  *
  */
 
+#include <regex>
+
 #include "globals.hpp"
 #include "fsUtil.hpp"
 #include "signalManager.hpp"
 #include "configuration.hpp"
-
-#if USE_PCRE
-#include "pcreRegex.hpp"
-#else
-#include "cppRegex.hpp"
-#endif
 
 /* Macro define. */
 
@@ -362,12 +358,6 @@ void TConfiguration::loadConfiguration(const char *filename) {
     return;
   }
 
-#if USE_PCRE
-  TPCRERegex confRegex("^\\s*(\\S+?)\\s*=\\s*(\\S+)?\\s*$", 9);
-#else
-  TCPPRegex confRegex("^\\s*(\\S+?)\\s*=\\s*(\\S+)?\\s*$");
-#endif
-
   /* Get string line from configure file. */
   long lineCnt = 0;
   char *lineBuff = NULL;
@@ -389,12 +379,14 @@ void TConfiguration::loadConfiguration(const char *filename) {
     }
 
     /* Check matched pair. */
-    if (confRegex.find(lineBuff)) {
+    std::regex expr("^\\s*(\\S+?)\\s*=\\s*(\\S+)?\\s*$");
+    std::cmatch mat;
+    if (std::regex_match(lineBuff, mat, expr)) {
       /* Key and value variables. */
-      char *key = confRegex.group(1);
+      char *key = strdup(mat.str(1).c_str());
       char *value;
       try {
-        value = confRegex.group(2);
+        value = strdup(mat.str(2).c_str());
       } catch (const char *errStr) {
         logger->printDebugMsg(errStr);
         value = (char *)calloc(1, sizeof(char));

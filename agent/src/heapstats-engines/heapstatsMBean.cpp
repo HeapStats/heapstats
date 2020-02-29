@@ -25,12 +25,7 @@
 #include <sched.h>
 
 #include <list>
-
-#ifdef HAVE_ATOMIC
 #include <atomic>
-#else
-#include <cstdatomic>
-#endif
 
 #include "globals.hpp"
 #include "configuration.hpp"

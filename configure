@@ -644,8 +644,6 @@ ARM_TRUE
 X86_FALSE
 X86_TRUE
 LIBOBJS
-USE_PCRE_FALSE
-USE_PCRE_TRUE
 CPP
 MVN
 ANT
@@ -1934,6 +1932,127 @@ fi
 
 } # ac_fn_cxx_try_run
 
+# ac_fn_c_check_type LINENO TYPE VAR INCLUDES
+# -------------------------------------------
+# Tests whether TYPE exists after having included INCLUDES, setting cache
+# variable VAR accordingly.
+ac_fn_c_check_type ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+$as_echo_n "checking for $2... " >&6; }
+if eval \${$3+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  eval "$3=no"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main ()
+{
+if (sizeof ($2))
+	 return 0;
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+int
+main ()
+{
+if (sizeof (($2)))
+	    return 0;
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
+else
+  eval "$3=yes"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+eval ac_res=\$$3
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+
+} # ac_fn_c_check_type
+
+# ac_fn_c_check_func LINENO FUNC VAR
+# ----------------------------------
+# Tests whether FUNC exists, setting the cache variable VAR accordingly
+ac_fn_c_check_func ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+$as_echo_n "checking for $2... " >&6; }
+if eval \${$3+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+/* Define $2 to an innocuous variant, in case <limits.h> declares $2.
+   For example, HP-UX 11i <limits.h> declares gettimeofday.  */
+#define $2 innocuous_$2
+
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char $2 (); below.
+    Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
+    <limits.h> exists even on freestanding compilers.  */
+
+#ifdef __STDC__
+# include <limits.h>
+#else
+# include <assert.h>
+#endif
+
+#undef $2
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char $2 ();
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined __stub_$2 || defined __stub___$2
+choke me
+#endif
+
+int
+main ()
+{
+return $2 ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  eval "$3=yes"
+else
+  eval "$3=no"
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+fi
+eval ac_res=\$$3
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+
+} # ac_fn_c_check_func
+
 # ac_fn_cxx_check_header_mongrel LINENO HEADER VAR INCLUDES
 # ---------------------------------------------------------
 # Tests whether HEADER exists, giving a warning if it cannot be compiled using
@@ -2070,127 +2189,6 @@ fi
   as_fn_set_status $ac_retval
 
 } # ac_fn_cxx_try_link
-
-# ac_fn_c_check_type LINENO TYPE VAR INCLUDES
-# -------------------------------------------
-# Tests whether TYPE exists after having included INCLUDES, setting cache
-# variable VAR accordingly.
-ac_fn_c_check_type ()
-{
-  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
-$as_echo_n "checking for $2... " >&6; }
-if eval \${$3+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  eval "$3=no"
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-int
-main ()
-{
-if (sizeof ($2))
-	 return 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-int
-main ()
-{
-if (sizeof (($2)))
-	    return 0;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-
-else
-  eval "$3=yes"
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-eval ac_res=\$$3
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
-
-} # ac_fn_c_check_type
-
-# ac_fn_c_check_func LINENO FUNC VAR
-# ----------------------------------
-# Tests whether FUNC exists, setting the cache variable VAR accordingly
-ac_fn_c_check_func ()
-{
-  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
-$as_echo_n "checking for $2... " >&6; }
-if eval \${$3+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-/* Define $2 to an innocuous variant, in case <limits.h> declares $2.
-   For example, HP-UX 11i <limits.h> declares gettimeofday.  */
-#define $2 innocuous_$2
-
-/* System header to define __stub macros and hopefully few prototypes,
-    which can conflict with char $2 (); below.
-    Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
-    <limits.h> exists even on freestanding compilers.  */
-
-#ifdef __STDC__
-# include <limits.h>
-#else
-# include <assert.h>
-#endif
-
-#undef $2
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char $2 ();
-/* The GNU C library defines this for functions which it implements
-    to always fail with ENOSYS.  Some functions are actually named
-    something starting with __ and the normal name is an alias.  */
-#if defined __stub_$2 || defined __stub___$2
-choke me
-#endif
-
-int
-main ()
-{
-return $2 ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  eval "$3=yes"
-else
-  eval "$3=no"
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-fi
-eval ac_res=\$$3
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
-
-} # ac_fn_c_check_func
 cat >config.log <<_ACEOF
 This file contains any messages produced by compilers while
 running configure, to aid debugging if configure makes a mistake.
@@ -6393,10 +6391,7 @@ ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
-ORIG_CXXFLAGS=$CXXFLAGS
 CXXFLAGS+=" -std=c++11"
-CPP11=1
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking C++11 support" >&5
 $as_echo_n "checking C++11 support... " >&6; }
 
@@ -6412,149 +6407,20 @@ main ()
 }
 _ACEOF
 if ac_fn_cxx_try_compile "$LINENO"; then :
-
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
 else
-   CPP11=0
+
+                    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+                    as_fn_error $? "Compiler does not support C++11." "$LINENO" 5
+
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-if test $CPP11 -eq 1; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: c++11" >&5
-$as_echo "c++11" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: c++0x" >&5
-$as_echo "c++0x" >&6; }
-  CXXFLAGS="$ORIG_CXXFLAGS -std=c++0x"
-fi
-
-# Check C++11 regex
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for std::regex" >&5
-$as_echo_n "checking for std::regex... " >&6; }
-
-
-if test "$cross_compiling" = yes; then :
-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "cannot run test program while cross compiling
-See \`config.log' for more details" "$LINENO" 5; }
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-      #include <regex>
-      #include <string>
-
-int
-main ()
-{
-
-      std::string res = std::regex_replace(std::string("heapStats"), std::regex("h"), "H");
-
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_run "$LINENO"; then :
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-    $as_echo "#define USE_PCRE 0" >>confdefs.h
-
-
-else
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-    $as_echo "#define USE_PCRE 1" >>confdefs.h
-
-    for ac_header in pcre.h
-do :
-  ac_fn_cxx_check_header_mongrel "$LINENO" "pcre.h" "ac_cv_header_pcre_h" "$ac_includes_default"
-if test "x$ac_cv_header_pcre_h" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_PCRE_H 1
-_ACEOF
-
-else
-  as_fn_error $? "PCRE not found." "$LINENO" 5
-fi
-
-done
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lpcre" >&5
-$as_echo_n "checking for main in -lpcre... " >&6; }
-if ${ac_cv_lib_pcre_main+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lpcre  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_pcre_main=yes
-else
-  ac_cv_lib_pcre_main=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_pcre_main" >&5
-$as_echo "$ac_cv_lib_pcre_main" >&6; }
-if test "x$ac_cv_lib_pcre_main" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBPCRE 1
-_ACEOF
-
-  LIBS="-lpcre $LIBS"
-
-else
-  as_fn_error $? "PCRE not found." "$LINENO" 5
-fi
-
-
-
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
- if test -n "${ac_cv_header_pcre_h}"; then
-  USE_PCRE_TRUE=
-  USE_PCRE_FALSE='#'
-else
-  USE_PCRE_TRUE='#'
-  USE_PCRE_FALSE=
-fi
-
-
-for ac_header in sys/auxv.h
-do :
-  ac_fn_cxx_check_header_mongrel "$LINENO" "sys/auxv.h" "ac_cv_header_sys_auxv_h" "$ac_includes_default"
-if test "x$ac_cv_header_sys_auxv_h" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_SYS_AUXV_H 1
-_ACEOF
-
-fi
-
-done
-  # Supplemental headers
 
 # Check Container insert/erase and iterator constness (N2350)
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for N2350" >&5
 $as_echo_n "checking for N2350... " >&6; }
-
 if test "$cross_compiling" = yes; then :
   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
@@ -6597,44 +6463,25 @@ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
   conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
 
-
-# Check for atomic operation
-for ac_header in atomic
-do :
-  ac_fn_cxx_check_header_mongrel "$LINENO" "atomic" "ac_cv_header_atomic" "$ac_includes_default"
-if test "x$ac_cv_header_atomic" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_ATOMIC 1
-_ACEOF
-
-else
-
-  for ac_header in cstdatomic
-do :
-  ac_fn_cxx_check_header_mongrel "$LINENO" "cstdatomic" "ac_cv_header_cstdatomic" "$ac_includes_default"
-if test "x$ac_cv_header_cstdatomic" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_CSTDATOMIC 1
-_ACEOF
-
-else
-  as_fn_error $? "Compiler does not support C++ atomic." "$LINENO" 5
-fi
-
-done
-
-
-fi
-
-done
-
-
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
+
+for ac_header in sys/auxv.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "sys/auxv.h" "ac_cv_header_sys_auxv_h" "$ac_includes_default"
+if test "x$ac_cv_header_sys_auxv_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SYS_AUXV_H 1
+_ACEOF
+
+fi
+
+done
+  # Supplemental headers
 
 # Checks for library header files.
 for ac_header in net-snmp/net-snmp-config.h
@@ -8103,6 +7950,7 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
 
+
 # set general file path
 DEVNULL="/dev/null"
 
@@ -8949,10 +8797,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCCAS_TRUE}" && test -z "${am__fastdepCCAS_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCCAS\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${USE_PCRE_TRUE}" && test -z "${USE_PCRE_FALSE}"; then
-  as_fn_error $? "conditional \"USE_PCRE\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
