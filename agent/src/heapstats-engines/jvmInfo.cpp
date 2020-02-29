@@ -36,8 +36,6 @@
 #include "util.hpp"
 #include "jvmInfo.hpp"
 
-#include "cppRegex.hpp"
-
 
 /*!
  * \brief TJvmInfo constructor.
