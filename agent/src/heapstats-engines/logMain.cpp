@@ -22,11 +22,7 @@
 #include <signal.h>
 #include <sched.h>
 
-#ifdef HAVE_ATOMIC
 #include <atomic>
-#else
-#include <cstdatomic>
-#endif
 
 #include "globals.hpp"
 #include "elapsedTimer.hpp"
