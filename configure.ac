@@ -78,7 +78,31 @@ AC_CACHE_SAVE
 AC_LANG_PUSH([C++])
 CXXFLAGS+=" -std=c++11"
 AC_MSG_CHECKING([C++11 support])
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])], [], [ AC_MSG_ERROR([Compiler does not support C++11.]) ])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])],
+                  [AC_MSG_RESULT([yes])],
+                  [
+                    AC_MSG_RESULT([no])
+                    AC_MSG_ERROR([Compiler does not support C++11.])
+                  ])
+
+# Check Container insert/erase and iterator constness (N2350)
+AC_MSG_CHECKING([for N2350])
+AC_RUN_IFELSE(
+  [AC_LANG_PROGRAM(
+    [[
+      #include <list>
+    ]], [[
+      std::list<int> test;
+      test.push_back(0);
+      test.erase(test.cbegin());
+    ]]
+  )], [
+    AC_MSG_RESULT([yes])
+    AC_DEFINE(USE_N2350, 1)
+  ], [
+    AC_MSG_RESULT([no])
+  ]
+)
 AC_LANG_POP([C++])
 
 AC_CHECK_HEADERS([sys/auxv.h], [], [])  # Supplemental headers
