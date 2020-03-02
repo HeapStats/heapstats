@@ -124,7 +124,7 @@ am__libheapstats_engine_avx_2_2_so_SOURCES_DIST = libmain.cpp util.cpp \
 	deadlockDetector.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
 	heapstatsMBean.cpp overrideFunc.S trapSender.cpp \
-	arch/x86/x86BitMapMarker.cpp \
+	objectData.cpp arch/x86/x86BitMapMarker.cpp \
 	arch/x86/sse2/sse2BitMapMarker.cpp \
 	arch/x86/avx/avxBitMapMarker.cpp
 am__objects_1 = libheapstats_engine_avx_2_2_so-libmain.$(OBJEXT) \
@@ -157,7 +157,8 @@ am__objects_1 = libheapstats_engine_avx_2_2_so-libmain.$(OBJEXT) \
 	libheapstats_engine_avx_2_2_so-threadRecorder.$(OBJEXT) \
 	libheapstats_engine_avx_2_2_so-heapstatsMBean.$(OBJEXT) \
 	libheapstats_engine_avx_2_2_so-overrideFunc.$(OBJEXT) \
-	libheapstats_engine_avx_2_2_so-trapSender.$(OBJEXT)
+	libheapstats_engine_avx_2_2_so-trapSender.$(OBJEXT) \
+	libheapstats_engine_avx_2_2_so-objectData.$(OBJEXT)
 am__dirstamp = $(am__leading_dot)dirstamp
 @AVX_TRUE@@X86_TRUE@am_libheapstats_engine_avx_2_2_so_OBJECTS =  \
 @AVX_TRUE@@X86_TRUE@	$(am__objects_1) \
@@ -180,7 +181,7 @@ am__libheapstats_engine_neon_2_2_so_SOURCES_DIST = libmain.cpp \
 	deadlockDetector.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
 	heapstatsMBean.cpp overrideFunc.S trapSender.cpp \
-	arch/arm/armBitMapMarker.cpp \
+	objectData.cpp arch/arm/armBitMapMarker.cpp \
 	arch/arm/neon/neonBitMapMarker.cpp
 am__objects_2 = libheapstats_engine_neon_2_2_so-libmain.$(OBJEXT) \
 	libheapstats_engine_neon_2_2_so-util.$(OBJEXT) \
@@ -212,7 +213,8 @@ am__objects_2 = libheapstats_engine_neon_2_2_so-libmain.$(OBJEXT) \
 	libheapstats_engine_neon_2_2_so-threadRecorder.$(OBJEXT) \
 	libheapstats_engine_neon_2_2_so-heapstatsMBean.$(OBJEXT) \
 	libheapstats_engine_neon_2_2_so-overrideFunc.$(OBJEXT) \
-	libheapstats_engine_neon_2_2_so-trapSender.$(OBJEXT)
+	libheapstats_engine_neon_2_2_so-trapSender.$(OBJEXT) \
+	libheapstats_engine_neon_2_2_so-objectData.$(OBJEXT)
 @ARM_TRUE@am_libheapstats_engine_neon_2_2_so_OBJECTS =  \
 @ARM_TRUE@	$(am__objects_2) \
 @ARM_TRUE@	arch/arm/libheapstats_engine_neon_2_2_so-armBitMapMarker.$(OBJEXT) \
@@ -233,7 +235,8 @@ am__libheapstats_engine_none_2_2_so_SOURCES_DIST = libmain.cpp \
 	deadlockDetector.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
 	heapstatsMBean.cpp overrideFunc.S trapSender.cpp \
-	arch/arm/armBitMapMarker.cpp arch/x86/x86BitMapMarker.cpp
+	objectData.cpp arch/arm/armBitMapMarker.cpp \
+	arch/x86/x86BitMapMarker.cpp
 am__objects_3 = libheapstats_engine_none_2_2_so-libmain.$(OBJEXT) \
 	libheapstats_engine_none_2_2_so-util.$(OBJEXT) \
 	libheapstats_engine_none_2_2_so-symbolFinder.$(OBJEXT) \
@@ -264,7 +267,8 @@ am__objects_3 = libheapstats_engine_none_2_2_so-libmain.$(OBJEXT) \
 	libheapstats_engine_none_2_2_so-threadRecorder.$(OBJEXT) \
 	libheapstats_engine_none_2_2_so-heapstatsMBean.$(OBJEXT) \
 	libheapstats_engine_none_2_2_so-overrideFunc.$(OBJEXT) \
-	libheapstats_engine_none_2_2_so-trapSender.$(OBJEXT)
+	libheapstats_engine_none_2_2_so-trapSender.$(OBJEXT) \
+	libheapstats_engine_none_2_2_so-objectData.$(OBJEXT)
 @ARM_FALSE@@X86_TRUE@am_libheapstats_engine_none_2_2_so_OBJECTS =  \
 @ARM_FALSE@@X86_TRUE@	$(am__objects_3) \
 @ARM_FALSE@@X86_TRUE@	arch/x86/libheapstats_engine_none_2_2_so-x86BitMapMarker.$(OBJEXT)
@@ -287,7 +291,7 @@ am__libheapstats_engine_sse2_2_2_so_SOURCES_DIST = libmain.cpp \
 	deadlockDetector.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
 	heapstatsMBean.cpp overrideFunc.S trapSender.cpp \
-	arch/x86/x86BitMapMarker.cpp \
+	objectData.cpp arch/x86/x86BitMapMarker.cpp \
 	arch/x86/sse2/sse2BitMapMarker.cpp
 am__objects_4 = libheapstats_engine_sse2_2_2_so-libmain.$(OBJEXT) \
 	libheapstats_engine_sse2_2_2_so-util.$(OBJEXT) \
@@ -319,7 +323,8 @@ am__objects_4 = libheapstats_engine_sse2_2_2_so-libmain.$(OBJEXT) \
 	libheapstats_engine_sse2_2_2_so-threadRecorder.$(OBJEXT) \
 	libheapstats_engine_sse2_2_2_so-heapstatsMBean.$(OBJEXT) \
 	libheapstats_engine_sse2_2_2_so-overrideFunc.$(OBJEXT) \
-	libheapstats_engine_sse2_2_2_so-trapSender.$(OBJEXT)
+	libheapstats_engine_sse2_2_2_so-trapSender.$(OBJEXT) \
+	libheapstats_engine_sse2_2_2_so-objectData.$(OBJEXT)
 @SSE2_TRUE@@X86_TRUE@am_libheapstats_engine_sse2_2_2_so_OBJECTS =  \
 @SSE2_TRUE@@X86_TRUE@	$(am__objects_4) \
 @SSE2_TRUE@@X86_TRUE@	arch/x86/libheapstats_engine_sse2_2_2_so-x86BitMapMarker.$(OBJEXT) \
@@ -340,7 +345,7 @@ am__libheapstats_engine_sse4_2_2_so_SOURCES_DIST = libmain.cpp \
 	deadlockDetector.cpp vmVariables.cpp vmFunctions.cpp \
 	configuration.cpp overrider.cpp threadRecorder.cpp \
 	heapstatsMBean.cpp overrideFunc.S trapSender.cpp \
-	arch/x86/x86BitMapMarker.cpp \
+	objectData.cpp arch/x86/x86BitMapMarker.cpp \
 	arch/x86/sse2/sse2BitMapMarker.cpp
 am__objects_5 = libheapstats_engine_sse4_2_2_so-libmain.$(OBJEXT) \
 	libheapstats_engine_sse4_2_2_so-util.$(OBJEXT) \
@@ -372,7 +377,8 @@ am__objects_5 = libheapstats_engine_sse4_2_2_so-libmain.$(OBJEXT) \
 	libheapstats_engine_sse4_2_2_so-threadRecorder.$(OBJEXT) \
 	libheapstats_engine_sse4_2_2_so-heapstatsMBean.$(OBJEXT) \
 	libheapstats_engine_sse4_2_2_so-overrideFunc.$(OBJEXT) \
-	libheapstats_engine_sse4_2_2_so-trapSender.$(OBJEXT)
+	libheapstats_engine_sse4_2_2_so-trapSender.$(OBJEXT) \
+	libheapstats_engine_sse4_2_2_so-objectData.$(OBJEXT)
 @SSE4_TRUE@@X86_TRUE@am_libheapstats_engine_sse4_2_2_so_OBJECTS =  \
 @SSE4_TRUE@@X86_TRUE@	$(am__objects_5) \
 @SSE4_TRUE@@X86_TRUE@	arch/x86/libheapstats_engine_sse4_2_2_so-x86BitMapMarker.$(OBJEXT) \
@@ -415,6 +421,7 @@ am__depfiles_remade =  \
 	./$(DEPDIR)/libheapstats_engine_avx_2_2_so-libmain.Po \
 	./$(DEPDIR)/libheapstats_engine_avx_2_2_so-logMain.Po \
 	./$(DEPDIR)/libheapstats_engine_avx_2_2_so-logManager.Po \
+	./$(DEPDIR)/libheapstats_engine_avx_2_2_so-objectData.Po \
 	./$(DEPDIR)/libheapstats_engine_avx_2_2_so-oopUtil.Po \
 	./$(DEPDIR)/libheapstats_engine_avx_2_2_so-overrideFunc.Po \
 	./$(DEPDIR)/libheapstats_engine_avx_2_2_so-overrider.Po \
@@ -446,6 +453,7 @@ am__depfiles_remade =  \
 	./$(DEPDIR)/libheapstats_engine_neon_2_2_so-libmain.Po \
 	./$(DEPDIR)/libheapstats_engine_neon_2_2_so-logMain.Po \
 	./$(DEPDIR)/libheapstats_engine_neon_2_2_so-logManager.Po \
+	./$(DEPDIR)/libheapstats_engine_neon_2_2_so-objectData.Po \
 	./$(DEPDIR)/libheapstats_engine_neon_2_2_so-oopUtil.Po \
 	./$(DEPDIR)/libheapstats_engine_neon_2_2_so-overrideFunc.Po \
 	./$(DEPDIR)/libheapstats_engine_neon_2_2_so-overrider.Po \
@@ -477,6 +485,7 @@ am__depfiles_remade =  \
 	./$(DEPDIR)/libheapstats_engine_none_2_2_so-libmain.Po \
 	./$(DEPDIR)/libheapstats_engine_none_2_2_so-logMain.Po \
 	./$(DEPDIR)/libheapstats_engine_none_2_2_so-logManager.Po \
+	./$(DEPDIR)/libheapstats_engine_none_2_2_so-objectData.Po \
 	./$(DEPDIR)/libheapstats_engine_none_2_2_so-oopUtil.Po \
 	./$(DEPDIR)/libheapstats_engine_none_2_2_so-overrideFunc.Po \
 	./$(DEPDIR)/libheapstats_engine_none_2_2_so-overrider.Po \
@@ -508,6 +517,7 @@ am__depfiles_remade =  \
 	./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-libmain.Po \
 	./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-logMain.Po \
 	./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-logManager.Po \
+	./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-objectData.Po \
 	./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-oopUtil.Po \
 	./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-overrideFunc.Po \
 	./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-overrider.Po \
@@ -539,6 +549,7 @@ am__depfiles_remade =  \
 	./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-libmain.Po \
 	./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-logMain.Po \
 	./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-logManager.Po \
+	./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-objectData.Po \
 	./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-oopUtil.Po \
 	./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-overrideFunc.Po \
 	./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-overrider.Po \
@@ -761,7 +772,7 @@ BASE_SOURCE = libmain.cpp util.cpp symbolFinder.cpp vmStructScanner.cpp   \
                   jniZipArchiver.cpp deadlockDetector.cpp vmVariables.cpp     \
                   vmFunctions.cpp configuration.cpp overrider.cpp             \
                   threadRecorder.cpp heapstatsMBean.cpp overrideFunc.S        \
-                  trapSender.cpp
+                  trapSender.cpp objectData.cpp
 
 BASE_CXX_FLAGS = -I@JDK_DIR@/include -I@JDK_DIR@/include/linux -Wall        \
                   -Wno-strict-aliasing -fPIC @VMSTRUCTS_CXX_FLAGS@           \
@@ -962,6 +973,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_2_so-libmain.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_2_so-logMain.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_2_so-logManager.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_2_so-objectData.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_2_so-oopUtil.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_2_so-overrideFunc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_avx_2_2_so-overrider.Po@am__quote@ # am--include-marker
@@ -993,6 +1005,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_2_so-libmain.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_2_so-logMain.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_2_so-logManager.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_2_so-objectData.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_2_so-oopUtil.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_2_so-overrideFunc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_neon_2_2_so-overrider.Po@am__quote@ # am--include-marker
@@ -1024,6 +1037,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_2_so-libmain.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_2_so-logMain.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_2_so-logManager.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_2_so-objectData.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_2_so-oopUtil.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_2_so-overrideFunc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_none_2_2_so-overrider.Po@am__quote@ # am--include-marker
@@ -1055,6 +1069,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-libmain.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-logMain.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-logManager.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-objectData.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-oopUtil.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-overrideFunc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-overrider.Po@am__quote@ # am--include-marker
@@ -1086,6 +1101,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-libmain.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-logMain.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-logManager.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-objectData.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-oopUtil.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-overrideFunc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-overrider.Po@am__quote@ # am--include-marker
@@ -1641,6 +1657,20 @@ libheapstats_engine_avx_2_2_so-trapSender.obj: trapSender.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_avx_2_2_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
 
+libheapstats_engine_avx_2_2_so-objectData.o: objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_avx_2_2_so-objectData.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_avx_2_2_so-objectData.Tpo -c -o libheapstats_engine_avx_2_2_so-objectData.o `test -f 'objectData.cpp' || echo '$(srcdir)/'`objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_avx_2_2_so-objectData.Tpo $(DEPDIR)/libheapstats_engine_avx_2_2_so-objectData.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='objectData.cpp' object='libheapstats_engine_avx_2_2_so-objectData.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_avx_2_2_so-objectData.o `test -f 'objectData.cpp' || echo '$(srcdir)/'`objectData.cpp
+
+libheapstats_engine_avx_2_2_so-objectData.obj: objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_avx_2_2_so-objectData.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_avx_2_2_so-objectData.Tpo -c -o libheapstats_engine_avx_2_2_so-objectData.obj `if test -f 'objectData.cpp'; then $(CYGPATH_W) 'objectData.cpp'; else $(CYGPATH_W) '$(srcdir)/objectData.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_avx_2_2_so-objectData.Tpo $(DEPDIR)/libheapstats_engine_avx_2_2_so-objectData.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='objectData.cpp' object='libheapstats_engine_avx_2_2_so-objectData.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_avx_2_2_so-objectData.obj `if test -f 'objectData.cpp'; then $(CYGPATH_W) 'objectData.cpp'; else $(CYGPATH_W) '$(srcdir)/objectData.cpp'; fi`
+
 arch/x86/libheapstats_engine_avx_2_2_so-x86BitMapMarker.o: arch/x86/x86BitMapMarker.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_avx_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT arch/x86/libheapstats_engine_avx_2_2_so-x86BitMapMarker.o -MD -MP -MF arch/x86/$(DEPDIR)/libheapstats_engine_avx_2_2_so-x86BitMapMarker.Tpo -c -o arch/x86/libheapstats_engine_avx_2_2_so-x86BitMapMarker.o `test -f 'arch/x86/x86BitMapMarker.cpp' || echo '$(srcdir)/'`arch/x86/x86BitMapMarker.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/x86/$(DEPDIR)/libheapstats_engine_avx_2_2_so-x86BitMapMarker.Tpo arch/x86/$(DEPDIR)/libheapstats_engine_avx_2_2_so-x86BitMapMarker.Po
@@ -2103,6 +2133,20 @@ libheapstats_engine_neon_2_2_so-trapSender.obj: trapSender.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_neon_2_2_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
 
+libheapstats_engine_neon_2_2_so-objectData.o: objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_neon_2_2_so-objectData.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_neon_2_2_so-objectData.Tpo -c -o libheapstats_engine_neon_2_2_so-objectData.o `test -f 'objectData.cpp' || echo '$(srcdir)/'`objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_neon_2_2_so-objectData.Tpo $(DEPDIR)/libheapstats_engine_neon_2_2_so-objectData.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='objectData.cpp' object='libheapstats_engine_neon_2_2_so-objectData.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_neon_2_2_so-objectData.o `test -f 'objectData.cpp' || echo '$(srcdir)/'`objectData.cpp
+
+libheapstats_engine_neon_2_2_so-objectData.obj: objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_neon_2_2_so-objectData.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_neon_2_2_so-objectData.Tpo -c -o libheapstats_engine_neon_2_2_so-objectData.obj `if test -f 'objectData.cpp'; then $(CYGPATH_W) 'objectData.cpp'; else $(CYGPATH_W) '$(srcdir)/objectData.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_neon_2_2_so-objectData.Tpo $(DEPDIR)/libheapstats_engine_neon_2_2_so-objectData.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='objectData.cpp' object='libheapstats_engine_neon_2_2_so-objectData.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_neon_2_2_so-objectData.obj `if test -f 'objectData.cpp'; then $(CYGPATH_W) 'objectData.cpp'; else $(CYGPATH_W) '$(srcdir)/objectData.cpp'; fi`
+
 arch/arm/libheapstats_engine_neon_2_2_so-armBitMapMarker.o: arch/arm/armBitMapMarker.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_neon_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT arch/arm/libheapstats_engine_neon_2_2_so-armBitMapMarker.o -MD -MP -MF arch/arm/$(DEPDIR)/libheapstats_engine_neon_2_2_so-armBitMapMarker.Tpo -c -o arch/arm/libheapstats_engine_neon_2_2_so-armBitMapMarker.o `test -f 'arch/arm/armBitMapMarker.cpp' || echo '$(srcdir)/'`arch/arm/armBitMapMarker.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/arm/$(DEPDIR)/libheapstats_engine_neon_2_2_so-armBitMapMarker.Tpo arch/arm/$(DEPDIR)/libheapstats_engine_neon_2_2_so-armBitMapMarker.Po
@@ -2550,6 +2594,20 @@ libheapstats_engine_none_2_2_so-trapSender.obj: trapSender.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='trapSender.cpp' object='libheapstats_engine_none_2_2_so-trapSender.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_none_2_2_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
+
+libheapstats_engine_none_2_2_so-objectData.o: objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_none_2_2_so-objectData.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_none_2_2_so-objectData.Tpo -c -o libheapstats_engine_none_2_2_so-objectData.o `test -f 'objectData.cpp' || echo '$(srcdir)/'`objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_none_2_2_so-objectData.Tpo $(DEPDIR)/libheapstats_engine_none_2_2_so-objectData.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='objectData.cpp' object='libheapstats_engine_none_2_2_so-objectData.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_none_2_2_so-objectData.o `test -f 'objectData.cpp' || echo '$(srcdir)/'`objectData.cpp
+
+libheapstats_engine_none_2_2_so-objectData.obj: objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_none_2_2_so-objectData.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_none_2_2_so-objectData.Tpo -c -o libheapstats_engine_none_2_2_so-objectData.obj `if test -f 'objectData.cpp'; then $(CYGPATH_W) 'objectData.cpp'; else $(CYGPATH_W) '$(srcdir)/objectData.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_none_2_2_so-objectData.Tpo $(DEPDIR)/libheapstats_engine_none_2_2_so-objectData.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='objectData.cpp' object='libheapstats_engine_none_2_2_so-objectData.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_none_2_2_so-objectData.obj `if test -f 'objectData.cpp'; then $(CYGPATH_W) 'objectData.cpp'; else $(CYGPATH_W) '$(srcdir)/objectData.cpp'; fi`
 
 arch/arm/libheapstats_engine_none_2_2_so-armBitMapMarker.o: arch/arm/armBitMapMarker.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_none_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT arch/arm/libheapstats_engine_none_2_2_so-armBitMapMarker.o -MD -MP -MF arch/arm/$(DEPDIR)/libheapstats_engine_none_2_2_so-armBitMapMarker.Tpo -c -o arch/arm/libheapstats_engine_none_2_2_so-armBitMapMarker.o `test -f 'arch/arm/armBitMapMarker.cpp' || echo '$(srcdir)/'`arch/arm/armBitMapMarker.cpp
@@ -2999,6 +3057,20 @@ libheapstats_engine_sse2_2_2_so-trapSender.obj: trapSender.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse2_2_2_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
 
+libheapstats_engine_sse2_2_2_so-objectData.o: objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse2_2_2_so-objectData.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse2_2_2_so-objectData.Tpo -c -o libheapstats_engine_sse2_2_2_so-objectData.o `test -f 'objectData.cpp' || echo '$(srcdir)/'`objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse2_2_2_so-objectData.Tpo $(DEPDIR)/libheapstats_engine_sse2_2_2_so-objectData.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='objectData.cpp' object='libheapstats_engine_sse2_2_2_so-objectData.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse2_2_2_so-objectData.o `test -f 'objectData.cpp' || echo '$(srcdir)/'`objectData.cpp
+
+libheapstats_engine_sse2_2_2_so-objectData.obj: objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse2_2_2_so-objectData.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse2_2_2_so-objectData.Tpo -c -o libheapstats_engine_sse2_2_2_so-objectData.obj `if test -f 'objectData.cpp'; then $(CYGPATH_W) 'objectData.cpp'; else $(CYGPATH_W) '$(srcdir)/objectData.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse2_2_2_so-objectData.Tpo $(DEPDIR)/libheapstats_engine_sse2_2_2_so-objectData.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='objectData.cpp' object='libheapstats_engine_sse2_2_2_so-objectData.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse2_2_2_so-objectData.obj `if test -f 'objectData.cpp'; then $(CYGPATH_W) 'objectData.cpp'; else $(CYGPATH_W) '$(srcdir)/objectData.cpp'; fi`
+
 arch/x86/libheapstats_engine_sse2_2_2_so-x86BitMapMarker.o: arch/x86/x86BitMapMarker.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse2_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT arch/x86/libheapstats_engine_sse2_2_2_so-x86BitMapMarker.o -MD -MP -MF arch/x86/$(DEPDIR)/libheapstats_engine_sse2_2_2_so-x86BitMapMarker.Tpo -c -o arch/x86/libheapstats_engine_sse2_2_2_so-x86BitMapMarker.o `test -f 'arch/x86/x86BitMapMarker.cpp' || echo '$(srcdir)/'`arch/x86/x86BitMapMarker.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/x86/$(DEPDIR)/libheapstats_engine_sse2_2_2_so-x86BitMapMarker.Tpo arch/x86/$(DEPDIR)/libheapstats_engine_sse2_2_2_so-x86BitMapMarker.Po
@@ -3447,6 +3519,20 @@ libheapstats_engine_sse4_2_2_so-trapSender.obj: trapSender.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse4_2_2_so-trapSender.obj `if test -f 'trapSender.cpp'; then $(CYGPATH_W) 'trapSender.cpp'; else $(CYGPATH_W) '$(srcdir)/trapSender.cpp'; fi`
 
+libheapstats_engine_sse4_2_2_so-objectData.o: objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse4_2_2_so-objectData.o -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse4_2_2_so-objectData.Tpo -c -o libheapstats_engine_sse4_2_2_so-objectData.o `test -f 'objectData.cpp' || echo '$(srcdir)/'`objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse4_2_2_so-objectData.Tpo $(DEPDIR)/libheapstats_engine_sse4_2_2_so-objectData.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='objectData.cpp' object='libheapstats_engine_sse4_2_2_so-objectData.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse4_2_2_so-objectData.o `test -f 'objectData.cpp' || echo '$(srcdir)/'`objectData.cpp
+
+libheapstats_engine_sse4_2_2_so-objectData.obj: objectData.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT libheapstats_engine_sse4_2_2_so-objectData.obj -MD -MP -MF $(DEPDIR)/libheapstats_engine_sse4_2_2_so-objectData.Tpo -c -o libheapstats_engine_sse4_2_2_so-objectData.obj `if test -f 'objectData.cpp'; then $(CYGPATH_W) 'objectData.cpp'; else $(CYGPATH_W) '$(srcdir)/objectData.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libheapstats_engine_sse4_2_2_so-objectData.Tpo $(DEPDIR)/libheapstats_engine_sse4_2_2_so-objectData.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='objectData.cpp' object='libheapstats_engine_sse4_2_2_so-objectData.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_2_so_CXXFLAGS) $(CXXFLAGS) -c -o libheapstats_engine_sse4_2_2_so-objectData.obj `if test -f 'objectData.cpp'; then $(CYGPATH_W) 'objectData.cpp'; else $(CYGPATH_W) '$(srcdir)/objectData.cpp'; fi`
+
 arch/x86/libheapstats_engine_sse4_2_2_so-x86BitMapMarker.o: arch/x86/x86BitMapMarker.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libheapstats_engine_sse4_2_2_so_CXXFLAGS) $(CXXFLAGS) -MT arch/x86/libheapstats_engine_sse4_2_2_so-x86BitMapMarker.o -MD -MP -MF arch/x86/$(DEPDIR)/libheapstats_engine_sse4_2_2_so-x86BitMapMarker.Tpo -c -o arch/x86/libheapstats_engine_sse4_2_2_so-x86BitMapMarker.o `test -f 'arch/x86/x86BitMapMarker.cpp' || echo '$(srcdir)/'`arch/x86/x86BitMapMarker.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) arch/x86/$(DEPDIR)/libheapstats_engine_sse4_2_2_so-x86BitMapMarker.Tpo arch/x86/$(DEPDIR)/libheapstats_engine_sse4_2_2_so-x86BitMapMarker.Po
@@ -3628,6 +3714,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-libmain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-logMain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-logManager.Po
+	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-objectData.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-oopUtil.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-overrideFunc.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-overrider.Po
@@ -3659,6 +3746,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-libmain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-logMain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-logManager.Po
+	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-objectData.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-oopUtil.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-overrideFunc.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-overrider.Po
@@ -3690,6 +3778,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-libmain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-logMain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-logManager.Po
+	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-objectData.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-oopUtil.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-overrideFunc.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-overrider.Po
@@ -3721,6 +3810,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-libmain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-logMain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-logManager.Po
+	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-objectData.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-oopUtil.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-overrideFunc.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-overrider.Po
@@ -3752,6 +3842,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-libmain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-logMain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-logManager.Po
+	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-objectData.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-oopUtil.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-overrideFunc.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-overrider.Po
@@ -3839,6 +3930,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-libmain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-logMain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-logManager.Po
+	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-objectData.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-oopUtil.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-overrideFunc.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_avx_2_2_so-overrider.Po
@@ -3870,6 +3962,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-libmain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-logMain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-logManager.Po
+	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-objectData.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-oopUtil.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-overrideFunc.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_neon_2_2_so-overrider.Po
@@ -3901,6 +3994,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-libmain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-logMain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-logManager.Po
+	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-objectData.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-oopUtil.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-overrideFunc.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_none_2_2_so-overrider.Po
@@ -3932,6 +4026,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-libmain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-logMain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-logManager.Po
+	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-objectData.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-oopUtil.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-overrideFunc.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse2_2_2_so-overrider.Po
@@ -3963,6 +4058,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-libmain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-logMain.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-logManager.Po
+	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-objectData.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-oopUtil.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-overrideFunc.Po
 	-rm -f ./$(DEPDIR)/libheapstats_engine_sse4_2_2_so-overrider.Po

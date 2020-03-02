@@ -113,27 +113,14 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop) {
 
   /* Class info setting. */
 
-  cur = (TObjectData *)calloc(1, sizeof(TObjectData));
-  /* If failure allocate. */
-  if (unlikely(cur == NULL)) {
-    /* Adding empty to list is deny. */
-    logger->printWarnMsg("Couldn't allocate counter memory!");
+  try {
+    cur = new TObjectData(klassOop);
+  } catch (...) {
+    logger->printWarnMsg("Couldn't allocate new TObjectData for %p!", klassOop);
     return NULL;
   }
 
-  cur->tag = (uintptr_t)cur;
-  cur->className = getClassName(getKlassFromKlassOop(klassOop));
-  /* If failure getting class name. */
-  if (unlikely(cur->className == NULL)) {
-    /* Adding empty to list is deny. */
-    logger->printWarnMsg("Couldn't get class name!");
-    free(cur);
-    return NULL;
-  }
-  cur->classNameLen = strlen(cur->className);
-  cur->oopType = getClassType(cur->className);
-
-  void *clsLoader = getClassLoader(klassOop, cur->oopType);
+  void *clsLoader = getClassLoader(klassOop, cur->OopType());
   TObjectData *clsLoaderData = NULL;
   /* If class loader isn't system bootstrap class loader. */
   if (clsLoader != NULL) {
@@ -147,15 +134,12 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop) {
       }
     }
   }
-  cur->clsLoaderTag = (clsLoaderData != NULL) ? clsLoaderData->tag : 0;
-  cur->clsLoaderId = (uintptr_t)clsLoader;
+  cur->setClassLoader(clsLoader, (clsLoaderData != NULL) ? clsLoaderData->Tag() : 0);
 
   /* Chain setting. */
-  cur->klassOop = klassOop;
   TObjectData *result = this->pushNewClass(klassOop, cur);
   if (unlikely(result != cur)) {
-    free(cur->className);
-    free(cur);
+    delete(cur);
   }
   return result;
 }
@@ -180,9 +164,9 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop,
     TObjectData *expectData = acc->second;
     if (likely(expectData != NULL)) {
       /* If adding class data for another class is already exists. */
-      if (unlikely((expectData->className == NULL) ||
-                   (strcmp(objData->className, expectData->className) != 0) ||
-                   (objData->clsLoaderId != expectData->clsLoaderId))) {
+      if (unlikely((expectData->ClassName() == NULL) ||
+                   (strcmp(objData->ClassName(), expectData->ClassName()) != 0) ||
+                   (objData->ClassLoaderId() != expectData->ClassLoaderId()))) {
         acc->second = objData;
         unloadedList.push(expectData);
       }
@@ -197,7 +181,7 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop,
  * \param target [in] Remove class data.
  */
 void TClassContainer::removeClass(TObjectData *target) {
-  classMap.erase(target->klassOop);
+  classMap.erase(target->KlassOop());
 }
 
 /*!
@@ -207,9 +191,7 @@ void TClassContainer::removeClass(TObjectData *target) {
 void TClassContainer::allClear(void) {
   /* Add all TObjectData pointers in container map to unloadedList */
   for (auto cur = classMap.begin(); cur != classMap.end(); cur++) {
-    TObjectData *objData = cur->second;
-    free(objData->className);
-    free(objData);
+    delete cur->second;
   }
 }
 
@@ -441,23 +423,13 @@ inline bool sendHeapAlertTrap(TTrapSender *pSender, THeapDelta heapUsage,
  * \return Value is zero, if process is succeed.<br />
  *         Value is error number a.k.a. "errno", if process is failure.
  */
-inline int writeClassData(const int fd, const TObjectData *objData,
+inline int writeClassData(const int fd, TObjectData *objData,
                           TClassCounter *cur, TSnapShotContainer *snapshot) {
   int result = 0;
   /* Output class-information. */
   try {
-    /* Output TObjectData.tag & TObjectData.classNameLen. */
-    if (unlikely(write(fd, objData, sizeof(jlong) << 1) < 0)) {
-      throw 1;
-    }
-
-    /* Output class name. */
-    if (unlikely(write(fd, objData->className, objData->classNameLen) < 0)) {
-      throw 1;
-    }
-
-    /* Output class loader's instance id and class tag. */
-    if (unlikely(write(fd, &objData->clsLoaderId, sizeof(jlong) << 1) < 0)) {
+    /* Write TObjectData */
+    if (unlikely(objData->writeObjectData(fd) == -1)) {
       throw 1;
     }
 
@@ -651,9 +623,9 @@ int TClassContainer::afterTakeSnapShot(TSnapShotContainer *snapshot,
 
     /* Calculate uasge and delta size. */
     result.usage = cur->counter->total_size;
-    result.delta = cur->counter->total_size - objData->oldTotalSize;
-    result.tag = objData->tag;
-    objData->oldTotalSize = result.usage;
+    result.delta = cur->counter->total_size - objData->OldTotalSize();
+    result.tag = objData->Tag();
+    objData->SetOldTotalSize(result.usage);
 
     /* If do output class. */
     if (!conf->ReduceSnapShot()->get() || (result.usage > 0)) {
@@ -678,21 +650,21 @@ int TClassContainer::afterTakeSnapShot(TSnapShotContainer *snapshot,
         /* Raise alert. */
         logger->printWarnMsg(
             "ALERT(DELTA): \"%s\" exceeded the threshold (%ld bytes)",
-            objData->className, result.delta);
+            objData->ClassName(), result.delta);
         /* Set need send trap flag. */
         sendFlag = 1;
       } else if ((order == USAGE) && (AlertThreshold <= result.usage)) {
         /* Raise alert. */
         logger->printWarnMsg(
             "ALERT(USAGE): \"%s\" exceeded the threshold (%ld bytes)",
-            objData->className, result.usage);
+            objData->ClassName(), result.usage);
         /* Set need send trap flag. */
         sendFlag = 1;
       }
 
       /* If need send trap. */
       if (conf->SnmpSend()->get() && sendFlag != 0) {
-        if (unlikely(!sendHeapAlertTrap(pSender, result, objData->className,
+        if (unlikely(!sendHeapAlertTrap(pSender, result, objData->ClassName(),
                                         cur->counter->count))) {
           logger->printWarnMsg("Send SNMP trap failed!");
         }
@@ -795,8 +767,7 @@ void JNICALL OnGarbageCollectionFinishForUnload(jvmtiEnv *jvmti) {
     TObjectData *objData;
     while (unloadedList.try_pop(objData)) {
       clsContainer->removeClass(objData);
-      free(objData->className);
-      free(objData);
+      delete objData;
     }
   }
 

@@ -9,7 +9,7 @@ BASE_SOURCE     = libmain.cpp util.cpp symbolFinder.cpp vmStructScanner.cpp   \
                   jniZipArchiver.cpp deadlockDetector.cpp vmVariables.cpp     \
                   vmFunctions.cpp configuration.cpp overrider.cpp             \
                   threadRecorder.cpp heapstatsMBean.cpp overrideFunc.S        \
-                  trapSender.cpp
+                  trapSender.cpp objectData.cpp
 
 BASE_CXX_FLAGS  = -I@JDK_DIR@/include -I@JDK_DIR@/include/linux -Wall        \
                   -Wno-strict-aliasing -fPIC @VMSTRUCTS_CXX_FLAGS@           \

@@ -225,7 +225,7 @@ TChildClassCounter *TSnapShotContainer::pushNewChildClass(
   newCounter->objData = objData;
 
   /* Set to children map. */
-  TChildrenMapKey key = std::make_pair(clsCounter, objData->klassOop);
+  TChildrenMapKey key = std::make_pair(clsCounter, objData->KlassOop());
   TChildrenMap::accessor acc;
   TChildrenMap::value_type value = std::make_pair(key, newCounter);
   childrenMap.insert(acc, value);
@@ -371,7 +371,7 @@ void TSnapShotContainer::removeObjectData(TClassInfoSet &unloadedList) {
       TChildClassCounter *child = clsCounter->child;
       while (child != NULL) {
         TChildClassCounter *next = child->next;
-        childrenMap.erase(std::make_pair(clsCounter, child->objData->klassOop));
+        childrenMap.erase(std::make_pair(clsCounter, child->objData->KlassOop()));
         free(child->counter);
         free(child);
         child = next;

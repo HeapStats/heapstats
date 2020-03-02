@@ -334,12 +334,12 @@ void iterateFieldObjectCallBack(void *oop, void *data) {
 
   TVMFunctions *vmFunc = TVMFunctions::getInstance();
   jlong size = 0;
-  if (clsCounter->objData->oopType == otInstance) {
-    if (likely(clsCounter->objData->instanceSize != 0)) {
-      size = clsCounter->objData->instanceSize;
+  if (clsCounter->objData->is_instance()) {
+    if (likely(clsCounter->objData->InstanceSize() != 0)) {
+      size = clsCounter->objData->InstanceSize();
     } else {
       vmFunc->GetObjectSize(NULL, (jobject)&oop, &size);
-      clsCounter->objData->instanceSize = size;
+      clsCounter->objData->SetInstanceSize(size);
     }
 
   } else {
@@ -387,15 +387,15 @@ inline void calculateObjectUsage(TSnapShotContainer *snapshot, void *oop) {
   }
 
   TVMFunctions *vmFunc = TVMFunctions::getInstance();
-  TOopType oopType = clsData->oopType;
+  TOopType oopType = clsData->OopType();
   jlong size = 0;
 
   if (oopType == otInstance) {
-    if (likely(clsData->instanceSize != 0)) {
-      size = clsData->instanceSize;
+    if (likely(clsData->InstanceSize() != 0)) {
+      size = clsData->InstanceSize();
     } else {
       vmFunc->GetObjectSize(NULL, (jobject)&oop, &size);
-      clsData->instanceSize = size;
+      clsData->SetInstanceSize(size);
     }
 
   } else {

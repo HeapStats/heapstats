@@ -28,6 +28,7 @@
 
 #include "sorter.hpp"
 #include "trapSender.hpp"
+#include "objectData.hpp"
 #include "oopUtil.hpp"
 
 #if PROCESSOR_ARCH == X86
@@ -36,30 +37,11 @@
 #include "arch/arm/lock.inline.hpp"
 #endif
 
-/*!
- * \brief Pointer type of klassOop.
- */
-typedef void* PKlassOop;
 
 /*!
  * \brief Forward declaration in snapShotContainer.hpp
  */
 class TSnapShotContainer;
-
-/*!
- * \brief This structure stored class information.
- */
-typedef struct {
-  jlong tag;          /*!< Class tag.                                 */
-  jlong classNameLen; /*!< Class name.                                */
-  char *className;    /*!< Class name length.                         */
-  PKlassOop klassOop; /*!< Java inner class object.                   */
-  jlong oldTotalSize; /*!< Class old total use size.                  */
-  TOopType oopType;   /*!< Type of class.                             */
-  jlong clsLoaderId;  /*!< Class loader instance id.                  */
-  jlong clsLoaderTag; /*!< Class loader class tag.                    */
-  jlong instanceSize; /*!< Class size if this class is instanceKlass. */
-} TObjectData;
 
 /*!
  * \brief This structure stored size of a class used in heap.
@@ -145,12 +127,11 @@ class TClassContainer {
       TObjectData *cur = acc->second;
       acc.release();
 
-      cur->klassOop = newKlassOop;
+      cur->replaceKlassOop(newKlassOop);
       TClassMap::accessor new_acc;
       classMap.insert(new_acc, std::make_pair(newKlassOop, cur));
       new_acc.release();
 
-      classMap.erase(oldKlassOop);
       updatedClassList.push(oldKlassOop);
     }
   }
