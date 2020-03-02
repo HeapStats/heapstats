@@ -72,7 +72,7 @@ typedef struct {
 struct TChildClassCounter {
   TObjectCounter *counter;  /*!< Java inner class object. */
   TChildClassCounter *next; /*!< Pointer of next object.  */
-  std::shared_ptr<TObjectDataA> objData; /*!< Class information.       */
+  std::shared_ptr<TObjectData> objData; /*!< Class information.       */
 };
 
 /*!
@@ -117,8 +117,8 @@ class TSnapShotContainer;
 /*!
  * \brief Type is for map of storing object counters.
  */
-typedef tbb::concurrent_hash_map<std::shared_ptr<TObjectDataA>, TClassCounter *,
-                                 TSharedPtrHasher<TObjectDataA> > TSizeMap;
+typedef tbb::concurrent_hash_map<std::shared_ptr<TObjectData>, TClassCounter *,
+                                 TSharedPtrHasher<TObjectData> > TSizeMap;
 
 /*!
  * \brief Container of active snapshot list.
@@ -237,7 +237,7 @@ class TSnapShotContainer {
    * \return Found class data.
    *         Value is null, if class is not found.
    */
-  inline TClassCounter *findClass(std::shared_ptr<TObjectDataA> objData) {
+  inline TClassCounter *findClass(std::shared_ptr<TObjectData> objData) {
     TSizeMap::const_accessor acc;
     return counterMap.find(acc, objData) ? acc->second : NULL;
   }
@@ -261,7 +261,7 @@ class TSnapShotContainer {
    * \param objData [in] New-class key object.
    * \return New-class data.
    */
-  virtual TClassCounter *pushNewClass(std::shared_ptr<TObjectDataA> objData);
+  virtual TClassCounter *pushNewClass(std::shared_ptr<TObjectData> objData);
 
   /*!
    * \brief Append new-child-class to container.
@@ -270,7 +270,7 @@ class TSnapShotContainer {
    * \return New-class data.
    */
   virtual TChildClassCounter *pushNewChildClass(TClassCounter *clsCounter,
-                                                std::shared_ptr<TObjectDataA> objData);
+                                                std::shared_ptr<TObjectData> objData);
 
   /*!
    * \brief Output GC statistics information.

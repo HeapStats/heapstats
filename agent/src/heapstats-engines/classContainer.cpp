@@ -111,22 +111,22 @@ TClassContainer::~TClassContainer(void) {
  * \param klassOop [in] New class oop.
  * \return New-class data.
  */
-std::shared_ptr<TObjectDataA> TClassContainer::pushNewClass(void *klassOop) {
-  TObjectDataA *cur = NULL;
+std::shared_ptr<TObjectData> TClassContainer::pushNewClass(void *klassOop) {
+  TObjectData *cur = NULL;
 
   /* Class info setting. */
 
   try {
-    cur = new TObjectDataA(klassOop);
+    cur = new TObjectData(klassOop);
   } catch (...) {
     logger->printWarnMsg("Couldn't allocate new TObjectData for %p!", klassOop);
     return NULL;
   }
 
-  std::shared_ptr<TObjectDataA> cur_ptr(cur);
+  std::shared_ptr<TObjectData> cur_ptr(cur);
 
   void *clsLoader = getClassLoader(klassOop, cur_ptr->OopType());
-  std::shared_ptr<TObjectDataA> clsLoaderData;
+  std::shared_ptr<TObjectData> clsLoaderData;
   /* If class loader isn't system bootstrap class loader. */
   if (clsLoader != NULL) {
     void *clsLoaderKlsOop = getKlassOopFromOop(clsLoader);
@@ -157,8 +157,8 @@ std::shared_ptr<TObjectDataA> TClassContainer::pushNewClass(void *klassOop) {
  *         This value isn't equal param "objData",
  *         if already registered equivalence class.
  */
-std::shared_ptr<TObjectDataA> TClassContainer::pushNewClass(void *klassOop,
-                                                            std::shared_ptr<TObjectDataA> objData) {
+std::shared_ptr<TObjectData> TClassContainer::pushNewClass(void *klassOop,
+                                                            std::shared_ptr<TObjectData> objData) {
   /*
    * Jvmti extension event "classUnload" is loose once in a while.
    * The event forget callback occasionally when class unloading.
@@ -166,7 +166,7 @@ std::shared_ptr<TObjectDataA> TClassContainer::pushNewClass(void *klassOop,
    */
   TClassMap::accessor acc;
   if (!classMap.insert(acc, {klassOop, objData})) {
-    std::shared_ptr<TObjectDataA> expectData = acc->second;
+    std::shared_ptr<TObjectData> expectData = acc->second;
     if (likely(expectData != NULL)) {
       /* If adding class data for another class is already exists. */
       if (unlikely((expectData->ClassName() == NULL) ||
@@ -185,7 +185,7 @@ std::shared_ptr<TObjectDataA> TClassContainer::pushNewClass(void *klassOop,
  * \brief Remove class from container.
  * \param target [in] Remove class data.
  */
-void TClassContainer::removeClass(std::shared_ptr<TObjectDataA> target) {
+void TClassContainer::removeClass(std::shared_ptr<TObjectData> target) {
   classMap.erase(target->KlassOop());
 }
 
@@ -417,7 +417,7 @@ inline bool sendHeapAlertTrap(TTrapSender *pSender, THeapDelta heapUsage,
  * \return Value is zero, if process is succeed.<br />
  *         Value is error number a.k.a. "errno", if process is failure.
  */
-inline int writeClassData(const int fd, std::shared_ptr<TObjectDataA> objData,
+inline int writeClassData(const int fd, std::shared_ptr<TObjectData> objData,
                           TClassCounter *cur, TSnapShotContainer *snapshot) {
   int result = 0;
   /* Output class-information. */
@@ -601,7 +601,7 @@ int TClassContainer::afterTakeSnapShot(TSnapShotContainer *snapshot,
 
   /* Loop each class. */
   for (auto it = workClsMap.begin(); it != workClsMap.end(); it++) {
-    std::shared_ptr<TObjectDataA> objData = it->second;
+    std::shared_ptr<TObjectData> objData = it->second;
     TClassCounter *cur = snapshot->findClass(objData);
     /* If don't registed class yet. */
     if (unlikely(cur == NULL)) {
@@ -732,7 +732,7 @@ void JNICALL
 
   if (likely(klassOop != NULL)) {
     /* Search class. */
-    std::shared_ptr<TObjectDataA> counter = clsContainer->findClass(klassOop);
+    std::shared_ptr<TObjectData> counter = clsContainer->findClass(klassOop);
     if (likely(counter != NULL)) {
       /*
        * This function will be called at safepoint and be called by VMThread
@@ -758,7 +758,7 @@ void JNICALL OnGarbageCollectionFinishForUnload(jvmtiEnv *jvmti) {
     TSnapShotContainer::removeObjectDataFromAllSnapShots(unloadedList);
 
     /* Remove targets from class container. */
-    std::shared_ptr<TObjectDataA> objData;
+    std::shared_ptr<TObjectData> objData;
     while (unloadedList.try_pop(objData)) {
       clsContainer->removeClass(objData);
       objData.reset();

@@ -162,7 +162,7 @@ TSnapShotContainer::~TSnapShotContainer(void) {
  * \param objData [in] New-class key object.
  * \return New-class data.
  */
-TClassCounter *TSnapShotContainer::pushNewClass(std::shared_ptr<TObjectDataA> objData) {
+TClassCounter *TSnapShotContainer::pushNewClass(std::shared_ptr<TObjectData> objData) {
   TClassCounter *cur = NULL;
 
   cur = (TClassCounter *)calloc(1, sizeof(TClassCounter));
@@ -205,7 +205,7 @@ TClassCounter *TSnapShotContainer::pushNewClass(std::shared_ptr<TObjectDataA> ob
  * \return New-class data.
  */
 TChildClassCounter *TSnapShotContainer::pushNewChildClass(
-    TClassCounter *clsCounter, std::shared_ptr<TObjectDataA> objData) {
+    TClassCounter *clsCounter, std::shared_ptr<TObjectData> objData) {
   TChildClassCounter *newCounter =
       (TChildClassCounter *)calloc(1, sizeof(TChildClassCounter));
   /* If failure allocate child class counter data. */

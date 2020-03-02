@@ -248,7 +248,7 @@ void TSnapShotProcessor::showRanking(const TSnapShotFileHeader *hdr,
 #endif
                          Cnt + 1, aNode->value.usage, aNode->value.delta,
                          // TODO: unsafe operation
-                         reinterpret_cast<TObjectDataA *>(aNode->value.tag)->ClassName());
+                         reinterpret_cast<TObjectData *>(aNode->value.tag)->ClassName());
   }
 
   /* Clean up after ranking output. */

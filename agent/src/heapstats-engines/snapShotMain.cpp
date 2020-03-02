@@ -290,8 +290,8 @@ void OnG1GarbageCollectionFinish(void) {
  * \param klassOop      [in] Pointer of child java class object(KlassOopDesc).
  * \return Pointer of information of expceted class by klassOop.
  */
-inline std::shared_ptr<TObjectDataA> getObjectDataFromKlassOop(void *klassOop) {
-  std::shared_ptr<TObjectDataA> clsData = clsContainer->findClass(klassOop);
+inline std::shared_ptr<TObjectData> getObjectDataFromKlassOop(void *klassOop) {
+  std::shared_ptr<TObjectData> clsData = clsContainer->findClass(klassOop);
   if (unlikely(clsData == NULL)) {
     /* Push new loaded class to root class container. */
     clsData = clsContainer->pushNewClass(klassOop);
@@ -323,7 +323,7 @@ void iterateFieldObjectCallBack(void *oop, void *data) {
 
   if (unlikely(clsCounter == NULL)) {
     /* Get child class information. */
-    std::shared_ptr<TObjectDataA> clsData = getObjectDataFromKlassOop(klassOop);
+    std::shared_ptr<TObjectData> clsData = getObjectDataFromKlassOop(klassOop);
     /* Push new child loaded class. */
     clsCounter = snapshot->pushNewChildClass(parentCounter, clsData);
   }
@@ -368,7 +368,7 @@ inline void calculateObjectUsage(TSnapShotContainer *snapshot, void *oop) {
   TClassCounter *clsCounter = NULL;
 
   /* Get class information. */
-  std::shared_ptr<TObjectDataA> clsData = getObjectDataFromKlassOop(klassOop);
+  std::shared_ptr<TObjectData> clsData = getObjectDataFromKlassOop(klassOop);
   if (unlikely(clsData == NULL)) {
     logger->printCritMsg("Couldn't get ObjectData!");
     return;

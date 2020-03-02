@@ -62,12 +62,12 @@ typedef enum { ALERT_JAVA_HEAP, ALERT_METASPACE } TMemoryUsageAlertType;
 /*!
  * \brief Type is for unloaded class information.
  */
-typedef tbb::concurrent_queue<std::shared_ptr<TObjectDataA> > TClassInfoSet;
+typedef tbb::concurrent_queue<std::shared_ptr<TObjectData> > TClassInfoSet;
 
 /*!
  * \brief Type is for storing class information.
  */
-typedef tbb::concurrent_hash_map<PKlassOop, std::shared_ptr<TObjectDataA>,
+typedef tbb::concurrent_hash_map<PKlassOop, std::shared_ptr<TObjectData>,
                                  TPointerHasher<PKlassOop> > TClassMap;
 /*!
  * \brief This class is stored class information.<br>
@@ -89,7 +89,7 @@ class TClassContainer {
    * \param klassOop [in] New class oop.
    * \return New-class data.
    */
-  virtual std::shared_ptr<TObjectDataA> pushNewClass(PKlassOop klassOop);
+  virtual std::shared_ptr<TObjectData> pushNewClass(PKlassOop klassOop);
 
   /*!
    * \brief Append new-class to container.
@@ -99,20 +99,20 @@ class TClassContainer {
    *         This value isn't equal param "objData",
    *         if already registered equivalence class.
    */
-  virtual std::shared_ptr<TObjectDataA> pushNewClass(PKlassOop klassOop, std::shared_ptr<TObjectDataA> objData);
+  virtual std::shared_ptr<TObjectData> pushNewClass(PKlassOop klassOop, std::shared_ptr<TObjectData> objData);
 
   /*!
    * \brief Remove class from container.
    * \param target [in] Remove class data.
    */
-  virtual void removeClass(std::shared_ptr<TObjectDataA> target);
+  virtual void removeClass(std::shared_ptr<TObjectData> target);
 
   /*!
    * \brief Search class from container.
    * \param klassOop [in] Target class oop.
    * \return Class data of target class.
    */
-  inline std::shared_ptr<TObjectDataA> findClass(PKlassOop klassOop) {
+  inline std::shared_ptr<TObjectData> findClass(PKlassOop klassOop) {
     TClassMap::const_accessor acc;
     return classMap.find(acc, klassOop) ? acc->second : NULL;
   }
@@ -126,7 +126,7 @@ class TClassContainer {
   inline void updateClass(PKlassOop oldKlassOop, PKlassOop newKlassOop) {
     TClassMap::accessor acc;
     if (classMap.find(acc, oldKlassOop)) {
-      std::shared_ptr<TObjectDataA> cur = acc->second;
+      std::shared_ptr<TObjectData> cur = acc->second;
       cur->replaceKlassOop(newKlassOop);
       classMap.insert(acc, {newKlassOop, cur});
 

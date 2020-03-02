@@ -27,7 +27,7 @@
 #include "oopUtil.hpp"
 
 
-TObjectDataA::TObjectDataA(PKlassOop koop) : _klassOop(koop),
+TObjectData::TObjectData(PKlassOop koop) : _klassOop(koop),
                                            _oldTotalSize(0L),
                                            _clsLoaderId(-1L),
                                            _clsLoaderTag(-1L),
@@ -44,16 +44,16 @@ TObjectDataA::TObjectDataA(PKlassOop koop) : _klassOop(koop),
   _oopType = getClassType(_className);
 }
 
-TObjectDataA::~TObjectDataA() {
+TObjectData::~TObjectData() {
   free(_className);
 }
 
-void TObjectDataA::setClassLoader(void *classLoaderOop, jlong classLoaderTag) {
+void TObjectData::setClassLoader(void *classLoaderOop, jlong classLoaderTag) {
   _clsLoaderId = reinterpret_cast<jlong>(classLoaderOop);
   _clsLoaderTag = classLoaderTag;
 }
 
-int TObjectDataA::writeObjectData(int fd) {
+int TObjectData::writeObjectData(int fd) {
   int ret;
 
   /* Write TObjectData.tag & TObjectData.classNameLen. */
