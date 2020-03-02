@@ -21,6 +21,7 @@
 
 #include <utility>
 #include <algorithm>
+#include <memory>
 
 #include "globals.hpp"
 #include "snapShotContainer.hpp"
@@ -161,7 +162,7 @@ TSnapShotContainer::~TSnapShotContainer(void) {
  * \param objData [in] New-class key object.
  * \return New-class data.
  */
-TClassCounter *TSnapShotContainer::pushNewClass(TObjectData *objData) {
+TClassCounter *TSnapShotContainer::pushNewClass(std::shared_ptr<TObjectDataA> objData) {
   TClassCounter *cur = NULL;
 
   cur = (TClassCounter *)calloc(1, sizeof(TClassCounter));
@@ -188,7 +189,7 @@ TClassCounter *TSnapShotContainer::pushNewClass(TObjectData *objData) {
 
   /* Set to counter map. */
   TSizeMap::accessor acc;
-  if (!counterMap.insert(acc, std::make_pair(objData, cur))) {
+  if (!counterMap.insert(acc, {objData, cur})) {
     free(cur->counter);
     free(cur);
     cur = NULL;
@@ -204,7 +205,7 @@ TClassCounter *TSnapShotContainer::pushNewClass(TObjectData *objData) {
  * \return New-class data.
  */
 TChildClassCounter *TSnapShotContainer::pushNewChildClass(
-    TClassCounter *clsCounter, TObjectData *objData) {
+    TClassCounter *clsCounter, std::shared_ptr<TObjectDataA> objData) {
   TChildClassCounter *newCounter =
       (TChildClassCounter *)calloc(1, sizeof(TChildClassCounter));
   /* If failure allocate child class counter data. */
@@ -225,9 +226,9 @@ TChildClassCounter *TSnapShotContainer::pushNewChildClass(
   newCounter->objData = objData;
 
   /* Set to children map. */
-  TChildrenMapKey key = std::make_pair(clsCounter, objData->KlassOop());
+  TChildrenMapKey key = {clsCounter, objData->KlassOop()};
   TChildrenMap::accessor acc;
-  TChildrenMap::value_type value = std::make_pair(key, newCounter);
+  TChildrenMap::value_type value = {key, newCounter};
   childrenMap.insert(acc, value);
   acc.release();
 
@@ -371,7 +372,8 @@ void TSnapShotContainer::removeObjectData(TClassInfoSet &unloadedList) {
       TChildClassCounter *child = clsCounter->child;
       while (child != NULL) {
         TChildClassCounter *next = child->next;
-        childrenMap.erase(std::make_pair(clsCounter, child->objData->KlassOop()));
+        childrenMap.erase({clsCounter, child->objData->KlassOop()});
+        child->objData.reset();
         free(child->counter);
         free(child);
         child = next;

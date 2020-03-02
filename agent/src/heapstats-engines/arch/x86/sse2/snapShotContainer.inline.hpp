@@ -79,7 +79,7 @@ inline void TSnapShotContainer::clearChildClassCounters(
     "  jz 2f;"
     "  movq     (%%rax),   %%rbx;" /* child->counter */
     "  movdqa    %%xmm0, (%%rbx);"
-    "  movq   16(%%rax),   %%rax;" /* child->next */
+    "  movq    8(%%rax),   %%rax;" /* child->next */
     "  jmp 1b;"
     "2:"
     "  movq     (%0),  %%rbx;" /* clsCounter->counter */
@@ -99,7 +99,7 @@ inline void TSnapShotContainer::clearChildClassCounters(
     "  jz 2f;"
     "  movl    (%%eax),   %%ecx;" /* child->counter */
     "  movdqa   %%xmm0, (%%ecx);"
-    "  movl   8(%%eax),   %%eax;" /* child->next */
+    "  movl   4(%%eax),   %%eax;" /* child->next */
     "  jmp 1b;"
     "2:"
     "  movl     (%0),  %%ecx;" /* clsCounter->counter */

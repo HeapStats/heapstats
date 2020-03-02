@@ -35,7 +35,7 @@ typedef void* PKlassOop;
 /*!
  * \brief This structure stored class information.
  */
-class TObjectData {
+class TObjectDataA {
 
   private:
     jlong _tag;          /*!< Class tag.                                 */
@@ -49,8 +49,8 @@ class TObjectData {
     jlong _instanceSize; /*!< Class size if this class is instanceKlass. */
 
   public:
-    TObjectData(PKlassOop koop);
-    ~TObjectData();
+    TObjectDataA(PKlassOop koop);
+    ~TObjectDataA();
 
     void setClassLoader(void *classLoaderOop, jlong classLoaderTag);
     int writeObjectData(int fd);

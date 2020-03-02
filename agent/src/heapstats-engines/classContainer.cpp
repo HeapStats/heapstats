@@ -96,8 +96,11 @@ TClassContainer::TClassContainer(void) : classMap(), updatedClassList() {
  * \brief TClassContainer destructor.
  */
 TClassContainer::~TClassContainer(void) {
-  /* Cleanup class information. */
-  this->allClear();
+  /*
+   * Cleanup class information.
+   * clear() is thread unsafe function, but this d'tor would not be called concurrently.
+   */
+  classMap.clear();
 
   /* Cleanup instances. */
   delete pSender;
@@ -108,20 +111,22 @@ TClassContainer::~TClassContainer(void) {
  * \param klassOop [in] New class oop.
  * \return New-class data.
  */
-TObjectData *TClassContainer::pushNewClass(void *klassOop) {
-  TObjectData *cur = NULL;
+std::shared_ptr<TObjectDataA> TClassContainer::pushNewClass(void *klassOop) {
+  TObjectDataA *cur = NULL;
 
   /* Class info setting. */
 
   try {
-    cur = new TObjectData(klassOop);
+    cur = new TObjectDataA(klassOop);
   } catch (...) {
     logger->printWarnMsg("Couldn't allocate new TObjectData for %p!", klassOop);
     return NULL;
   }
 
-  void *clsLoader = getClassLoader(klassOop, cur->OopType());
-  TObjectData *clsLoaderData = NULL;
+  std::shared_ptr<TObjectDataA> cur_ptr(cur);
+
+  void *clsLoader = getClassLoader(klassOop, cur_ptr->OopType());
+  std::shared_ptr<TObjectDataA> clsLoaderData;
   /* If class loader isn't system bootstrap class loader. */
   if (clsLoader != NULL) {
     void *clsLoaderKlsOop = getKlassOopFromOop(clsLoader);
@@ -134,12 +139,12 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop) {
       }
     }
   }
-  cur->setClassLoader(clsLoader, (clsLoaderData != NULL) ? clsLoaderData->Tag() : 0);
+  cur_ptr->setClassLoader(clsLoader, (clsLoaderData != NULL) ? clsLoaderData->Tag() : 0);
 
   /* Chain setting. */
-  TObjectData *result = this->pushNewClass(klassOop, cur);
-  if (unlikely(result != cur)) {
-    delete(cur);
+  std::shared_ptr<TObjectDataA> result(this->pushNewClass(klassOop, cur_ptr));
+  if (unlikely(result != cur_ptr)) {
+    cur_ptr.reset();
   }
   return result;
 }
@@ -152,16 +157,16 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop) {
  *         This value isn't equal param "objData",
  *         if already registered equivalence class.
  */
-TObjectData *TClassContainer::pushNewClass(void *klassOop,
-                                           TObjectData *objData) {
+std::shared_ptr<TObjectDataA> TClassContainer::pushNewClass(void *klassOop,
+                                                            std::shared_ptr<TObjectDataA> objData) {
   /*
    * Jvmti extension event "classUnload" is loose once in a while.
    * The event forget callback occasionally when class unloading.
    * So we need to check klassOop that was doubling.
    */
   TClassMap::accessor acc;
-  if (!classMap.insert(acc, std::make_pair(klassOop, objData))) {
-    TObjectData *expectData = acc->second;
+  if (!classMap.insert(acc, {klassOop, objData})) {
+    std::shared_ptr<TObjectDataA> expectData = acc->second;
     if (likely(expectData != NULL)) {
       /* If adding class data for another class is already exists. */
       if (unlikely((expectData->ClassName() == NULL) ||
@@ -180,19 +185,8 @@ TObjectData *TClassContainer::pushNewClass(void *klassOop,
  * \brief Remove class from container.
  * \param target [in] Remove class data.
  */
-void TClassContainer::removeClass(TObjectData *target) {
+void TClassContainer::removeClass(std::shared_ptr<TObjectDataA> target) {
   classMap.erase(target->KlassOop());
-}
-
-/*!
- * \brief Remove all-class from container.
- *        This function will be called from d'tor of TClassContainer.
- */
-void TClassContainer::allClear(void) {
-  /* Add all TObjectData pointers in container map to unloadedList */
-  for (auto cur = classMap.begin(); cur != classMap.end(); cur++) {
-    delete cur->second;
-  }
 }
 
 /*!
@@ -423,7 +417,7 @@ inline bool sendHeapAlertTrap(TTrapSender *pSender, THeapDelta heapUsage,
  * \return Value is zero, if process is succeed.<br />
  *         Value is error number a.k.a. "errno", if process is failure.
  */
-inline int writeClassData(const int fd, TObjectData *objData,
+inline int writeClassData(const int fd, std::shared_ptr<TObjectDataA> objData,
                           TClassCounter *cur, TSnapShotContainer *snapshot) {
   int result = 0;
   /* Output class-information. */
@@ -447,7 +441,7 @@ inline int writeClassData(const int fd, TObjectData *objData,
         if (likely(!conf->ReduceSnapShot()->get() ||
                    (childCounter->counter->total_size > 0))) {
           /* Output child class tag. */
-          jlong childClsTag = (uintptr_t)childCounter->objData;
+          jlong childClsTag = reinterpret_cast<jlong>(childCounter->objData.get());
           if (unlikely(write(fd, &childClsTag, sizeof(jlong)) < 0)) {
             throw 1;
           }
@@ -607,7 +601,7 @@ int TClassContainer::afterTakeSnapShot(TSnapShotContainer *snapshot,
 
   /* Loop each class. */
   for (auto it = workClsMap.begin(); it != workClsMap.end(); it++) {
-    TObjectData *objData = it->second;
+    std::shared_ptr<TObjectDataA> objData = it->second;
     TClassCounter *cur = snapshot->findClass(objData);
     /* If don't registed class yet. */
     if (unlikely(cur == NULL)) {
@@ -738,7 +732,7 @@ void JNICALL
 
   if (likely(klassOop != NULL)) {
     /* Search class. */
-    TObjectData *counter = clsContainer->findClass(klassOop);
+    std::shared_ptr<TObjectDataA> counter = clsContainer->findClass(klassOop);
     if (likely(counter != NULL)) {
       /*
        * This function will be called at safepoint and be called by VMThread
@@ -764,10 +758,10 @@ void JNICALL OnGarbageCollectionFinishForUnload(jvmtiEnv *jvmti) {
     TSnapShotContainer::removeObjectDataFromAllSnapShots(unloadedList);
 
     /* Remove targets from class container. */
-    TObjectData *objData;
+    std::shared_ptr<TObjectDataA> objData;
     while (unloadedList.try_pop(objData)) {
       clsContainer->removeClass(objData);
-      delete objData;
+      objData.reset();
     }
   }
 

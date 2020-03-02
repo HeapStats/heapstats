@@ -69,7 +69,7 @@ inline void TSnapShotContainer::clearChildClassCounters(
     "  beq    2f;"
     "  ldr    %%r1,   [%%r0];" /* child->counter */
     "  vst1.8 {%%q0}, [%%r1];"
-    "  ldr    %%r0,   [%%r0, #8];" /* child->next */
+    "  ldr    %%r0,   [%%r0, #4];" /* child->next */
     "  b      1b;"
     "2:"
     "  ldr    %%r0,   [%0];" /* clsCounter->counter */

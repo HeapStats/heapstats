@@ -24,7 +24,9 @@
 
 #include <tbb/concurrent_hash_map.h>
 #include <tbb/concurrent_queue.h>
+
 #include <algorithm>
+#include <memory>
 
 #include "sorter.hpp"
 #include "trapSender.hpp"
@@ -60,12 +62,12 @@ typedef enum { ALERT_JAVA_HEAP, ALERT_METASPACE } TMemoryUsageAlertType;
 /*!
  * \brief Type is for unloaded class information.
  */
-typedef tbb::concurrent_queue<TObjectData *> TClassInfoSet;
+typedef tbb::concurrent_queue<std::shared_ptr<TObjectDataA> > TClassInfoSet;
 
 /*!
  * \brief Type is for storing class information.
  */
-typedef tbb::concurrent_hash_map<PKlassOop, TObjectData *,
+typedef tbb::concurrent_hash_map<PKlassOop, std::shared_ptr<TObjectDataA>,
                                  TPointerHasher<PKlassOop> > TClassMap;
 /*!
  * \brief This class is stored class information.<br>
@@ -87,7 +89,7 @@ class TClassContainer {
    * \param klassOop [in] New class oop.
    * \return New-class data.
    */
-  virtual TObjectData *pushNewClass(PKlassOop klassOop);
+  virtual std::shared_ptr<TObjectDataA> pushNewClass(PKlassOop klassOop);
 
   /*!
    * \brief Append new-class to container.
@@ -97,20 +99,20 @@ class TClassContainer {
    *         This value isn't equal param "objData",
    *         if already registered equivalence class.
    */
-  virtual TObjectData *pushNewClass(PKlassOop klassOop, TObjectData *objData);
+  virtual std::shared_ptr<TObjectDataA> pushNewClass(PKlassOop klassOop, std::shared_ptr<TObjectDataA> objData);
 
   /*!
    * \brief Remove class from container.
    * \param target [in] Remove class data.
    */
-  virtual void removeClass(TObjectData *target);
+  virtual void removeClass(std::shared_ptr<TObjectDataA> target);
 
   /*!
    * \brief Search class from container.
    * \param klassOop [in] Target class oop.
    * \return Class data of target class.
    */
-  inline TObjectData *findClass(PKlassOop klassOop) {
+  inline std::shared_ptr<TObjectDataA> findClass(PKlassOop klassOop) {
     TClassMap::const_accessor acc;
     return classMap.find(acc, klassOop) ? acc->second : NULL;
   }
@@ -122,15 +124,11 @@ class TClassContainer {
    * \return Class data of target class.
    */
   inline void updateClass(PKlassOop oldKlassOop, PKlassOop newKlassOop) {
-    TClassMap::const_accessor acc;
+    TClassMap::accessor acc;
     if (classMap.find(acc, oldKlassOop)) {
-      TObjectData *cur = acc->second;
-      acc.release();
-
+      std::shared_ptr<TObjectDataA> cur = acc->second;
       cur->replaceKlassOop(newKlassOop);
-      TClassMap::accessor new_acc;
-      classMap.insert(new_acc, std::make_pair(newKlassOop, cur));
-      new_acc.release();
+      classMap.insert(acc, {newKlassOop, cur});
 
       updatedClassList.push(oldKlassOop);
     }
@@ -144,10 +142,6 @@ class TClassContainer {
     return classMap.size();
   }
 
-  /*!
-   * \brief Remove all-class from container.
-   */
-  virtual void allClear(void);
   /*!
    * \brief Output all-class information to file.
    * \param snapshot [in]  Snapshot instance.

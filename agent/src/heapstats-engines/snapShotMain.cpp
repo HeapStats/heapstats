@@ -22,6 +22,7 @@
 #include <sched.h>
 
 #include <atomic>
+#include <memory>
 
 #include "globals.hpp"
 #include "vmFunctions.hpp"
@@ -289,8 +290,8 @@ void OnG1GarbageCollectionFinish(void) {
  * \param klassOop      [in] Pointer of child java class object(KlassOopDesc).
  * \return Pointer of information of expceted class by klassOop.
  */
-inline TObjectData *getObjectDataFromKlassOop(void *klassOop) {
-  TObjectData *clsData = clsContainer->findClass(klassOop);
+inline std::shared_ptr<TObjectDataA> getObjectDataFromKlassOop(void *klassOop) {
+  std::shared_ptr<TObjectDataA> clsData = clsContainer->findClass(klassOop);
   if (unlikely(clsData == NULL)) {
     /* Push new loaded class to root class container. */
     clsData = clsContainer->pushNewClass(klassOop);
@@ -322,7 +323,7 @@ void iterateFieldObjectCallBack(void *oop, void *data) {
 
   if (unlikely(clsCounter == NULL)) {
     /* Get child class information. */
-    TObjectData *clsData = getObjectDataFromKlassOop(klassOop);
+    std::shared_ptr<TObjectDataA> clsData = getObjectDataFromKlassOop(klassOop);
     /* Push new child loaded class. */
     clsCounter = snapshot->pushNewChildClass(parentCounter, clsData);
   }
@@ -365,10 +366,9 @@ inline void calculateObjectUsage(TSnapShotContainer *snapshot, void *oop) {
   snapshot->setIsCleared(false);
 
   TClassCounter *clsCounter = NULL;
-  TObjectData *clsData = NULL;
 
   /* Get class information. */
-  clsData = getObjectDataFromKlassOop(klassOop);
+  std::shared_ptr<TObjectDataA> clsData = getObjectDataFromKlassOop(klassOop);
   if (unlikely(clsData == NULL)) {
     logger->printCritMsg("Couldn't get ObjectData!");
     return;

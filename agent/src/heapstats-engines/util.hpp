@@ -26,6 +26,7 @@
 #include <jni.h>
 
 #include <atomic>
+#include <memory>
 
 #include <assert.h>
 #include <stddef.h>
@@ -385,6 +386,18 @@ class TPointerHasher : public TNumericalHasher<T> {
   public:
     static size_t hash(const T v) {
       return reinterpret_cast<size_t>(v) / sizeof(T);
+    }
+};
+
+/*!
+ * \brief Hasher class for tbb::concurrent_hash_map.
+ *        This template class is for shared_ptr<T>.
+ */
+template <typename T>
+class TSharedPtrHasher : public TNumericalHasher<std::shared_ptr<T> > {
+  public:
+    static size_t hash(const std::shared_ptr<T> v) {
+      return reinterpret_cast<size_t>(v.get());
     }
 };
 
