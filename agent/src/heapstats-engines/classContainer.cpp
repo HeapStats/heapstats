@@ -141,12 +141,12 @@ std::shared_ptr<TObjectDataA> TClassContainer::pushNewClass(void *klassOop) {
   }
   cur_ptr->setClassLoader(clsLoader, (clsLoaderData != NULL) ? clsLoaderData->Tag() : 0);
 
-  /* Chain setting. */
-  std::shared_ptr<TObjectDataA> result(this->pushNewClass(klassOop, cur_ptr));
-  if (unlikely(result != cur_ptr)) {
-    cur_ptr.reset();
-  }
-  return result;
+  // Return corresponding TObjectData.
+  // If TObjectData which relates to klassOop is already exists,
+  // returns existed TObjectData. Then cur_ptr and TObjectData
+  // which is wrapped in it would be released automatically because
+  // cur_ptr is shared_ptr and it is just refered at this point.
+  return this->pushNewClass(klassOop, cur_ptr);
 }
 
 /*!
