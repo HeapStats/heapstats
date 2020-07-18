@@ -1,7 +1,7 @@
 /*!
  * \file jvmInfo.cpp
  * \brief This file is used to get JVM performance information.
- * Copyright (C) 2011-2016 Nippon Telegraph and Telephone Corporation
+ * Copyright (C) 2011-2020 Nippon Telegraph and Telephone Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -525,5 +525,19 @@ void TJvmInfo::detectDelayInfoAddress(void) {
   /* JEP 220: Modular Run-Time Images */
   if (!isAfterJDK9()) {
     loadDelayLogFlag &= (_endorsedPath != NULL) && (_bootClassPath != NULL);
+  }
+
+  /* JFR-backported JDK 8 is not supported */
+#if USE_PCRE
+  TPCRERegex versionRegex("^\\d+\\.(\\d+)\\.\\d+_(\\d+)[^0-9]*$", 9);
+#else
+  TCPPRegex versionRegex("^\\d+\\.(\\d+)\\.\\d+_(\\d+)[^0-9]*$");
+#endif
+  if (versionRegex.find(this->_javaVersion)) {
+    int major = atoi(versionRegex.group(1));
+    int update = atoi(versionRegex.group(2));
+    if ((major == 8) && (update >= 262)) {
+      logger->printWarnMsg("JDK %s is not recommended due to JFR backport", this->_javaVersion);
+    }
   }
 }

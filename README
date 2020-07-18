@@ -36,6 +36,8 @@ More detailes are [here](http://icedtea.classpath.org/wiki/HeapStats/information
 * Linux x64 / x86_64 / AArch32
 * Oracle JDK / OpenJDK 6u18 or later
 
+**NOTE: For JDK 8u262 or later, we recommend to use built-in agent, JDK Flight Recorder, instead of HeapStats**
+
 ## How to use ##
 
 You can attach HeapStats agent by any way of the following:
@@ -154,4 +156,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 # License #
 
 [GNU General Public License, version 2](COPYING)
-
