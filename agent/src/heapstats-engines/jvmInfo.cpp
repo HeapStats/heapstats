@@ -539,7 +539,5 @@ void TJvmInfo::detectDelayInfoAddress(void) {
     if ((major == 8) && (update >= 262)) {
       logger->printWarnMsg("JDK %s is not recommended due to JFR backport", this->_javaVersion);
     }
-  } else {
-    logger->printWarnMsg("Invalid JDK version: %s", this->_javaVersion);
   }
 }
