@@ -529,7 +529,7 @@ void TJvmInfo::detectDelayInfoAddress(void) {
 
   /* JFR-backported JDK 8 is not supported */
 #if USE_PCRE
-  TPCRERegex versionRegex("^\\d+\\.(\\d+)\\.\\d+_(\\d+)[^0-9]*$", 6);
+  TPCRERegex versionRegex("^\\d+\\.(\\d+)\\.\\d+_(\\d+)[^0-9]*$", 9);
 #else
   TCPPRegex versionRegex("^\\d+\\.(\\d+)\\.\\d+_(\\d+)[^0-9]*$");
 #endif
